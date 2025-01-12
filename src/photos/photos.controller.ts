@@ -7,7 +7,7 @@ interface RequestBody {
   company: string;
   serial: string;
   bodywork: string;
-  engine: string;
+  chassis: string;
   author: string;
   description: string;
 }
@@ -28,7 +28,7 @@ export class PhotosController {
     const company = body.company;
     const serial = body.serial;
     const bodywork = body.bodywork;
-    const engine = body.engine;
+    const chassis = body.chassis;
     const author = body.author;
     const description = body.description;
 
@@ -42,7 +42,7 @@ export class PhotosController {
         company,
         serial,
         bodywork,
-        engine,
+        chassis,
         author,
         description,
       );

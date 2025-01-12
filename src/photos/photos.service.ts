@@ -29,7 +29,7 @@ export class PhotosService {
     company: string,
     serial: string,
     bodywork: string,
-    engine: string,
+    chassis: string,
     author: string,
     description: string,
   ) {
@@ -76,14 +76,14 @@ export class PhotosService {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO photos VALUES (:photo_id,:url, :company, :serial, :bodywork, :engine, :author, :create_at, :description)',
+        sql: 'INSERT INTO photos VALUES (:photo_id,:url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description)',
         args: {
           photo_id: null,
           url: uploadResult.url,
           company: company,
           serial: serial,
           bodywork: bodywork,
-          engine: engine,
+          chassis: chassis,
           author: author,
           create_at: dateCol,
           description: description,
