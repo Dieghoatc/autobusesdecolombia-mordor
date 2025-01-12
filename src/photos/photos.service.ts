@@ -3,8 +3,6 @@ import { UploadResultCloudinary } from './interfaces/photos.interface';
 import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
 import { createClient } from '@libsql/client';
-import { v4 as uuidv4 } from 'uuid';
-
 
 @Injectable()
 export class PhotosService {
@@ -32,6 +30,7 @@ export class PhotosService {
     chassis: string,
     author: string,
     description: string,
+    category: string
   ) {
     cloudinary.config({
       cloud_name: this.CLOUDINARY_CLOUD_NAME,
@@ -58,10 +57,9 @@ export class PhotosService {
       },
     );
 
-    const uuid = uuidv4();
 
     const date = new Date();
-    
+
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: '2-digit',
@@ -76,7 +74,7 @@ export class PhotosService {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO photos VALUES (:photo_id,:url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description)',
+        sql: 'INSERT INTO photos VALUES (:photo_id, :url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description, :category)',
         args: {
           photo_id: null,
           url: uploadResult.url,
@@ -87,6 +85,7 @@ export class PhotosService {
           author: author,
           create_at: dateCol,
           description: description,
+          category: category,
         },
       });
     } catch (error) {

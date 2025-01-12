@@ -10,6 +10,7 @@ interface RequestBody {
   chassis: string;
   author: string;
   description: string;
+  category: string;
 }
 
 @Controller('photos')
@@ -31,6 +32,7 @@ export class PhotosController {
     const chassis = body.chassis;
     const author = body.author;
     const description = body.description;
+    const category = body.category;
 
     const imageData = body.image;
     const base64Data = imageData.replace(/^data:image\/webp;base64,/, '');
@@ -45,6 +47,7 @@ export class PhotosController {
         chassis,
         author,
         description,
+        category
       );
       return {
         message: 'Image uploaded successfully',
