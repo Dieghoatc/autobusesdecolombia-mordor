@@ -30,7 +30,7 @@ export class PhotosService {
     chassis: string,
     author: string,
     description: string,
-    category: string
+    category: string,
   ) {
     cloudinary.config({
       cloud_name: this.CLOUDINARY_CLOUD_NAME,
@@ -56,7 +56,6 @@ export class PhotosService {
         streamifier.createReadStream(buffer).pipe(uploadStream);
       },
     );
-
 
     const date = new Date();
 
