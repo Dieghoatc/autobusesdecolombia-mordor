@@ -1,14 +1,27 @@
-import { Injectable } from '@nestjs/common';
+
 import { UploadResultCloudinary } from './interfaces/photos.interface';
 import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
 import { createClient } from '@libsql/client';
 
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Photo } from './photos.entitiesdev';
+
 @Injectable()
-export class PhotosService {
+export class PhotosService  {
+
+  constructor(
+    @InjectRepository(Photo)
+    private readonly userRepository: Repository<Photo>,
+  ) {}
+
   private CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
   private CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
   private CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+
+  private environment = process.env.DEV_ENVIRONMENT;
 
   private turso = createClient({
     url: process.env.TURSO_DATABASE_URL,
@@ -16,8 +29,19 @@ export class PhotosService {
   });
 
   async getAllPhotos() {
-    const result = await this.turso.execute('SELECT * FROM photos');
-    return result.rows;
+    if (this.environment === "DEV") {
+      try {
+        return this.userRepository.query('SELECT * FROM photos');
+      } catch (error) {
+        console.error('Error al conectar a la base de datos', error);
+      }
+    }
+    try {
+      const result = await this.turso.execute('SELECT * FROM photos');
+      return result.rows;
+    } catch (error) {
+      console.error('Error al conectar a la base de datos', error);
+    }
   }
 
   ///////////////////////

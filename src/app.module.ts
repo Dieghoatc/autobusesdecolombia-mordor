@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './photos/photos.module';
 
 @Module({
-  imports: [PhotosModule,
+  imports: [
+    PhotosModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
