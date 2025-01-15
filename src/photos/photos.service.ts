@@ -55,6 +55,7 @@ export class PhotosService  {
     author: string,
     description: string,
     category: string,
+    plate: string
   ) {
     cloudinary.config({
       cloud_name: this.CLOUDINARY_CLOUD_NAME,
@@ -97,7 +98,7 @@ export class PhotosService  {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO photos VALUES (:photo_id, :url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description, :category)',
+        sql: 'INSERT INTO photos VALUES (:photo_id, :url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description, :category, :plate)',
         args: {
           photo_id: null,
           url: uploadResult.url,
@@ -109,6 +110,7 @@ export class PhotosService  {
           create_at: dateCol,
           description: description,
           category: category,
+          plate: plate,
         },
       });
     } catch (error) {
