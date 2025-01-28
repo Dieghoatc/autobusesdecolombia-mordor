@@ -8,5 +8,5 @@ export interface Photos {
 }
 
 export interface UploadResultCloudinary {
-  url: string;
+  secure_url: string;
 }

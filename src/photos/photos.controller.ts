@@ -1,4 +1,11 @@
-import { Controller, Get, Post, UseInterceptors, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseInterceptors,
+  Body,
+  UploadedFile,
+} from '@nestjs/common';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -26,7 +33,25 @@ export class PhotosController {
   // upload
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))
-  async uploadImage(@Body() body: RequestBody) {
+  async uploadImage(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: RequestBody,
+  ) {
+
+    if (!file) {
+      throw new Error('No se recibió ningún archivo');
+    }
+    if (file.mimetype !== 'image/webp') {
+      throw new Error('Formato de archivo no soportado.');
+    }
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+
+    if (file.size > maxSize) {
+      throw new Error('El archivo es demasiado grande.');
+    }
+    const base64Data = file.buffer.toString('base64');
+    const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
+
     const company = body.company;
     const serial = body.serial;
     const bodywork = body.bodywork;
@@ -36,9 +61,8 @@ export class PhotosController {
     const category = body.category;
     const plate = body.plate;
 
-    const imageData = body.image;
-    const base64Data = imageData.replace(/^data:image\/webp;base64,/, '');
-    const buffer = Buffer.from(base64Data, 'base64');
+    const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
+    const buffer = Buffer.from(formatBase64Data, 'base64');
 
     try {
       const result = await this.photosService.uploadImageFromBuffer(
@@ -50,7 +74,7 @@ export class PhotosController {
         author,
         description,
         category,
-        plate
+        plate,
       );
       return {
         message: 'Image uploaded successfully',

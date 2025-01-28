@@ -101,7 +101,7 @@ export class PhotosService  {
         sql: 'INSERT INTO photos VALUES (:photo_id, :url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description, :category, :plate)',
         args: {
           photo_id: null,
-          url: uploadResult.url,
+          url: uploadResult.secure_url,
           company: company,
           serial: serial,
           bodywork: bodywork,
