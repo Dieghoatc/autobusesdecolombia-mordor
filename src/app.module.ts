@@ -2,6 +2,7 @@ import { Module, MiddlewareConsumer, NestModule  } from '@nestjs/common';
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
 import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './photos/photos.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { PhotosModule } from './photos/photos.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PostsModule,
   ],
   providers: [],
 })
