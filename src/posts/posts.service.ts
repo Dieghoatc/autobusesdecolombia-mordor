@@ -6,7 +6,7 @@ import { TursoService } from 'src/services/turso.service';
 
 @Injectable()
 export class PostsService {
-  private tursoContection = new TursoService().tursoConection();
+  private tursoConection = new TursoService().tursoConection();
 
   create(createPostDto: CreatePostDto) {
     return 'This action adds a new post';
@@ -14,15 +14,22 @@ export class PostsService {
 
   async findAllPost() {
     try {
-      const result = await this.tursoContection.execute('SELECT * FROM posts');
+      const result = await this.tursoConection.execute('SELECT * FROM posts');
       return result.rows;
     } catch (error) {
       console.error('Error al conectar a la base de datos', error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number) {
+    try {
+      const result = await this.tursoConection.execute(
+        `SELECT * FROM posts WHERE post_id = ${id}`,
+      );
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error al conectar a la base de datos', error);
+    }
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
