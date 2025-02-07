@@ -3,6 +3,7 @@ import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
 import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './photos/photos.module';
 import { PostsModule } from './posts/posts.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { PostsModule } from './posts/posts.module';
       isGlobal: true,
     }),
     PostsModule,
+    ContactModule,
   ],
   providers: [],
 })
