@@ -6,20 +6,10 @@ import {
   Body,
   UploadedFile,
 } from '@nestjs/common';
+import { PhotoDto } from './dto/photo.dto/photo.dto';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-interface RequestBody {
-  image: string;
-  company: string;
-  serial: string;
-  bodywork: string;
-  chassis: string;
-  author: string;
-  description: string;
-  category: string;
-  plate: string;
-}
 
 @Controller('photos')
 export class PhotosController {
@@ -35,7 +25,7 @@ export class PhotosController {
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: RequestBody,
+    @Body() photoDto: PhotoDto,
   ) {
 
     if (!file) {
@@ -52,14 +42,18 @@ export class PhotosController {
     const base64Data = file.buffer.toString('base64');
     const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
 
-    const company = body.company;
-    const serial = body.serial;
-    const bodywork = body.bodywork;
-    const chassis = body.chassis;
-    const author = body.author;
-    const description = body.description;
-    const category = body.category;
-    const plate = body.plate;
+    const category = photoDto.category;
+    const type = photoDto.type;
+    const company = photoDto.company;
+    const serial = photoDto.serial;
+    const bodywork = photoDto.bodywork;
+    const chassis = photoDto.chassis;
+    const plate = photoDto.plate;
+    const service = photoDto.service;
+    const author = photoDto.author;
+    const is_international = photoDto.is_international;
+    const country = photoDto.country; 
+    const location = photoDto.location;
 
     const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
     const buffer = Buffer.from(formatBase64Data, 'base64');
@@ -67,14 +61,18 @@ export class PhotosController {
     try {
       const result = await this.photosService.uploadImageFromBuffer(
         buffer,
+        category,
+        type,
         company,
         serial,
         bodywork,
         chassis,
-        author,
-        description,
-        category,
         plate,
+        service,
+        author,
+        is_international,
+        country,
+        location
       );
       return {
         message: 'Image uploaded successfully',
