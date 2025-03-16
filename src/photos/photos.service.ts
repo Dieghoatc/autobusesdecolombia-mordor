@@ -37,7 +37,7 @@ export class PhotosService  {
       }
     }
     try {
-      const result = await this.turso.execute('SELECT * FROM photos');
+      const result = await this.turso.execute('SELECT * FROM autobuses_photos_production');
       return result.rows;
     } catch (error) {
       console.error('Error al conectar a la base de datos', error);
@@ -46,16 +46,32 @@ export class PhotosService  {
 
   ///////////////////////
 
+  async findOne(id: number) {
+    try {
+      const result = await this.turso.execute(`SELECT * FROM autobuses_photos_production WHERE photo_id = ${id}`);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error al conectar a la base de datos', error);
+    }
+  }
+
+  //////////////////////////////////////////
+
   async uploadImageFromBuffer(
-    buffer: Buffer,
+    buffer: Buffer,    
+    category: string,
+    type: string,
     company: string,
     serial: string,
     bodywork: string,
     chassis: string,
+    plate: string,
+    service: string,
     author: string,
-    description: string,
-    category: string,
-    plate: string
+    isInternational: number,
+    country: string,
+    location: string,
+    
   ) {
     cloudinary.config({
       cloud_name: this.CLOUDINARY_CLOUD_NAME,
@@ -98,19 +114,23 @@ export class PhotosService  {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO photos VALUES (:photo_id, :url, :company, :serial, :bodywork, :chassis, :author, :create_at, :description, :category, :plate)',
+        sql: 'INSERT INTO autobuses_photos_test VALUES (:photo_id, :category_id, :type_id :url, :company, :serial, :bodywork, :chassis, :plate, :service, :author, :id_international, :country, :location, :create_at)',
         args: {
           photo_id: null,
+          category_id: category,
+          type_id: type,
           url: uploadResult.secure_url,
           company: company,
           serial: serial,
           bodywork: bodywork,
           chassis: chassis,
-          author: author,
-          create_at: dateCol,
-          description: description,
-          category: category,
           plate: plate,
+          service: service,
+          author: author,
+          id_international: isInternational,
+          country: country,
+          location: location,
+          create_at: null,
         },
       });
     } catch (error) {
