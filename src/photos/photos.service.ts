@@ -46,6 +46,17 @@ export class PhotosService  {
 
   ///////////////////////
 
+  async findOne(id: number) {
+    try {
+      const result = await this.turso.execute(`SELECT * FROM autobuses_photos_production WHERE photo_id = ${id}`);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error al conectar a la base de datos', error);
+    }
+  }
+
+  //////////////////////////////////////////
+
   async uploadImageFromBuffer(
     buffer: Buffer,    
     category: string,
@@ -103,7 +114,7 @@ export class PhotosService  {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO autobuses_photos_production VALUES (:photo_id, :category_id, :type_id :url, :company, :serial, :bodywork, :chassis, :plate, :service, :author, :id_international, :country, :location, :create_at)',
+        sql: 'INSERT INTO autobuses_photos_test VALUES (:photo_id, :category_id, :type_id :url, :company, :serial, :bodywork, :chassis, :plate, :service, :author, :id_international, :country, :location, :create_at)',
         args: {
           photo_id: null,
           category_id: category,

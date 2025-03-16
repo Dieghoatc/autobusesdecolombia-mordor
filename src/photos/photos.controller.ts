@@ -5,6 +5,7 @@ import {
   UseInterceptors,
   Body,
   UploadedFile,
+  Param
 } from '@nestjs/common';
 import { PhotoDto } from './dto/photo.dto/photo.dto';
 import { PhotosService } from './photos.service';
@@ -18,6 +19,11 @@ export class PhotosController {
   @Get()
   getAllPhotos() {
     return this.photosService.getAllPhotos();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.photosService.findOne(+id);
   }
 
   // upload
@@ -51,7 +57,7 @@ export class PhotosController {
     const plate = photoDto.plate;
     const service = photoDto.service;
     const author = photoDto.author;
-    const is_international = photoDto.is_international;
+    const isInternational = photoDto.is_international;
     const country = photoDto.country; 
     const location = photoDto.location;
 
@@ -70,7 +76,7 @@ export class PhotosController {
         plate,
         service,
         author,
-        is_international,
+        isInternational,
         country,
         location
       );
