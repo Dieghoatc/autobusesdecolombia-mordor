@@ -5,12 +5,13 @@ import {
   UseInterceptors,
   Body,
   UploadedFile,
-  Param
+  Param,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PhotoDto } from './dto/photo.dto/photo.dto';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-
+import { categoryValidator, typeCarValidator } from './utils/utils';
 
 @Controller('photos')
 export class PhotosController {
@@ -31,9 +32,8 @@ export class PhotosController {
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
-    @Body() photoDto: PhotoDto,
+    @Body(ValidationPipe) photoDto: PhotoDto,
   ) {
-
     if (!file) {
       throw new Error('No se recibió ningún archivo');
     }
@@ -45,11 +45,11 @@ export class PhotosController {
     if (file.size > maxSize) {
       throw new Error('El archivo es demasiado grande.');
     }
+
     const base64Data = file.buffer.toString('base64');
     const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
-
-    const category = photoDto.category;
-    const type = photoDto.type;
+    const category = typeCarValidator(photoDto.category);
+    const type = categoryValidator(photoDto.type);
     const company = photoDto.company;
     const serial = photoDto.serial;
     const bodywork = photoDto.bodywork;
@@ -57,10 +57,9 @@ export class PhotosController {
     const plate = photoDto.plate;
     const service = photoDto.service;
     const author = photoDto.author;
-    const isInternational = photoDto.is_international;
-    const country = photoDto.country; 
+    const isInternational = Number(photoDto.isInternational);
+    const country = photoDto.country;
     const location = photoDto.location;
-
     const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
     const buffer = Buffer.from(formatBase64Data, 'base64');
 
@@ -78,10 +77,10 @@ export class PhotosController {
         author,
         isInternational,
         country,
-        location
+        location,
       );
       return {
-        message: 'Image uploaded successfully',
+        message: 'Image uploaded successfully controller',
         url: result,
       };
     } catch (error) {

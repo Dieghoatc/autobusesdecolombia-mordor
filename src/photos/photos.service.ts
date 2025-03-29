@@ -59,8 +59,8 @@ export class PhotosService  {
 
   async uploadImageFromBuffer(
     buffer: Buffer,    
-    category: string,
-    type: string,
+    category: number,
+    type: number,
     company: string,
     serial: string,
     bodywork: string,
@@ -79,7 +79,7 @@ export class PhotosService  {
       api_secret: this.CLOUDINARY_API_SECRET, // Click 'View API Keys' above to copy your API secret
     });
 
-    const uploadResult: UploadResultCloudinary = await new Promise(
+    const UploadResultCloudinary: UploadResultCloudinary = await new Promise(
       (resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
@@ -114,12 +114,12 @@ export class PhotosService  {
 
     try {
       await this.turso.execute({
-        sql: 'INSERT INTO autobuses_photos_production VALUES (:photo_id, :category_id, :type_id :url, :company, :serial, :bodywork, :chassis, :plate, :service, :author, :id_international, :country, :location, :create_at)',
+        sql: 'INSERT INTO autobuses_photos_production VALUES (:photo_id, :category_id, :type_id, :url, :company, :serial, :bodywork, :chassis, :plate, :service, :author, :id_international, :country, :location, :create_at)',
         args: {
           photo_id: null,
           category_id: category,
           type_id: type,
-          url: uploadResult.secure_url,
+          url: UploadResultCloudinary.secure_url,
           company: company,
           serial: serial,
           bodywork: bodywork,
@@ -130,7 +130,7 @@ export class PhotosService  {
           id_international: isInternational,
           country: country,
           location: location,
-          create_at: null,
+          create_at: dateCol,
         },
       });
     } catch (error) {
