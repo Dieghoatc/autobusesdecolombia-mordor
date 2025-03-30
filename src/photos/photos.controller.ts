@@ -48,8 +48,8 @@ export class PhotosController {
 
     const base64Data = file.buffer.toString('base64');
     const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
-    const category = typeCarValidator(photoDto.category);
-    const type = categoryValidator(photoDto.type);
+    const category = categoryValidator(photoDto.category);
+    const type = typeCarValidator(photoDto.type);
     const company = photoDto.company;
     const serial = photoDto.serial;
     const bodywork = photoDto.bodywork;
