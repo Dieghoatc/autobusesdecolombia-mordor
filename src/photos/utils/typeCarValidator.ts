@@ -1,8 +1,8 @@
 export function typeCarValidator(value: string) {
-  
   if (typeof value !== 'string') {
     throw new Error('El valor debe ser una cadena de texto');
   }
+
   switch (value) {
     case 'bus':
       return 1;
@@ -18,30 +18,34 @@ export function typeCarValidator(value: string) {
       return 6;
     case 'buseton':
       return 7;
-    case 'taxi':
+    case 'trompon':
       return 8;
-    case 'chiva':
+    case 'camioneta':
       return 9;
-    case 'furgon':
+    case 'taxi':
       return 10;
-    case 'bala':
+    case 'chiva':
       return 11;
-    case 'electrico':
+    case 'furgon':
       return 12;
-    case 'hibrido':
+    case 'bala':
       return 13;
-    case 'articulado':
+    case 'electrico':
       return 14;
-    case 'biarticulado':
+    case 'hibrido':
       return 15;
-    case 'padron':
+    case 'articulado':
       return 16;
-    case 'empresarial':
+    case 'biarticulado':
       return 17;
-    case 'escolar':
+    case 'padron':
       return 18;
-    case 'turismo':
+    case 'empresarial':
       return 19;
+    case 'escolar':
+      return 20;
+    case 'turismo':
+      return 21;
     default:
       return 1;
   }
