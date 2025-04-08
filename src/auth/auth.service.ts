@@ -1,12 +1,29 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
 
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
+
+
+
 @Injectable()
 export class AuthService {
+  constructor(
+    private jwtService: JwtService,
 
-  async createAuthUser(
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
+  ) {}
+
+  async register(
     createUserDto: CreateUserDto,
   ): Promise<{ email: string; password: string } | { message: string }> {
     try {
@@ -20,16 +37,24 @@ export class AuthService {
   async validateUser(
     loginUser: LoginUserDto,
     findUser: LoginUserDto,
-  ): Promise<boolean> {
+  ): Promise<boolean> { 
     try {
-      const validUser = await bcrypt.compare(
-        loginUser.password,
-        findUser.password,
-      );
-
-      return validUser;
+      return await bcrypt.compare(loginUser.password, findUser.password);
     } catch (error) {
       throw new InternalServerErrorException('Error validating user');
     }
+  }
+
+  async login(loginUser: LoginUserDto): Promise<{ access_token: string }> {
+    const findUser = await this.userService.findUserByEmail(loginUser.email);
+    const validUser = await this.validateUser(loginUser, findUser);
+
+    if (!validUser) {
+      throw new UnauthorizedException('Invalid password');
+    }
+    const payload = { sub: loginUser.email };
+    const token = await this.jwtService.sign(payload);
+
+    return { access_token: token };
   }
 }
