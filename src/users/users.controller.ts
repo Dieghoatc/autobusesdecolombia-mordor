@@ -39,6 +39,6 @@ export class UsersController {
       maxAge: 60 * 60 * 24 * 30,
     });
 
-    return { message: 'Logged in' };
+    return { message: 'Logged successful' };
   }
 }

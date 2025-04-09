@@ -3,7 +3,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 
-const db = [];
+const db = [
+  {
+    email: 'admin@abc.com',
+    password: '$2b$10$nXOv0LdQrflvS6iR7y4VFeJoFbjqHLToLedrSfZcTW39hx03Zgeba'
+  }
+];
 
 @Injectable()
 export class UsersService {
@@ -12,12 +17,11 @@ export class UsersService {
     private authService: AuthService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto):Promise<{email: string; password: string}> {
     if (db.find((user) => user.email === createUserDto.email)) {
-      return { message: 'User already exists' };
+      throw new UnauthorizedException('Email already exists');
     }
     const authUser = await this.authService.register(createUserDto);
-
     db.push(authUser);
     return authUser;
   }

@@ -3,10 +3,9 @@ import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
-
-  @Get('check-cookie')
+  @Get('verify')
   checkCookie(@Req() req: Request) {
-    const token = req.cookies['access_token']; // 👈 accede a la cookie llamada "jwt"    
-    return { token };
+    const token = req.cookies['access_token']; // 👈 accede a la cookie llamada "jwt"
+    return { status: 'ok', token };
   }
 }

@@ -25,7 +25,7 @@ export class AuthService {
 
   async register(
     createUserDto: CreateUserDto,
-  ): Promise<{ email: string; password: string } | { message: string }> {
+  ): Promise<{ email: string; password: string }> {
     try {
       const hashed = await bcrypt.hash(createUserDto.password, 10);
       return { email: createUserDto.email, password: hashed };
