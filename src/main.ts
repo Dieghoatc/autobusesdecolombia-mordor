@@ -5,12 +5,14 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: 'http://localhost:3000', // o el frontend real
-    credentials: true,               // 👈 permite enviar cookies
+    origin: ['http://localhost:3000', 'https://autobusesdecolombia.com'],
+    credentials: true, // 👈 permite enviar cookies
   });
 
   app.use(cookieParser());
-  
-  await app.listen(process.env.PORT ?? 3001);
+
+  const port = parseInt(process.env.PORT, 10) || 3001;
+  await app.listen(port);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 }
 bootstrap();
