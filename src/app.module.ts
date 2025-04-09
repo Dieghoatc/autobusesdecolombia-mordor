@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './photos/photos.module';
 import { PostsModule } from './posts/posts.module';
 import { ContactModule } from './contact/contact.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { ContactModule } from './contact/contact.module';
     }),
     PostsModule,
     ContactModule,
+    AuthModule,
+    UsersModule,
   ],
   providers: [],
 })
