@@ -18,7 +18,6 @@ export class ContactController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createContactDto: CreateContactDto) {
     try {
-      console.log(createContactDto);
       const createdContact = await this.contactService.create(createContactDto);
       return {
         statusCode: HttpStatus.CREATED, // Usa HttpStatus para códigos de estado

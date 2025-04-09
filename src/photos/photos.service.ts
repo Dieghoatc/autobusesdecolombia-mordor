@@ -134,7 +134,7 @@ export class PhotosService  {
         },
       });
     } catch (error) {
-      console.log(error);
+      throw new Error('Error al insertar la foto');
     }
     return;
   }
