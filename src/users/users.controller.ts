@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Res, HttpStatus, HttpCode, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  HttpStatus,
+  HttpCode,
+  UseGuards,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Response } from 'express';
 
 import { UsersService } from './users.service';
@@ -6,10 +17,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-
 @Controller('users')
 export class UsersController {
-  
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
@@ -20,7 +29,7 @@ export class UsersController {
     } catch (error) {
       throw new UnauthorizedException('Invalid credentials');
     }
-  } 
+  }
 
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
@@ -29,14 +38,21 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
-
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const access_token = await this.usersService.login(loginUserDto);
     res.cookie('access_token', access_token.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: 60 * 60 * 24 * 30,
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? 'https//:autobusesdecolombia.com'
+          : undefined,
+      path: '/',
     });
 
     return { message: 'Logged successful' };
