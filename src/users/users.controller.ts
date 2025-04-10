@@ -50,7 +50,7 @@ export class UsersController {
       maxAge: 60 * 60 * 24 * 30,
       domain:
         process.env.NODE_ENV === 'production'
-          ? 'https//:autobusesdecolombia.com'
+          ? 'autobusesdecolombia.com'
           : undefined,
       path: '/',
     });
