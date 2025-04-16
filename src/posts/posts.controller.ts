@@ -1,20 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto } from './dto/create-post.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  @UseInterceptors(FileInterceptor('image'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createPostDto: CreatePostDto,
+  ) {
+    if (!file) {
+      throw new Error('No se recibió ningún archivo');
+    }
+    if (file.mimetype !== 'image/webp') {
+      throw new Error('Formato de archivo no soportado.');
+    }
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+
+    if (file.size > maxSize) {
+      throw new Error('El archivo es demasiado grande.');
+    }
+
+    const base64Data = file.buffer.toString('base64');
+    const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
+    const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
+    const buffer = Buffer.from(formatBase64Data, 'base64');
+    return this.postsService.create(createPostDto, buffer);
   }
 
   @Get()
   findAll() {
-    return this.postsService.findAllPost();
+    return this.postsService.findAll();
   }
 
   @Get(':id')
