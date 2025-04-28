@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Post } from './post.entity';
+import { Posts } from './post.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Post],
+  entities: [Posts],
   synchronize: true,
   migrations: ['dist/migrations/**/*.js'],
   ssl: {

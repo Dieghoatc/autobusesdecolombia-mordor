@@ -7,7 +7,6 @@ import { Posts } from './post.entity';
 import { Repository } from 'typeorm';
 import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
 
-import * as sharp from 'sharp';
 import { ImageConvert } from 'src/utils/imageConvert';
 
 @Injectable()
