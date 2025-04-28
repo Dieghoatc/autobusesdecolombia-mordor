@@ -1,18 +1,58 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-
 import { TursoService } from 'src/services/turso.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Posts } from './post.entity';
+import { Repository } from 'typeorm';
+import { CloudinaryService } from '../services/cloudinary/cloudinary.service';
+
+import * as sharp from 'sharp';
+import { ImageConvert } from 'src/utils/imageConvert';
 
 @Injectable()
 export class PostsService {
-  private tursoConection = new TursoService().tursoConection();
+  constructor(
+    @InjectRepository(Posts)
+    private readonly postRepository: Repository<Posts>,
+  ) {}
 
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  private tursoConection = new TursoService().tursoConection();
+  private cloudinaryService = new CloudinaryService();
+  private imageConvert = new ImageConvert();
+
+  ///////////////////////////////////////////////////////
+  // Upload image
+  async uploadImage(file: Express.Multer.File) {
+    const outputWebp = await this.imageConvert.toWebp(file);
+
+    return await this.cloudinaryService.uploadImage('post', outputWebp);
   }
 
-  async findAllPost() {
+  ///////////////////////////////////////////////////////
+
+  async create(data: CreatePostDto, file: Express.Multer.File) {
+    const outputWebp = await this.imageConvert.toWebp(file);
+
+    const urlUploadCloudinary = await this.cloudinaryService.uploadImage(
+      'post',
+      outputWebp,
+    );
+
+    try {
+      const postData = {
+        ...data,
+        image: urlUploadCloudinary,
+      };
+      const createPost = this.postRepository.create(postData);
+
+      return this.postRepository.save(createPost);
+    } catch (error) {
+      console.error('Error connecting to the database', error);
+    }
+  }
+
+  async findAll() {
     try {
       const result = await this.tursoConection.execute('SELECT * FROM posts');
       return result.rows;
