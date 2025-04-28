@@ -5,15 +5,20 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const origins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'];
+
   app.enableCors({
-    origin: [
-      'https://www.autobusesdecolombia.com',  // Dominio de producción
-      'http://localhost:3000',               // Frontend de Next.js en localhost
-      'http://localhost:4200',               // Frontend de Angular en localhost
-    ],
+    origin: origins,
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
-    allowedHeaders: 'Content-Type, Accept, x-requested-with',  // Encabezados permitidos
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
+    allowedHeaders: [
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'X-Requested-With',
+      'Access-Control-Allow-Credentials',
+      'Access-Control-Allow-Origin',
+    ], // Encabezados permitidos
   });
 
   app.use(cookieParser());
