@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity() // ✅ Necesario
-export class Post {
+@Entity()
+export class Posts {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,6 +13,9 @@ export class Post {
 
   @Column()
   slug: string;
+
+  @Column()
+  tags: string;
 
   @Column({ type: 'json' })
   content: any;

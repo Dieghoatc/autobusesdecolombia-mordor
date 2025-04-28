@@ -24,23 +24,32 @@ export class PostsController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createPostDto: CreatePostDto,
   ) {
+    return this.postsService.create(createPostDto, file);
+  }
+
+  @Post('image')
+  @UseInterceptors(FileInterceptor('image'))
+  async ploadImage(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
-      throw new Error('No se recibió ningún archivo');
-    }
-    if (file.mimetype !== 'image/webp') {
-      throw new Error('Formato de archivo no soportado.');
+      return {
+        message: 'No file received',
+      };
     }
     const maxSize = 5 * 1024 * 1024; // 5 MB
 
     if (file.size > maxSize) {
-      throw new Error('El archivo es demasiado grande.');
+      return {
+        message: 'The file is too large',
+      };
     }
 
-    const base64Data = file.buffer.toString('base64');
-    const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
-    const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
-    const buffer = Buffer.from(formatBase64Data, 'base64');
-    return this.postsService.create(createPostDto, buffer);
+    const imageUrl = await this.postsService.uploadImage(file);
+    return {
+      success: 1,
+      file: {
+        url: imageUrl, // La URL que se insertará en el editor
+      },
+    };
   }
 
   @Get()

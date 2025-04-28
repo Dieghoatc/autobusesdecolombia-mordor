@@ -7,7 +7,7 @@ import { ContactModule } from './contact/contact.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post } from './posts/post.entity'; // Importamos la clase Post
+import { Posts } from './posts/post.entity'; // Importamos la clase Post
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { Post } from './posts/post.entity'; // Importamos la clase Post
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Post],
+      entities: [Posts],
       synchronize: true,
       migrations: ['dist/migrations/**/*.js'],
       ssl: {
