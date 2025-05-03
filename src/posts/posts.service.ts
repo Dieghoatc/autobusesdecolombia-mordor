@@ -44,8 +44,8 @@ export class PostsService {
         image: urlUploadCloudinary,
       };
       const createPost = this.postRepository.create(postData);
-
       return this.postRepository.save(createPost);
+
     } catch (error) {
       console.error('Error connecting to the database', error);
     }
@@ -53,8 +53,7 @@ export class PostsService {
 
   async findAll() {
     try {
-      const result = await this.tursoConection.execute('SELECT * FROM posts');
-      return result.rows;
+      return await this.postRepository.find();
     } catch (error) {
       console.error('Error al conectar a la base de datos', error);
     }
@@ -62,10 +61,7 @@ export class PostsService {
 
   async findOne(id: number) {
     try {
-      const result = await this.tursoConection.execute(
-        `SELECT * FROM posts WHERE post_id = ${id}`,
-      );
-      return result.rows[0];
+      return await this.postRepository.findOne({ where: { post_id: id } });
     } catch (error) {
       console.error('Error al conectar a la base de datos', error);
     }

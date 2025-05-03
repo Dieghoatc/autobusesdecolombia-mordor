@@ -37,6 +37,7 @@ import { Posts } from './posts/post.entity'; // Importamos la clase Post
   ],
   providers: [],
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(ResponseTimeMiddleware).forRoutes('*'); // Aplica el middleware a todas las rutas

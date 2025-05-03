@@ -3,20 +3,20 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class Posts {
   @PrimaryGeneratedColumn()
-  id: number;
+  post_id: number;
 
-  @Column()
-  image: string;
+  @Column({ nullable: true })
+  image_url: string;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   slug: string;
 
-  @Column()
+  @Column({ nullable: true })
   tags: string;
 
-  @Column({ type: 'json' })
+  @Column({ nullable: true, type: 'json' })
   content: any;
 }
