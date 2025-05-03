@@ -48,11 +48,8 @@ export class UsersController {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'none',
       maxAge: 60 * 60 * 24 * 30,
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? 'autobusesdecolombia.com'
-          : undefined,
       path: '/',
+      ...(process.env.NODE_ENV === 'production' ? { domain: 'autobusesdecolombia.com' } : {})
     });
 
     return { message: 'Logged successful' };
