@@ -46,10 +46,12 @@ export class UsersController {
     res.cookie('access_token', access_token.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 60 * 60 * 24 * 30,
       path: '/',
-      ...(process.env.NODE_ENV === 'production' ? { domain: 'autobusesdecolombia.com' } : {})
+      ...(process.env.NODE_ENV === 'production'
+        ? { domain: 'autobusesdecolombia.com' }
+        : {}),
     });
 
     return { message: 'Logged successful' };
