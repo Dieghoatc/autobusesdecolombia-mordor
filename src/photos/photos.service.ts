@@ -46,7 +46,31 @@ export class PhotosService {
     }
   }
 
-  ///////////////////////
+  async getPhotosForCategory(category: number) {
+    try {
+      const result = await this.turso.execute(
+        `SELECT * FROM autobuses_photos_production WHERE category_id = ${category}`,
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error connect to the database:');
+      console.error(error);
+    }
+  }
+
+  async getPhotosForType(type: number) {
+    try {
+      const result = await this.turso.execute(
+        `SELECT * FROM autobuses_photos_production WHERE type_id = ${type}`,
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error connect to the database:');
+      console.error(error);
+    }
+  }
+
+  ///////////FILTERS////////////
 
   async findOne(id: number) {
     try {
@@ -60,7 +84,7 @@ export class PhotosService {
     }
   }
 
-  //////////////////////////////////////////
+  ////////////////////UPLOAD TO CLOUDINARY AND INSERT TO DATABASE //////////////////////
 
   async uploadImageFromBuffer(
     buffer: Buffer,
