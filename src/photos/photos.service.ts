@@ -1,4 +1,3 @@
-
 import { UploadResultCloudinary } from './interfaces/photos.interface';
 import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
@@ -10,8 +9,7 @@ import { Repository } from 'typeorm';
 import { Photo } from './photos.entitiesdev';
 
 @Injectable()
-export class PhotosService  {
-
+export class PhotosService {
   constructor(
     @InjectRepository(Photo)
     private readonly userRepository: Repository<Photo>,
@@ -29,36 +27,67 @@ export class PhotosService  {
   });
 
   async getAllPhotos() {
-    if (this.environment === "DEV") {
+    if (this.environment === 'DEV') {
       try {
         return this.userRepository.query('SELECT * FROM photos');
       } catch (error) {
-        console.error('Error al conectar a la base de datos', error);
+        console.error('Error connect to the database:');
+        console.error(error);
       }
     }
     try {
-      const result = await this.turso.execute('SELECT * FROM autobuses_photos_production');
+      const result = await this.turso.execute(
+        'SELECT * FROM autobuses_photos_production',
+      );
       return result.rows;
     } catch (error) {
-      console.error('Error al conectar a la base de datos', error);
+      console.error('Error connect to the database:');
+      console.error(error);
     }
   }
 
-  ///////////////////////
+  async getPhotosForCategory(category: number) {
+    try {
+      const result = await this.turso.execute(
+        `SELECT * FROM autobuses_photos_production WHERE category_id = ${category}`,
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error connect to the database:');
+      console.error(error);
+    }
+  }
+
+  async getPhotosForType(type: number) {
+    try {
+      const result = await this.turso.execute(
+        `SELECT * FROM autobuses_photos_production WHERE type_id = ${type}`,
+      );
+      return result.rows;
+    } catch (error) {
+      console.error('Error connect to the database:');
+      console.error(error);
+    }
+  }
+
+  ///////////FILTERS////////////
 
   async findOne(id: number) {
     try {
-      const result = await this.turso.execute(`SELECT * FROM autobuses_photos_production WHERE photo_id = ${id}`);
+      const result = await this.turso.execute(
+        `SELECT * FROM autobuses_photos_production WHERE photo_id = ${id}`,
+      );
       return result.rows[0];
     } catch (error) {
-      console.error('Error al conectar a la base de datos', error);
+      console.error('Error connect to the database:');
+      console.error(error);
     }
   }
 
-  //////////////////////////////////////////
+  ////////////////////UPLOAD TO CLOUDINARY AND INSERT TO DATABASE //////////////////////
 
   async uploadImageFromBuffer(
-    buffer: Buffer,    
+    buffer: Buffer,
     category: number,
     type: number,
     company: string,
@@ -71,7 +100,6 @@ export class PhotosService  {
     isInternational: number,
     country: string,
     location: string,
-    
   ) {
     cloudinary.config({
       cloud_name: this.CLOUDINARY_CLOUD_NAME,

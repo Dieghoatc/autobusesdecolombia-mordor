@@ -27,6 +27,16 @@ export class PhotosController {
     return this.photosService.findOne(+id);
   }
 
+  @Get('category/:category')
+  getPhotosForCategory(@Param('category') category: string) {
+    return this.photosService.getPhotosForCategory(+category);
+  }
+
+  @Get('type/:type')
+  getPhotosForType(@Param('type') type: string) {
+    return this.photosService.getPhotosForType(+type);
+  }
+
   // upload
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))

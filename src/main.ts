@@ -5,24 +5,31 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
-  const origins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'];
-  
+
+  const origins = process.env.CORS_ORIGIN?.split(',') || [
+    'http://localhost:3000',
+  ];
+  const environment = process.env.NODE_ENV || 'development';
+
   app.useGlobalPipes(new ValidationPipe());
 
-  app.enableCors({
-    origin: origins,
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-    allowedHeaders: [
-      'Content-Type',
-      'Accept',
-      'Authorization',
-      'X-Requested-With',
-      'Access-Control-Allow-Credentials',
-      'Access-Control-Allow-Origin',
-    ], // Encabezados permitidos
-  });
+  if (environment === 'development') {
+    app.enableCors();
+  } else {
+    app.enableCors({
+      origin: origins,
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      allowedHeaders: [
+        'Content-Type',
+        'Accept',
+        'Authorization',
+        'X-Requested-With',
+        'Access-Control-Allow-Credentials',
+        'Access-Control-Allow-Origin',
+      ],
+    });
+  }
 
   app.use(cookieParser());
 
