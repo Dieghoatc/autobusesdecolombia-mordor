@@ -45,12 +45,13 @@ export class UsersController {
     const access_token = await this.usersService.login(loginUserDto);
     res.cookie('access_token', access_token.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 60 * 60 * 24 * 30,
+      secure: true,
+      sameSite: 'none',
       path: '/',
+      maxAge: 60 * 60 * 24 * 30,
     });
 
     return { message: 'Logged successful' };
   }
 }
+;
