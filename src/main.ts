@@ -18,16 +18,12 @@ async function bootstrap() {
         transform: true,
       }),
     );
-    const origins = process.env.CORS_ORIGIN?.split(',').map((origin) =>
-      origin.trim(),
-    ) || ['http://localhost:3000', 'http://localhost:3001'];
-    
+
     const environment = process.env.NODE_ENV || 'development';
 
     app.enableCors({
-      origin: origins,
+      origin: 'https://autobusesdecolombia.com',
       credentials: true,
-      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
       allowedHeaders: [
         'Content-Type',
         'Accept',
@@ -35,6 +31,8 @@ async function bootstrap() {
         'X-Requested-With',
         'Origin',
       ],
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      exposedHeaders: ['Set-Cookie'],
     });
 
     const portEnv = process.env.PORT;
@@ -45,7 +43,6 @@ async function bootstrap() {
 
     logger.log(`🚀 Server running on http://localhost:${port}`);
     logger.log(`📝 Environment: ${environment}`);
-    logger.log(`🌐 CORS origins: ${origins.join(', ')}`);
   } catch (error) {
     logger.error('❌ Error starting the application:', error);
     process.exit(1);
