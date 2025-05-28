@@ -47,6 +47,7 @@ export class UsersController {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
+      domain: '.autobusesdecolombia.com',
       path: '/',
       maxAge: 60 * 60 * 24 * 30,
     });
@@ -54,4 +55,3 @@ export class UsersController {
     return { message: 'Logged successful' };
   }
 }
-;
