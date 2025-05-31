@@ -22,7 +22,7 @@ async function bootstrap() {
     const environment = process.env.NODE_ENV || 'development';
 
     app.enableCors({
-      origin: 'https://www.autobusesdecolombia.com',
+      origin: environment === 'development' ? true : ['https://www.autobusesdecolombia.com'],
       credentials: true,
       allowedHeaders: [
         'Content-Type',
