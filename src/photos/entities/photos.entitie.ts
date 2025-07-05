@@ -1,3 +1,5 @@
+// Entity is a class that is used to define the structure of the table in the database
+
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -6,7 +8,16 @@ export class Photo {
   photo_id: number;
 
   @Column()
+  category_id: number;
+
+  @Column()
+  type_id: number;
+
+  @Column()
   url: string;
+
+  @Column() 
+  company: string;
 
   @Column()
   serial: string;
@@ -18,17 +29,23 @@ export class Photo {
   chassis: string;
 
   @Column()
+  plate: string;
+
+  @Column()
+  service: string;
+
+  @Column()
   author: string;
 
   @Column()
-  created_at: string;
+  id_international: number;
 
   @Column()
-  description: string;
+  country: string;
 
   @Column()
-  category: string;
+  location: string;
 
   @Column()
-  plate: string;
+  create_at: string;
 }
