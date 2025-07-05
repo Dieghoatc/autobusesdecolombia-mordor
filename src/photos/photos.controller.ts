@@ -8,10 +8,11 @@ import {
   Param,
   ValidationPipe,
 } from '@nestjs/common';
-import { PhotoDto } from './dto/photo.dto/photo.dto';
+import { PhotoDto } from './dto/photo.dto';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { categoryValidator, typeCarValidator } from './utils/utils';
+import { categoryValidator } from './utils/categoryValidator';
+import { typeCarValidator } from './utils/typeCarValidator';
 
 @Controller('photos')
 export class PhotosController {
@@ -21,6 +22,15 @@ export class PhotosController {
   getAllPhotos() {
     return this.photosService.getAllPhotos();
   }
+
+  @Get('page/:id')
+  getAllPhotosPagination(@Param('id') id: string) {
+    const paginationDto: PhotoDto = {
+      page: Number(id),
+      limit: 20,
+    };
+    return this.photosService.getAllPhotosPagination(paginationDto);
+  }                                                                                                                                                                                                                                                                                                                                                     
 
   @Get(':id')
   findOne(@Param('id') id: string) {
