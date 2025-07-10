@@ -16,7 +16,6 @@ export class PostsService {
     private readonly postRepository: Repository<Posts>,
   ) {}
 
-  private tursoConection = new TursoService().tursoConection();
   private cloudinaryService = new CloudinaryService();
   private imageConvert = new ImageConvert();
 
