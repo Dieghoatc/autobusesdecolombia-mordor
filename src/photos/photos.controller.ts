@@ -37,9 +37,9 @@ export class PhotosController {
     return this.photosService.findOne(+id);
   }
 
-  @Get('category/:category')
-  getPhotosForCategory(@Param('category') category: string) {
-    return this.photosService.getPhotosForCategory(+category);
+  @Get('category/:category/page/:page')
+  getPhotosForCategory(@Param('category') category: string, @Param('page') page: string) {
+    return this.photosService.getPhotosForCategory(+category, { page: Number(page), limit: 20 });
   }
 
   @Get('type/:type')
