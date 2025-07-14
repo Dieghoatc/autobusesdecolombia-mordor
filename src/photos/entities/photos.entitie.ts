@@ -1,6 +1,18 @@
 // Entity is a class that is used to define the structure of the table in the database
 
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Category } from './categories.entitie';
+import { Vehicle } from './vehicles.entitie';
+import { Mark } from './marks.entitie';
+import { Company } from './companies.entitie';
+import { Photographer } from './photographers.entitie';
+import { Country } from './countries.entitie';
 
 @Entity()
 export class Photo {
@@ -16,7 +28,7 @@ export class Photo {
   @Column()
   url: string;
 
-  @Column() 
+  @Column()
   company: string;
 
   @Column()
@@ -52,39 +64,78 @@ export class Photo {
 
 @Entity('photos')
 export class Photo2 {
-
   @PrimaryGeneratedColumn()
   photo_id: number;
+
   @Column()
   category_id: number;
+
   @Column()
   vehicle_id: number;
+
   @Column()
   image_url: string;
+
   @Column()
   mark_id: number;
+
   @Column()
   company_id: number;
+
   @Column()
   serial_company: string;
+
   @Column()
   chassis: string;
+
   @Column()
   bodywork: string;
+
   @Column()
   plate: string;
+
   @Column()
   service: string;
+
   @Column()
-  photographer_id: number;  
+  photographer_id: number;
+
   @Column()
   location: string;
+
   @Column()
   country_id: number;
-  @Column()
-  created_at: string;
-  @Column()
-  last_modification: string;
-  @Column()
+
+  @Column({ type: 'timestamp' })
+  created_at: Date;
+
+  @Column({ type: 'timestamp' })
+  last_modification: Date;
+
+  @Column({ default: true })
   active: boolean;
+
+  @ManyToOne(() => Category, (category) => category.photos)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
+
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.photos)
+  @JoinColumn({ name: 'vehicle_id' })
+  vehicle: Vehicle;
+
+  @ManyToOne(() => Mark, (mark) => mark.photos)
+  @JoinColumn({ name: 'mark_id' })
+  mark: Mark;
+
+  @ManyToOne(() => Company, (company) => company.photos)
+  @JoinColumn({ name: 'company_id' })
+  company: Company;
+
+  @ManyToOne(() => Photographer, (photographer) => photographer.photos)
+  @JoinColumn({ name: 'photographer_id' })
+  photographer: Photographer;
+
+  @ManyToOne(() => Country, (country) => country.photos)
+  @JoinColumn({ name: 'country_id' })
+  country: Country;
 }

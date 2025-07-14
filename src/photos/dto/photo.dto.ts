@@ -1,6 +1,6 @@
 // DTO is a data transfer object, it is currently used to validate the data that is sent to the controller
 
-import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
+import {IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
 
 export class PhotoDto {
   @IsNumber()

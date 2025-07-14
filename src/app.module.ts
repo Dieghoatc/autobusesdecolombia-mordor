@@ -9,6 +9,12 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Posts } from './posts/post.entity'; // Importamos la clase Post
 import { Photo2 } from './photos/entities/photos.entitie';
+import { Category } from './photos/entities/categories.entitie';
+import { Vehicle } from './photos/entities/vehicles.entitie';
+import { Mark } from './photos/entities/marks.entitie';
+import { Company } from './photos/entities/companies.entitie';
+import { Photographer } from './photos/entities/photographers.entitie';
+import { Country } from './photos/entities/countries.entitie';
 
 @Module({
   imports: [
@@ -23,7 +29,7 @@ import { Photo2 } from './photos/entities/photos.entitie';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Posts, Photo2],
+      entities: [Posts, Photo2, Category, Vehicle, Mark, Company, Photographer, Country],
       //synchronize: true,
       migrations: ['dist/migrations/**/*.js'],
       ssl: {
