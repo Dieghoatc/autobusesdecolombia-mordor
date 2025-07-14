@@ -23,6 +23,15 @@ export class PhotosController {
     return this.photosService.getAllPhotos();
   }
 
+  @Get('getAll/:id')
+  getAllPhotos2(@Param('id') id: string) {
+    const paginationDto: PhotoDto = {
+      page: Number(id),
+      limit: 20,
+    };
+    return this.photosService.getAllPhotos2(paginationDto);
+  } 
+
   @Get('page/:id')
   getAllPhotosPagination(@Param('id') id: string) {
     const paginationDto: PhotoDto = {

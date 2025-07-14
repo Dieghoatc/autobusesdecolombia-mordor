@@ -62,3 +62,68 @@ export class PhotoDto {
   @IsOptional()
   isInternational?: string;
 }
+
+export class PhotoDto2 {
+  @IsNumber()
+  @Min(1, { message: 'Page should be greater than 0' })
+  @IsOptional()
+  page: number = 1;
+
+  @IsNumber()
+  @Min(1, { message: 'Limit should be greater than 0' })
+  @Max(100, { message: 'Maximum limit is 100' })
+  @IsOptional()
+  limit: number = 10;
+
+  @IsString()
+  photo_id: string;
+
+  @IsString()
+  category: string;
+
+  @IsString()
+  vehicle: string;
+
+  @IsString()
+  image_url: string;
+
+  @IsString()
+  mark: string;
+
+  @IsString()
+  company: string;
+
+  @IsString()
+  serial_company: string;
+
+  @IsString()
+  chassis: string;
+
+  @IsString()
+  bodywork: string;  
+
+  @IsString()
+  plate: string;
+
+  @IsString()
+  service: string;
+
+  @IsString()
+  photographer: string;  
+
+  @IsString()
+  location: string;
+
+  @IsString()
+  country: string;
+
+  @IsString()
+  created_at: string;  
+
+  @IsString()
+  last_modification: string;  
+
+  @IsString()
+  active: boolean;
+}
+

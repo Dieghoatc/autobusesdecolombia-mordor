@@ -1,0 +1,175 @@
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE vehicles (
+    vehicle_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE countries (
+    country_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    iso_code CHAR(2) UNIQUE,
+    active BOOLEAN DEFAULT true
+);
+
+CREATE TABLE marks (
+    mark_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE companies (
+    company_id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE photographers (
+    photographer_id SERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    email VARCHAR(255) UNIQUE,
+    phone VARCHAR(20),
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE photos (
+    photo_id SERIAL PRIMARY KEY,
+    category_id INTEGER NOT NULL REFERENCES categories(category_id),
+    vehicle_id INTEGER NOT NULL REFERENCES vehicles(vehicle_id),
+    image_url VARCHAR(500) NOT NULL,
+    mark_id INTEGER REFERENCES marks(mark_id),
+    company_id INTEGER REFERENCES companies(company_id),
+    serial_company VARCHAR(100),
+    chasis VARCHAR(100),
+    bodywork VARCHAR(100),
+    plate VARCHAR(20),
+    service VARCHAR(100),
+    photographer_id INTEGER REFERENCES photographers(photographer_id),
+    location VARCHAR(300),
+    country_id INTEGER REFERENCES countries(country_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN DEFAULT true       
+);
+
+-- Índices para mejorar el rendimiento (creados por separado)
+CREATE INDEX idx_photos_category ON photos(category_id);
+CREATE INDEX idx_photos_vehicle_type ON photos(vehicle_id);
+CREATE INDEX idx_photos_photographer ON photos(photographer_id);
+CREATE INDEX idx_photos_date ON photos(created_at);
+CREATE INDEX idx_photos_plate ON photos(plate);
+CREATE INDEX idx_photos_country ON photos(country_id);
+
+
+
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(200),
+    lastname VARCHAR(200),
+    avatar_url VARCHAR(500),
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_access TIMESTAMP
+);
+
+CREATE TABLE likes (
+    like_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    photo_id INTEGER NOT NULL REFERENCES photos(photo_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    UNIQUE(user_id, photo_id)
+);
+
+CREATE INDEX idx_user_like ON likes(user_id);
+CREATE INDEX idx_photo_like ON likes(photo_id);
+
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    photo_id INTEGER NOT NULL REFERENCES photos(photo_id),
+    comment_user TEXT NOT NULL,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modification TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_user_comments ON comments(user_id);
+CREATE INDEX idx_photo_comments ON comments(photo_id);
+CREATE INDEX idx_date_comments ON comments(created_at);
+
+INSERT INTO categories (name, description) VALUES
+('Interdepartamental', 'Transporte entre departamentos'),
+('Intermunicipal', 'Transporte entre municipios'),
+('Internacional', 'Transporte internacional'),
+('Nuestros Recuerdos', 'Fotografías históricas y memorables'),
+('Turismos', 'Vehículos de turismo'),
+('Especiales', 'Vehículos especiales'),
+('Escolar', 'Transporte escolar'),
+('Chivas', 'Vehículos tipo chiva'),
+('Urbanos', 'Transporte urbano'),
+('Taxi', 'Servicio de taxi');
+
+INSERT INTO vehicles (name, description) VALUES
+('Bus tradicional', 'Bus convencional de un piso'),
+('Bus doble piso', 'Bus de dos pisos'),
+('Bus doble eje', 'Bus con doble eje trasero'),
+('Bus cuádruple eje', 'Bus con cuatro ejes'),
+('Microbus', 'Vehículo pequeño de transporte'),
+('Van', 'Vehículo tipo van'),
+('Buseton', 'Bus mediano'),
+('Trompon', 'Vehículo tipo trompon'),
+('Camioneta', 'Vehículo tipo camioneta'),
+('Automovil', 'Vehículo automóvil'),
+('Furgon', 'Vehículo tipo furgón'),
+('Bala', 'Vehículo tipo bala'),
+('Eléctrico', 'Vehículo eléctrico'),
+('Hibrido', 'Vehículo híbrido'),
+('Articulado', 'Bus articulado'),
+('Biarticulado', 'Bus biarticulado'),
+('Padron', 'Bus padrón'),
+('Hidrogeno', 'Vehículo de hidrógeno'),
+('Gas natural', 'Vehículo de gas natural');
+
+INSERT INTO countries (name, iso_code) VALUES
+('Colombia', 'CO'),
+('Venezuela', 'VE'),
+('Ecuador', 'EC'),
+('Perú', 'PE'),
+('Brasil', 'BR'),
+('Panamá', 'PA'),
+('Australia', 'AU');
+
+CREATE OR REPLACE FUNCTION update_date_modification()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.date_modification = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_photos_date_modification
+    BEFORE UPDATE ON photos
+    FOR EACH ROW
+    EXECUTE FUNCTION update_date_modification();
+    
+CREATE TRIGGER trigger_comments_date_modification
+    BEFORE UPDATE ON comments
+    FOR EACH ROW
+    EXECUTE FUNCTION update_date_modification();
+    

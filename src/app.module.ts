@@ -8,10 +8,10 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Posts } from './posts/post.entity'; // Importamos la clase Post
+import { Photo2 } from './photos/entities/photos.entitie';
 
 @Module({
   imports: [
-    PhotosModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -23,13 +23,14 @@ import { Posts } from './posts/post.entity'; // Importamos la clase Post
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Posts],
-      synchronize: true,
+      entities: [Posts, Photo2],
+      //synchronize: true,
       migrations: ['dist/migrations/**/*.js'],
       ssl: {
         rejectUnauthorized: false, // Necesario para conexiones SSL en Railway
       },
     }),
+    PhotosModule,
     PostsModule,
     ContactModule,
     AuthModule,
@@ -37,7 +38,6 @@ import { Posts } from './posts/post.entity'; // Importamos la clase Post
   ],
   providers: [],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(ResponseTimeMiddleware).forRoutes('*'); // Aplica el middleware a todas las rutas

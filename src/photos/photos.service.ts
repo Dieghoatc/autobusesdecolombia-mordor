@@ -2,19 +2,20 @@ import { UploadResultCloudinary } from './interfaces/photos.interface';
 import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
 import { createClient } from '@libsql/client';
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Photo } from './entities/photos.entitie';
 import { PhotoResponse } from './interfaces/photos.interface';
 import { PhotoDto } from './dto/photo.dto';
+import { PhotoPostgresDAO } from './dao/photo.postgres.dao';
 
 @Injectable()
 export class PhotosService {
   constructor(
     @InjectRepository(Photo)
     private readonly userRepository: Repository<Photo>,
+    private readonly photoDao: PhotoPostgresDAO,
   ) {}
 
   private CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
@@ -27,7 +28,7 @@ export class PhotosService {
     url: process.env.TURSO_DATABASE_URL,
     authToken: process.env.TURSO_AUTH_TOKEN,
   });
-
+  
   async getAllPhotos() {
     if (this.environment === 'DEV') {
       try {
@@ -41,19 +42,18 @@ export class PhotosService {
       const result = await this.turso.execute(
         'SELECT * FROM autobuses_photos_production',
       );
-      console.log(result.rows);
       return result.rows;
     } catch (error) {
-      console.error('Error connect to the database:');
       console.error(error);
     }
   }
 
-  async getAllPhotosPagination(paginationDto: PhotoDto): Promise<PhotoResponse> {
-
+  async getAllPhotosPagination(
+    paginationDto: PhotoDto,
+  ): Promise<PhotoResponse> {
     const { page = 1, limit = 20 } = paginationDto;
     const offset = (page - 1) * limit;
-    
+
     // 1. Consulta para obtener los datos de la página actual
     const photosQuery = this.turso.execute(
       `SELECT * FROM autobuses_photos_production ORDER BY photo_id DESC LIMIT ${limit} OFFSET ${offset}`,
@@ -111,11 +111,43 @@ export class PhotosService {
     };
   }
 
-  async getPhotosForCategory(category: number, paginationDto: PhotoDto) {
-
+  async getAllPhotos2(paginationDto: PhotoDto) {
     const { page = 1, limit = 20 } = paginationDto;
     const offset = (page - 1) * limit;
-    
+
+    const photosQuery = this.photoDao.findAllPaginated(limit, offset);
+    const totalCountQuery = this.photoDao.findCount();
+
+    const [photosResult, totalCountResult] = await Promise.all([
+      photosQuery,
+      totalCountQuery,
+    ]); 
+
+    const startItem = offset + 1;
+    const endItem = Math.min(offset + limit, totalCountResult);
+    const totalPages = Math.ceil(totalCountResult / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+
+    return {
+      data: photosResult,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalItems: totalCountResult,
+        itemsPerPage: limit,
+        hasNext: hasNext,
+        hasPrev: hasPrev,
+        startItem: startItem,
+        endItem: endItem,
+      },
+    };
+  }
+
+  async getPhotosForCategory(category: number, paginationDto: PhotoDto) {
+    const { page = 1, limit = 20 } = paginationDto;
+    const offset = (page - 1) * limit;
+
     // 1. Consulta para obtener los datos de la página actual
     const photosQuery = this.turso.execute(
       `SELECT * FROM autobuses_photos_production WHERE category_id = ${category} ORDER BY photo_id DESC LIMIT ${limit} OFFSET ${offset}`,
