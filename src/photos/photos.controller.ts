@@ -7,55 +7,44 @@ import {
   UploadedFile,
   Param,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { PhotoDto } from './dto/photo.dto';
 import { PhotosService } from './photos.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { categoryValidator } from './utils/categoryValidator';
 import { typeCarValidator } from './utils/typeCarValidator';
+import { QueryPaginationDto } from './dto/query-pagination.dto';
 
 @Controller('photos')
 export class PhotosController {
   constructor(private readonly photosService: PhotosService) {}
 
   @Get()
-  getAllPhotos() {
-    return this.photosService.getAllPhotos();
+  getPhotos() {
+    return this.photosService.getPhotos();
   }
 
-  @Get('getAll/:id')
-  getAllPhotos2(@Param('id') id: string) {
-    const paginationDto: PhotoDto = {
-      page: Number(id),
-      limit: 20,
-    };
-    return this.photosService.getAllPhotos2(paginationDto);
-  } 
-
-  @Get('page/:id')
-  getAllPhotosPagination(@Param('id') id: string) {
-    const paginationDto: PhotoDto = {
-      page: Number(id),
-      limit: 20,
-    };
-    return this.photosService.getAllPhotosPagination(paginationDto);
-  }                                                                                                                                                                                                                                                                                                                                                     
+  @Get('page')
+  getPhotosPagination(@Query() query: QueryPaginationDto) {
+    return this.photosService.getPhotosPagination(query);
+  }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photosService.findOne(+id);
+  getPhotoById(@Param('id') id: string) {
+    return this.photosService.getPhotoById(+id);
   }
 
-  @Get('category/:category/page/:page')
-  getPhotosForCategory(@Param('category') category: string, @Param('page') page: string) {
-    return this.photosService.getPhotosForCategory(+category, { page: Number(page), limit: 20 });
+  @Get('category/:category')
+  getPhotosForCategory(@Param('category') category: string, @Query() query: QueryPaginationDto) {
+    return this.photosService.getPhotosForCategory(+category, query);
   }
 
-  @Get('type/:type')
-  getPhotosForType(@Param('type') type: string) {
-    return this.photosService.getPhotosForType(+type);
+  @Get('vehicle/:vehicle')
+  getPhotosForVehicle(@Param('vehicle') vehicle: string, @Query() query: QueryPaginationDto) {
+    return this.photosService.getPhotosForVehicle(+vehicle, query);
   }
-
+  
   // upload
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))

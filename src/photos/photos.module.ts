@@ -2,17 +2,20 @@ import { Module } from '@nestjs/common';
 import { PhotosController } from './photos.controller';
 import { PhotosService } from './photos.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Photo, Photo2 } from './entities/photos.entitie';
+import { Photo, Photo2 } from './entities/photos.entity';
 import { PhotoPostgresDAO } from './dao/photo.postgres.dao';
-import { Category } from './entities/categories.entitie';
-import { Vehicle } from './entities/vehicles.entitie';
-import { Mark } from './entities/marks.entitie';
-import { Company } from './entities/companies.entitie';
-import { Photographer } from './entities/photographers.entitie';
-import { Country } from './entities/countries.entitie';
+import { Category } from './entities/categories.entity';
+import { Vehicle } from './entities/vehicles.entity';
+import { Brand } from './entities/brands.entity';
+import { Company } from './entities/companies.entity';
+import { Photographer } from './entities/photographers.entity';
+import { Country } from './entities/countries.entity';
+import { Bodywork } from './entities/bodyworks.entity';
+import { Chassis } from './entities/chassis.entity';
+import { Serial } from './entities/serials.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Photo, Photo2, Category, Vehicle, Mark, Company, Photographer, Country])],
+  imports: [TypeOrmModule.forFeature([Photo, Photo2, Category, Vehicle, Brand, Company, Photographer, Country, Bodywork, Chassis, Serial])],
   controllers: [PhotosController],
   providers: [PhotosService, PhotoPostgresDAO],
   exports: [TypeOrmModule]

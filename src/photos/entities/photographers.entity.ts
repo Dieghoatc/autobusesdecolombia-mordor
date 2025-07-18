@@ -1,24 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, OneToMany, Column, JoinColumn } from "typeorm";
-import { Photo2 } from "./photos.entitie";
+import { Entity, PrimaryGeneratedColumn, OneToMany, Column, JoinColumn, CreateDateColumn } from "typeorm";
+import { Photo2 } from "./photos.entity";
 
 @Entity('photographers')
 export class Photographer {
     @PrimaryGeneratedColumn()
     photographer_id: number;
 
-    @Column()
+    @Column({ unique: true })
     name: string;
 
-    @Column()
+    @Column({nullable: true})
     email: string;
 
-    @Column()
+    @Column({nullable: true})
     phone: string;
     
-    @Column()
+    @Column({ default: true })
     active: boolean;
 
-    @Column()
+    @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;
     
     @OneToMany(() => Photo2, (photo) => photo.photographer)

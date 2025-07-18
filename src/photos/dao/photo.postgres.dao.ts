@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PhotoDAO } from './photo.dao';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Photo2 } from '../entities/photos.entitie';
+import { Photo2 } from '../entities/photos.entity';
 
 @Injectable()
 export class PhotoPostgresDAO implements PhotoDAO {
@@ -11,45 +11,94 @@ export class PhotoPostgresDAO implements PhotoDAO {
     private readonly photoRepository: Repository<Photo2>,
   ) {}
 
-  //left join make relationships between tables and use the names relationships not the names columns
-
   findAllPaginated(limit: number, offset: number): Promise<Photo2[]> {
-    return this.photoRepository
-      .createQueryBuilder('photo')
-      .leftJoin('photo.category', 'category')
-      .leftJoin('photo.vehicle', 'vehicle')
-      .leftJoin('photo.mark', 'mark')
-      .leftJoin('photo.company', 'company')
-      .leftJoin('photo.photographer', 'photographer')
-      .leftJoin('photo.country', 'country')
-      .select([
-        'photo.photo_id',
-        'category.name AS category',
-        'vehicle.name AS vehicle',
-        'photo.image_url',
-        'mark.name AS mark',
-        'company.name AS company',
-        'photo.serial_company',
-        'photo.chassis',
-        'photo.bodywork',
-        'photo.plate',
-        'photo.service',
-        'photographer.name AS photographer',
-        'country.name AS country',
-        'photo.location',
-        'photo.created_at',
-        'photo.last_modification',
-        'photo.active',
-      ])
-
-      .orderBy('photo.photo_id', 'DESC')
-      .skip(offset)
-      .take(limit)
-      .getRawMany();
+    return this.photoRepository.find({
+      relations: {
+        category: true,
+        vehicle: true,
+        brand: true,
+        company: true,
+        serial: true,
+        chassis: true,
+        bodywork: true,
+        photographer: true,
+        country: true,
+      },
+      take: limit,
+      skip: offset,
+      order: {
+        photo_id: 'DESC',
+      },
+    });
   }
 
-  findById(id: number): Promise<Photo2 | undefined> {
-    return this.photoRepository.findOne({ where: { photo_id: id } });
+  findById(id: number): Promise<Photo2> {
+    return this.photoRepository.findOne({
+      where: { photo_id: id },
+      relations: {
+        category: true,
+        vehicle: true,
+        brand: true,
+        company: true,
+        serial: true,
+        chassis: true,
+        bodywork: true,
+        photographer: true,
+        country: true,
+      },
+    });
+  }
+
+  findByCategoryPaginated(
+    category: number,
+    limit: number,
+    offset: number,
+  ): Promise<Photo2[]> {
+    return this.photoRepository.find({
+      where: { category: { category_id: category } },
+      relations: {
+        category: true,
+        vehicle: true,
+        brand: true,
+        company: true,
+        serial: true,
+        chassis: true,
+        bodywork: true,
+        photographer: true,
+        country: true,
+      },
+      take: limit,
+      skip: offset,
+      order: {
+        photo_id: 'DESC',
+      },
+    });
+  }
+
+  findByVehiclePaginated(
+    vehicle: number,
+    limit: number,
+    offset: number,
+  ): Promise<Photo2[]> {
+    return this.photoRepository.find({
+      where: { vehicle: { vehicle_id: vehicle } },
+      relations: {
+        category: true,
+        vehicle: true,
+        brand: true,
+        company: true,
+        serial: true,
+        chassis: true,
+        bodywork: true,
+        photographer: true,
+        country: true,
+      },
+      take: limit,
+      skip: offset,
+      order: {
+        photo_id: 'DESC',
+      },
+    });
   }
 
   findCount(): Promise<number> {

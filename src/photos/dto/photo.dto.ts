@@ -1,6 +1,7 @@
 // DTO is a data transfer object, it is currently used to validate the data that is sent to the controller
 
-import {IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Min, Max } from 'class-validator';
+
 
 export class PhotoDto {
   @IsNumber()
@@ -88,7 +89,7 @@ export class PhotoDto2 {
   image_url: string;
 
   @IsString()
-  mark: string;
+  Brand: string;
 
   @IsString()
   company: string;
@@ -97,10 +98,13 @@ export class PhotoDto2 {
   serial_company: string;
 
   @IsString()
+  serial_id: string;
+
+  @IsString()
   chassis: string;
 
   @IsString()
-  bodywork: string;  
+  bodywork: string;
 
   @IsString()
   plate: string;
@@ -109,7 +113,7 @@ export class PhotoDto2 {
   service: string;
 
   @IsString()
-  photographer: string;  
+  photographer: string;
 
   @IsString()
   location: string;
@@ -118,12 +122,5 @@ export class PhotoDto2 {
   country: string;
 
   @IsString()
-  created_at: string;  
-
-  @IsString()
-  last_modification: string;  
-
-  @IsString()
-  active: boolean;
+  created_at: string;
 }
-

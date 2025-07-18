@@ -1,22 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, OneToMany, Column, JoinColumn } from "typeorm";
-import { Photo2 } from "./photos.entitie";
+import { Photo2 } from "./photos.entity";
 
 @Entity('vehicles')
 export class Vehicle {
     @PrimaryGeneratedColumn()
     vehicle_id: number;
 
-    @Column()
+    @Column({type: 'varchar', unique: true})
     name: string;
 
-    @Column()
+    @Column({type: 'varchar'})
     description: string;
-    
-    @Column()
-    active: boolean;
-
-    @Column()
-    created_at: Date;
     
     @OneToMany(() => Photo2, (photo) => photo.vehicle)
     @JoinColumn({ name: 'vehicle_id' })

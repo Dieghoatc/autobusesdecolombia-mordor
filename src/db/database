@@ -49,10 +49,11 @@ CREATE TABLE photos (
     category_id INTEGER NOT NULL REFERENCES categories(category_id),
     vehicle_id INTEGER NOT NULL REFERENCES vehicles(vehicle_id),
     image_url VARCHAR(500) NOT NULL,
-    mark_id INTEGER REFERENCES marks(mark_id),
+    brand_id INTEGER REFERENCES brands(brand_id),
     company_id INTEGER REFERENCES companies(company_id),
     serial_company VARCHAR(100),
-    chasis VARCHAR(100),
+    serial_id INTEGER REFERENCES serials(serial_id),
+    chassis VARCHAR(100),
     bodywork VARCHAR(100),
     plate VARCHAR(20),
     service VARCHAR(100),
@@ -67,10 +68,15 @@ CREATE TABLE photos (
 -- Índices para mejorar el rendimiento (creados por separado)
 CREATE INDEX idx_photos_category ON photos(category_id);
 CREATE INDEX idx_photos_vehicle_type ON photos(vehicle_id);
+CREATE INDEX idx_photos_brand ON photos(brand_id);    
+CREATE INDEX idx_photos_company ON photos(company_id); 
+CREATE INDEX idx_photos_chassis ON photos(chassis_id);   
+CREATE INDEX idx_photos_bodywork ON photos(bodywork_id);   
 CREATE INDEX idx_photos_photographer ON photos(photographer_id);
 CREATE INDEX idx_photos_date ON photos(created_at);
 CREATE INDEX idx_photos_plate ON photos(plate);
 CREATE INDEX idx_photos_country ON photos(country_id);
+CREATE INDEX idx_photos_serial ON photos(serial_id);
 
 
 
