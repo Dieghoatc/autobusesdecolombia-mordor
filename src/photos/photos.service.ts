@@ -21,7 +21,7 @@ export class PhotosService {
     process.env.NODE_ENV === 'production'
       ? 'https://api.autobusesdecolombia.com/'
       : process.env.NODE_ENV === 'staging'
-        ? 'https://abcdev1-production.up.railway.app'
+        ? 'https://abcdev1-production.up.railway.app/'
         : 'http://localhost:3000/';
 
   private CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
@@ -69,8 +69,7 @@ export class PhotosService {
   }
 
   async getPhotosPagination(paginationDto: QueryPaginationDto) {
-    const page = paginationDto.page ?? 1;
-    const limit = paginationDto.limit ?? 20;
+    const { page = 1, limit = paginationDto.limit ?? 20 } = paginationDto;
     const offset = (page - 1) * limit;
     
     const photosQuery = this.photoDao.findAllPaginated(limit, offset);
