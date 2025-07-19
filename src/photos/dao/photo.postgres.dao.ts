@@ -12,6 +12,7 @@ export class PhotoPostgresDAO implements PhotoDAO {
   ) {}
 
   findAllPaginated(limit: number, offset: number): Promise<Photo2[]> {
+    console.log(limit, offset);
     return this.photoRepository.find({
       relations: {
         category: true,

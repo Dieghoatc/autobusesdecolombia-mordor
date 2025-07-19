@@ -4,7 +4,7 @@ import { PhotosService } from './photos.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Photo, Photo2 } from './entities/photos.entity';
 import { PhotoPostgresDAO } from './dao/photo.postgres.dao';
-import { Category } from './entities/categories.entity';
+import { TransportCategory } from '../transport-categories/entities/transport-category.entity'
 import { Vehicle } from './entities/vehicles.entity';
 import { Brand } from './entities/brands.entity';
 import { Company } from './entities/companies.entity';
@@ -15,7 +15,7 @@ import { Chassis } from './entities/chassis.entity';
 import { Serial } from './entities/serials.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Photo, Photo2, Category, Vehicle, Brand, Company, Photographer, Country, Bodywork, Chassis, Serial])],
+  imports: [TypeOrmModule.forFeature([Photo, Photo2, TransportCategory, Vehicle, Brand, Company, Photographer, Country, Bodywork, Chassis, Serial])],
   controllers: [PhotosController],
   providers: [PhotosService, PhotoPostgresDAO],
   exports: [TypeOrmModule]

@@ -3,11 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import * as streamifier from 'streamifier';
 import { createClient } from '@libsql/client';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Photo } from './entities/photos.entity';
-import { PhotoResponse } from './interfaces/photos.interface';
-import { PhotoDto } from './dto/photo.dto';
 import { QueryPaginationDto } from './dto/query-pagination.dto';
 import { PhotoPostgresDAO } from './dao/photo.postgres.dao';
 
@@ -195,68 +190,68 @@ export class PhotosService {
     }
   }
 
-  async getAllPhotosPagination(
-    paginationDto: PhotoDto,
-  ): Promise<PhotoResponse> {
-    const { page = 1, limit = 20 } = paginationDto;
-    const offset = (page - 1) * limit;
+  // async getAllPhotosPagination(
+  //   paginationDto: PhotoDto,
+  // ): Promise<PhotoResponse> {
+  //   const { page = 1, limit = 20 } = paginationDto;
+  //   const offset = (page - 1) * limit;
 
-    // 1. Consulta para obtener los datos de la página actual
-    const photosQuery = this.turso.execute(
-      `SELECT * FROM autobuses_photos_production ORDER BY photo_id DESC LIMIT ${limit} OFFSET ${offset}`,
-    );
+  //   // 1. Consulta para obtener los datos de la página actual
+  //   const photosQuery = this.turso.execute(
+  //     `SELECT * FROM autobuses_photos_production ORDER BY photo_id DESC LIMIT ${limit} OFFSET ${offset}`,
+  //   );
 
-    // 2. Consulta para obtener el número total de fotos
-    const totalCountQuery = this.turso.execute(
-      `SELECT COUNT(*) as count FROM autobuses_photos_production`,
-    );
+  //   // 2. Consulta para obtener el número total de fotos
+  //   const totalCountQuery = this.turso.execute(
+  //     `SELECT COUNT(*) as count FROM autobuses_photos_production`,
+  //   );
 
-    // Ejecutar ambas consultas en paralelo para mayor eficiencia
-    const [photosResult, totalCountResult] = await Promise.all([
-      photosQuery,
-      totalCountQuery,
-    ]);
+  //   // Ejecutar ambas consultas en paralelo para mayor eficiencia
+  //   const [photosResult, totalCountResult] = await Promise.all([
+  //     photosQuery,
+  //     totalCountQuery,
+  //   ]);
 
-    const totalItems = Number(totalCountResult.rows[0].count);
+  //   const totalItems = Number(totalCountResult.rows[0].count);
 
-    const photos: Photo[] = photosResult.rows.map((row) => ({
-      photo_id: Number(row.photo_id),
-      category_id: Number(row.category_id),
-      type_id: Number(row.type_id),
-      id_international: Number(row.id_international),
-      url: String(row.url),
-      company: String(row.company),
-      serial: String(row.serial),
-      bodywork: String(row.bodywork),
-      chassis: String(row.chassis),
-      plate: String(row.plate),
-      service: String(row.service),
-      author: String(row.author),
-      country: String(row.country),
-      location: String(row.location),
-      create_at: String(row.create_at),
-    }));
+  //   const photos: Photo[] = photosResult.rows.map((row) => ({
+  //     photo_id: Number(row.photo_id),
+  //     transport_category_id: Number(row.transport_category_id),
+  //     vehicle_id: Number(row.vehicle_id),
+  //     id_international: Number(row.id_international),
+  //     url: String(row.url),
+  //     company: String(row.company),
+  //     serial: String(row.serial),
+  //     bodywork: String(row.bodywork),
+  //     chassis: String(row.chassis),
+  //     plate: String(row.plate),
+  //     service: String(row.service),
+  //     author: String(row.author),
+  //     country: String(row.country),
+  //     location: String(row.location),
+  //     create_at: String(row.create_at),
+  //   }));
 
-    const startItem = offset + 1;
-    const endItem = Math.min(offset + limit, totalItems);
-    const totalPages = Math.ceil(totalItems / limit);
-    const hasNext = page < totalPages;
-    const hasPrev = page > 1;
+  //   const startItem = offset + 1;
+  //   const endItem = Math.min(offset + limit, totalItems);
+  //   const totalPages = Math.ceil(totalItems / limit);
+  //   const hasNext = page < totalPages;
+  //   const hasPrev = page > 1;
 
-    return {
-      data: photos,
-      pagination: {
-        currentPage: page,
-        totalPages: totalPages,
-        totalItems: totalItems,
-        itemsPerPage: limit,
-        hasNext: hasNext,
-        hasPrev: hasPrev,
-        startItem: startItem,
-        endItem: endItem,
-      },
-    };
-  }
+  //   return {
+  //     data: photos,
+  //     pagination: {
+  //       currentPage: page,
+  //       totalPages: totalPages,
+  //       totalItems: totalItems,
+  //       itemsPerPage: limit,
+  //       hasNext: hasNext,
+  //       hasPrev: hasPrev,
+  //       startItem: startItem,
+  //       endItem: endItem,
+  //     },
+  //   };
+  // }
 
 
 

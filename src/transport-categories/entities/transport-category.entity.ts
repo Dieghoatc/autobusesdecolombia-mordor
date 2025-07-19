@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn, CreateDateColumn } from 'typeorm';
-import { Photo2 } from './photos.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
+import { Photo2 } from '../../photos/entities/photos.entity';
 
 @Entity('categories')
-export class Category {
+export class TransportCategory {
   @PrimaryGeneratedColumn()
   category_id: number;
 
@@ -19,6 +19,5 @@ export class Category {
   created_at: Date;
 
   @OneToMany(() => Photo2, (photo) => photo.category)
-  @JoinColumn({ name: 'category_id' })
   photos: Photo2[];
 }

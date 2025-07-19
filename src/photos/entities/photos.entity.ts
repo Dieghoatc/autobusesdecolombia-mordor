@@ -9,7 +9,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-import { Category } from './categories.entity';
+import { TransportCategory } from '../../transport-categories/entities/transport-category.entity';
 import { Vehicle } from './vehicles.entity';
 import { Brand } from './brands.entity';
 import { Company } from './companies.entity';
@@ -25,10 +25,10 @@ export class Photo {
   photo_id: number;
 
   @Column()
-  category_id: number;
+  transport_category_id: number;
 
   @Column()
-  type_id: number;
+  vehicle_id: number;
 
   @Column()
   url: string;
@@ -117,9 +117,9 @@ export class Photo2 {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @ManyToOne(() => Category, (category) => category.category_id)
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
+  @ManyToOne(() => TransportCategory)
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'category_id' })
+  category: TransportCategory;
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.vehicle_id)
   @JoinColumn({ name: 'vehicle_id' })

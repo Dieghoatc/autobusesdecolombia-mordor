@@ -1,7 +1,7 @@
 // src/data-source.ts
 import { DataSource } from 'typeorm';
 import { Photo2 } from './photos/entities/photos.entity';
-import { Category } from './photos/entities/categories.entity';
+import { TransportCategory } from './transport-categories/entities/transport-category.entity';
 import { Vehicle } from './photos/entities/vehicles.entity';
 import { Brand } from './photos/entities/brands.entity';
 import { Company } from './photos/entities/companies.entity';
@@ -30,7 +30,7 @@ export const AppDataSource = new DataSource({
   entities: [
     Posts,
     Photo2,
-    Category,
+    TransportCategory,
     Vehicle,
     Brand,
     Company,
