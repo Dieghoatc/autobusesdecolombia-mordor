@@ -122,8 +122,8 @@ export class PhotosService {
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
     const currentPage = page;
-    const nextPage = `photos/category/${category}/${page === totalPages ? totalPages : page + 1}`;
-    const prevPage = `photos/category/${category}/${page === 1 ? 1 : page - 1}`;
+    const nextPage = hasNext ? `${category}?page=${currentPage + 1}&limit=${limit}` : "";
+    const prevPage = hasPrev ? `${category}?page=${currentPage - 1}&limit=${limit}` : "";
     
     return {
       info: {
