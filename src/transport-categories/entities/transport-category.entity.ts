@@ -12,6 +12,9 @@ export class TransportCategory {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: true })
+  slug: string;
+
   @Column({ default: true })
   active: boolean;
 

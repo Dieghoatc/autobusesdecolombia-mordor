@@ -121,14 +121,16 @@ export class PhotosService {
     const totalPages = Math.ceil(totalCountResult / limit);
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
+    const currentPage = page;
     const nextPage = `${this.urlApi}photos/category/${category}/${page === totalPages ? totalPages : page + 1}`;
     const prevPage = `${this.urlApi}photos/category/${category}/${page === 1 ? 1 : page - 1}`;
     
     return {
       info: {
         count: totalCountResult,
-        pages: totalPages,
-        limit: limit,
+        totalPages,
+        limit,
+        currentPage,
         next: nextPage,
         prev: prevPage,
         hasNext: hasNext,

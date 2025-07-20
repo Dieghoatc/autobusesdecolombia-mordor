@@ -39,7 +39,7 @@ export const AppDataSource = new DataSource({
     Bodywork,
     Chassis,
     Serial,
-  ],
+  ],  
   migrations: ['src/migrations/*.ts'],
 });
 
