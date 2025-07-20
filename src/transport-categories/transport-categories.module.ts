@@ -11,3 +11,4 @@ import { TransportCategory } from './entities/transport-category.entity';
   exports: [TypeOrmModule],
 })
 export class TransportCategoriesModule {}
+

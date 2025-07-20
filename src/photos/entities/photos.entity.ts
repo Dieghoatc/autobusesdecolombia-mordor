@@ -117,8 +117,8 @@ export class Photo2 {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @ManyToOne(() => TransportCategory)
-  @JoinColumn({ name: 'category_id', referencedColumnName: 'category_id' })
+  @ManyToOne(() => TransportCategory, (category) => category.category_id)
+  @JoinColumn({ name: 'category_id' })
   category: TransportCategory;
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.vehicle_id)

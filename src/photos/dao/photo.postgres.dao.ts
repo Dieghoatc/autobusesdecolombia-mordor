@@ -12,7 +12,6 @@ export class PhotoPostgresDAO implements PhotoDAO {
   ) {}
 
   findAllPaginated(limit: number, offset: number): Promise<Photo2[]> {
-    console.log(limit, offset);
     return this.photoRepository.find({
       relations: {
         category: true,
@@ -51,12 +50,12 @@ export class PhotoPostgresDAO implements PhotoDAO {
   }
 
   findByCategoryPaginated(
-    category: number,
+    category: string,
     limit: number,
     offset: number,
-  ): Promise<Photo2[]> {
+  ): Promise<Photo2[]> {    
     return this.photoRepository.find({
-      where: { category: { category_id: category } },
+      where: { category: { slug: category }},
       relations: {
         category: true,
         vehicle: true,
@@ -73,6 +72,12 @@ export class PhotoPostgresDAO implements PhotoDAO {
       order: {
         photo_id: 'DESC',
       },
+    });
+  }
+
+  findByCategoryCount(category: string):Promise<number> {
+    return this.photoRepository.count({
+      where: { category: { slug: category }},
     });
   }
 

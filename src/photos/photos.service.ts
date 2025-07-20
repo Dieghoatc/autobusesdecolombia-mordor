@@ -104,17 +104,17 @@ export class PhotosService {
     return photoQuery;
   }
 
-  async getPhotosForCategory(category: number, paginationDto: QueryPaginationDto) {
+  async getPhotosForCategory(category: string, paginationDto: QueryPaginationDto) {
     const { page = 1, limit = paginationDto.limit ?? 20 } = paginationDto;
     const offset = (page - 1) * limit;
-    const photoQuery = this.photoDao.findByCategoryPaginated(category, limit, offset);
-    
-    const totalCountQuery = this.photoDao.findCount();
+    const photoQuery = this.photoDao.findByCategoryPaginated(category, limit, offset); 
+    const totalCountQuery = this.photoDao.findByCategoryCount(category); 
     
     const [photosResult, totalCountResult] = await Promise.all([
       photoQuery,
       totalCountQuery,
     ]);
+
     
     const startItem = offset + 1;
     const endItem = Math.min(offset + limit, totalCountResult);
@@ -122,8 +122,8 @@ export class PhotosService {
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
     const currentPage = page;
-    const nextPage = `${this.urlApi}photos/category/${category}/${page === totalPages ? totalPages : page + 1}`;
-    const prevPage = `${this.urlApi}photos/category/${category}/${page === 1 ? 1 : page - 1}`;
+    const nextPage = `photos/category/${category}/${page === totalPages ? totalPages : page + 1}`;
+    const prevPage = `photos/category/${category}/${page === 1 ? 1 : page - 1}`;
     
     return {
       info: {

@@ -37,7 +37,7 @@ export class PhotosController {
 
   @Get('category/:category')
   getPhotosForCategory(@Param('category') category: string, @Query() query: QueryPaginationDto) {
-    return this.photosService.getPhotosForCategory(+category, query);
+    return this.photosService.getPhotosForCategory(category, query);
   }
 
   @Get('vehicle/:vehicle')
