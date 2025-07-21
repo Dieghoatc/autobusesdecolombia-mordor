@@ -19,11 +19,11 @@ async function bootstrap() {
       }),
     );
 
-    const environment = process.env.NODE_ENV || 'development';
+    const environment = process.env.NODE_ENV || 'staging';
     const origins = process.env.CORS_ORIGIN || 'https://www.autobusesdecolombia.com';
 
     app.enableCors({
-      origin: environment === 'development' ? true : origins.split(','),
+      origin: environment === 'staging' ? true : origins.split(','),
       credentials: true,
       allowedHeaders: [
         'Content-Type',

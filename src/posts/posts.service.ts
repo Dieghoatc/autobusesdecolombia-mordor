@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { TursoService } from 'src/services/turso.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Posts } from './post.entity';
 import { Repository } from 'typeorm';
