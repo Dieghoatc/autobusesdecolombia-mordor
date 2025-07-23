@@ -1,26 +1,24 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
-import { Photo2 } from '../../photos/entities/photos.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, JoinColumn } from 'typeorm';
+import { Vehicles } from '../../vehicle/entities/vehicle.entity';
 
-@Entity('categories')
+@Entity('transport_categories')
 export class TransportCategory {
   @PrimaryGeneratedColumn()
-  category_id: number;
+  transport_category_id: number;
 
-  @Column({ unique: true })
+  @Column({type: 'varchar', nullable: true })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({type: 'varchar', nullable: true })
   description: string;
 
-  @Column({ nullable: true })
+  @Column({type: 'varchar', nullable: true })
   slug: string;
-
-  @Column({ default: true })
-  active: boolean;
-
+  
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @OneToMany(() => Photo2, (photo) => photo.category)
-  photos: Photo2[];
+  @OneToMany(() => Vehicles, (vehicles) => vehicles.transport_category_id)
+  @JoinColumn({ name: 'transport_category_id' })
+  vehicles: Vehicles[];
 }

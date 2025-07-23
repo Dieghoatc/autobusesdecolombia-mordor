@@ -2,27 +2,21 @@ import { Injectable } from '@nestjs/common';
 import { PhotoDAO } from './photo.dao';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Photo2 } from '../entities/photos.entity';
+import { Photo } from '../entities/photos.entity';
 
 @Injectable()
 export class PhotoPostgresDAO implements PhotoDAO {
   constructor(
-    @InjectRepository(Photo2)
-    private readonly photoRepository: Repository<Photo2>,
+    @InjectRepository(Photo)
+    private readonly photoRepository: Repository<Photo>,
   ) {}
 
-  findAllPaginated(limit: number, offset: number): Promise<Photo2[]> {
+  findAllPaginated(limit: number, offset: number): Promise<Photo[]> {
     return this.photoRepository.find({
       relations: {
-        category: true,
-        vehicle: true,
-        brand: true,
-        company: true,
-        serial: true,
-        chassis: true,
-        bodywork: true,
-        photographer: true,
-        country: true,
+        vehicles: true,
+        photographers: true,
+        countries: true,
       },
       take: limit,
       skip: offset,
@@ -32,40 +26,29 @@ export class PhotoPostgresDAO implements PhotoDAO {
     });
   }
 
-  findById(id: number): Promise<Photo2> {
+  findById(id: number): Promise<Photo> {
     return this.photoRepository.findOne({
       where: { photo_id: id },
       relations: {
-        category: true,
-        vehicle: true,
-        brand: true,
-        company: true,
-        serial: true,
-        chassis: true,
-        bodywork: true,
-        photographer: true,
-        country: true,
+        vehicles: true,
+        photographers: true,
+        countries: true,
       },
     });
   }
 
   findByCategoryPaginated(
-    category: string,
+    category: number,
     limit: number,
     offset: number,
-  ): Promise<Photo2[]> {    
+  ): Promise<Photo[]> {    
     return this.photoRepository.find({
-      where: { category: { slug: category }},
+      where: { transport_category_id: category },
       relations: {
-        category: true,
-        vehicle: true,
-        brand: true,
-        company: true,
-        serial: true,
-        chassis: true,
-        bodywork: true,
-        photographer: true,
-        country: true,
+        vehicles: true,
+        photographers: true,
+        countries: true,
+        transportCategory: true,
       },
       take: limit,
       skip: offset,
@@ -75,35 +58,9 @@ export class PhotoPostgresDAO implements PhotoDAO {
     });
   }
 
-  findByCategoryCount(category: string):Promise<number> {
+  findByCategoryCount(category: number):Promise<number> {
     return this.photoRepository.count({
-      where: { category: { slug: category }},
-    });
-  }
-
-  findByVehiclePaginated(
-    vehicle: number,
-    limit: number,
-    offset: number,
-  ): Promise<Photo2[]> {
-    return this.photoRepository.find({
-      where: { vehicle: { vehicle_id: vehicle } },
-      relations: {
-        category: true,
-        vehicle: true,
-        brand: true,
-        company: true,
-        serial: true,
-        chassis: true,
-        bodywork: true,
-        photographer: true,
-        country: true,
-      },
-      take: limit,
-      skip: offset,
-      order: {
-        photo_id: 'DESC',
-      },
+      where: { transport_category_id: category },
     });
   }
 

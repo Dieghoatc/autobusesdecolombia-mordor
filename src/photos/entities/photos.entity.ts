@@ -1,5 +1,3 @@
-// Entity is a class that is used to define the structure of the table in the database
-
 import {
   Entity,
   Column,
@@ -9,147 +7,83 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
+import { Vehicles } from '../../vehicle/entities/vehicle.entity';
+import { Photographers } from '../../photos/entities/photographers.entity';
+import { Countries } from '../../countries/entities/countries.entity';
 import { TransportCategory } from '../../transport-categories/entities/transport-category.entity';
-import { Vehicle } from './vehicles.entity';
-import { Brand } from './brands.entity';
-import { Company } from './companies.entity';
-import { Photographer } from './photographers.entity';
-import { Country } from './countries.entity';
-import { Bodywork } from './bodyworks.entity';
-import { Chassis } from './chassis.entity';
-import { Serial } from './serials.entity';
 
-@Entity()
+@Entity('photos')
 export class Photo {
   @PrimaryGeneratedColumn()
   photo_id: number;
 
-  @Column()
-  transport_category_id: number;
-
-  @Column()
-  vehicle_id: number;
-
-  @Column()
-  url: string;
-
-  @Column()
-  company: string;
-
-  @Column()
-  serial: string;
-
-  @Column()
-  bodywork: string;
-
-  @Column()
-  chassis: string;
-
-  @Column()
-  plate: string;
-
-  @Column()
-  service: string;
-
-  @Column()
-  author: string;
-
-  @Column()
-  id_international: number;
-
-  @Column()
-  country: string;
-
-  @Column()
-  location: string;
-
-  @Column()
-  create_at: string;
-}
-
-@Entity('photos')
-export class Photo2 {
-  @PrimaryGeneratedColumn()
-  photo_id: number;
-
   @Column({ type: 'integer' })
-  category_id: number;
-
-  @Column({ type: 'integer'} )
   vehicle_id: number;
 
   @Column({ type: 'varchar', unique: true })
   image_url: string;
 
   @Column({ type: 'integer' })
-  brand_id: number;
-
-  @Column({ type: 'integer' })
-  company_id: number;
-
-  @Column({ type: 'varchar' })
-  serial_company: string;
-
-  @Column({ type: 'integer', nullable: true })
-  serial_id: number;
-
-  @Column({ type: 'integer' })
-  chassis_id: number;
-
-  @Column({ type: 'integer' })
-  bodywork_id: number;
-
-  @Column({ type: 'varchar' })
-  plate: string;
-
-  @Column({ type: 'varchar' })
-  service: string;
-
-  @Column({ type: 'integer' })
   photographer_id: number;
+
+  @Column({ type: 'integer' })
+  transport_category_id: number;
 
   @Column({ type: 'varchar' })
   location: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  department: string;
+
   @Column({ type: 'integer' })
   country_id: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  description: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  notes: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  tags: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  status: string;
+
+  @Column({ type: 'integer', nullable: true })
+  likes: number;
+
+  @Column({ type: 'integer', nullable: true })
+  views: number;
+
+  @Column({ type: 'integer', nullable: true })
+  favorites: number;
+
+  @Column({ type: 'integer', nullable: true })
+  shares: number;
+
+  @Column({ type: 'integer', nullable: true })
+  comments: number;
+
+  @Column({ type: 'integer', nullable: true })
+  downloads: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @ManyToOne(() => TransportCategory, (category) => category.category_id)
-  @JoinColumn({ name: 'category_id' })
-  category: TransportCategory;
-
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.vehicle_id)
+  @ManyToOne(() => Vehicles, (vehicles) => vehicles.vehicle_id)
   @JoinColumn({ name: 'vehicle_id' })
-  vehicle: Vehicle;
+  vehicles: Vehicles;
 
-  @ManyToOne(() => Brand, (brand) => brand.brand_id)
-  @JoinColumn({ name: 'brand_id' })
-  brand: Brand;
-
-  @ManyToOne(() => Chassis, (chassis) => chassis.chassis_id)
-  @JoinColumn({ name: 'chassis_id' })
-  chassis: Chassis;
-
-  @ManyToOne(() => Bodywork, (bodywork) => bodywork.bodywork_id)
-  @JoinColumn({ name: 'bodywork_id' })
-  bodywork: Bodywork;
-
-  @ManyToOne(() => Company, (company) => company.company_id)
-  @JoinColumn({ name: 'company_id' })
-  company: Company;
-
-  @ManyToOne(() => Photographer, (photographer) => photographer.photographer_id)
+  @ManyToOne(() => Photographers, (photographers) => photographers.photographer_id)
   @JoinColumn({ name: 'photographer_id' })
-  photographer: Photographer;
+  photographers: Photographers;
 
-  @ManyToOne(() => Country, (country) => country.country_id)
+  @ManyToOne(() => Countries, (countries) => countries.country_id)
   @JoinColumn({ name: 'country_id' })
-  country: Country;
+  countries: Countries;
 
-  @ManyToOne(() => Serial, (serial) => serial.serial_id)
-  @JoinColumn({ name: 'serial_id' })
-  serial: Serial;
+  @ManyToOne(() => TransportCategory, (transportCategory) => transportCategory.transport_category_id)
+  @JoinColumn({ name: 'transport_category_id' })
+  transportCategory: TransportCategory;
 }

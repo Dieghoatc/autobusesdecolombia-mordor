@@ -21,7 +21,7 @@ export class TransportCategoriesService {
   }
 
   findOne(id: number) {
-    return this.transportCategoryRepository.findOne({ where: { category_id: id } });
+    return this.transportCategoryRepository.findOne({ where: { transport_category_id: id } });
   }
 
   update(id: number, updateTransportCategoryDto: UpdateTransportCategoryDto) {
