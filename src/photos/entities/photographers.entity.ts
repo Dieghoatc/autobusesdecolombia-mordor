@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, OneToMany, Column, JoinColumn, CreateDateColumn } from "typeorm";
-import { Photo2 } from "./photos.entity";
+import { Photo } from "./photos.entity";
 
 @Entity('photographers')
-export class Photographer {
+export class Photographers {
     @PrimaryGeneratedColumn()
     photographer_id: number;
 
@@ -21,7 +21,7 @@ export class Photographer {
     @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;
     
-    @OneToMany(() => Photo2, (photo) => photo.photographer)
+    @OneToMany(() => Photo, (photo) => photo.photographer_id)
     @JoinColumn({ name: 'photographer_id' })
-    photos: Photo2[];
+    photos: Photo[];
 }

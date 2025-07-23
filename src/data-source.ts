@@ -1,15 +1,18 @@
-// src/data-source.ts
 import { DataSource } from 'typeorm';
-import { Photo2 } from './photos/entities/photos.entity';
+import { Photo } from './photos/entities/photos.entity';
 import { TransportCategory } from './transport-categories/entities/transport-category.entity';
-import { Vehicle } from './photos/entities/vehicles.entity';
-import { Brand } from './photos/entities/brands.entity';
-import { Company } from './photos/entities/companies.entity';
-import { Photographer } from './photos/entities/photographers.entity';
-import { Country } from './photos/entities/countries.entity';
-import { Bodywork } from './photos/entities/bodyworks.entity';
-import { Chassis } from './photos/entities/chassis.entity';
-import { Serial } from './photos/entities/serials.entity';
+import { Vehicles } from './vehicle/entities/vehicle.entity';
+import { Brand } from './brands/entities/brands.entity';
+import { Photographers } from './photos/entities/photographers.entity';
+import { Countries } from './countries/entities/countries.entity';
+import { Bodywork } from './vehicle/entities/bodyworks.entity';
+import { Chassis } from './vehicle/entities/chassis.entity';
+import { Companies } from './companies/entities/companies.entity';
+import { CompanySerials } from './companies/entities/company_serials.entity';
+import { CompanyServices } from './companies/entities/company_services.entity';
+import { VehicleType } from './vehicle/entities/vehicle-type.entity';
+
+import { Models } from './vehicle/entities/vehicle-models.entity';
 
 import { Posts } from './posts/post.entity';
 
@@ -24,21 +27,25 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD, 
   database: process.env.DB_DATABASE,
-  synchronize: true,
-  migrationsRun: false, // ⚠️ ¡muy importante!
+  synchronize: false,
+  migrationsRun: true, // ⚠️ ¡muy importante!
+  dropSchema: true,
   logging: true,
   entities: [
     Posts,
-    Photo2,
+    Photo,
+    Photographers,
     TransportCategory,
-    Vehicle,
-    Brand,
-    Company,
-    Photographer,
-    Country,
+    Vehicles,
+    Models,
     Bodywork,
     Chassis,
-    Serial,
+    Brand,
+    Countries,
+    Companies,
+    CompanySerials,
+    CompanyServices,
+    VehicleType,    
   ],  
   migrations: ['src/migrations/*.ts'],
 });

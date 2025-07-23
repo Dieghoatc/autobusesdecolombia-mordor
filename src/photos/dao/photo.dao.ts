@@ -1,7 +1,7 @@
-import { Photo2 } from '../entities/photos.entity';
+import { Photo } from '../entities/photos.entity';
 
 export interface PhotoDAO {
-  findAllPaginated(limit: number, offset: number): Promise<Photo2[]>;
-  findById(id: number): Promise<Photo2 | []>;
+  findAllPaginated(limit: number, offset: number): Promise<Photo[]>;
+  findById(id: number): Promise<Photo | []>;
   findCount(): Promise<number>;
 }

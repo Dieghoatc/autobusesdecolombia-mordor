@@ -13,12 +13,12 @@ export class TransportCategoryDAO {
     findAll(): Promise<TransportCategory[]> {
         return this.transportCategoryRepository.find({
             order: {
-                category_id: 'ASC',
+                transport_category_id: 'ASC',
             },
         });
     }
 
     findById(id: number): Promise<TransportCategory> {
-        return this.transportCategoryRepository.findOne({ where: { category_id: id } });
+        return this.transportCategoryRepository.findOne({ where: { transport_category_id: id } });
     }
 }
