@@ -4,9 +4,9 @@ import {
   Column,
   CreateDateColumn,
   OneToMany,
-  JoinColumn,
 } from 'typeorm';
-import { Models } from './vehicle-models.entity';
+
+import { Vehicle } from './vehicle.entity';
 
 @Entity({ name: 'vehicle_types' })
 export class VehicleType {
@@ -22,7 +22,6 @@ export class VehicleType {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @OneToMany(() => Models, (model) => model.vehicle_type_id)
-  @JoinColumn({ name: 'vehicle_type_id' })
-  models: Models[];
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.vehicle_type)
+  vehicles: Vehicle[];
 }

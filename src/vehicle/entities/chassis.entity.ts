@@ -4,10 +4,12 @@ import {
   Column,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Brand } from '../../brands/entities/brands.entity';
+import { Vehicle } from './vehicle.entity';
 
-@Entity({ name: 'chassis' })
+@Entity('chassis')
 export class Chassis {
   @PrimaryGeneratedColumn()
   chassis_id: number;
@@ -21,7 +23,10 @@ export class Chassis {
   @Column({ nullable: true, default: null })
   description: string;
 
-  @ManyToOne(() => Brand, (brand) => brand.brand_id)
+  @ManyToOne(() => Brand, (brand) => brand.chassis)
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.chassis)
+  vehicles: Vehicle[];
 }

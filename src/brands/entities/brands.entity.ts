@@ -3,11 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
 
-import { Models } from '../../vehicle/entities/vehicle-models.entity';
+import { Model } from '../../vehicle/entities/vehicle-model.entity';
+import { Chassis } from '../../vehicle/entities/chassis.entity';
+import { Bodywork } from '../../vehicle/entities/bodyworks.entity';
 
 @Entity('brands')
 export class Brand {
@@ -15,13 +16,13 @@ export class Brand {
   brand_id: number;
 
   @Column({ nullable: true })
-  brand_name: string;
+  name: string;
 
   @Column({ nullable: true })
-  brand_logo: string;
+  logo: string;
 
   @Column({ nullable: true })
-  brand_url: string;
+  url: string;
 
   @Column({ nullable: true })
   description: string;
@@ -29,7 +30,12 @@ export class Brand {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @OneToMany(() => Models, (model) => model.brand_id)
-  @JoinColumn({ name: 'brand_id' })
-  models: Models[];
+  @OneToMany(() => Model, (model) => model.brand)
+  models: Model[];
+
+  @OneToMany(() => Chassis, (chassis) => chassis.brand)
+  chassis: Chassis[];
+
+  @OneToMany(() => Bodywork, (bodywork) => bodywork.brand)
+  bodyworks: Bodywork[];
 }

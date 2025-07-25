@@ -6,6 +6,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Brand } from '../../brands/entities/brands.entity';
+import { Vehicle } from './vehicle.entity';
 
 @Entity('bodyworks')
 export class Bodywork {
@@ -24,4 +25,7 @@ export class Bodywork {
   @ManyToOne(() => Brand, (brand) => brand.brand_id)
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
+
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.bodywork)
+  vehicles: Vehicle[];
 }

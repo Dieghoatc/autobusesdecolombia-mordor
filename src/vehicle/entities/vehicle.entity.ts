@@ -5,17 +5,18 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { TransportCategory } from '../../transport-categories/entities/transport-category.entity';
-import { Companies } from '../../companies/entities/companies.entity';
-import { Models } from './vehicle-models.entity';
+import { TransportCategory } from '../../transport-category/entities/transport-category.entity';
+import { Company } from '../../company/entities/company.entity';
+import { Model } from './vehicle-model.entity';
 import { Chassis } from './chassis.entity';
 import { Bodywork } from './bodyworks.entity';
-import { CompanySerials } from '../../companies/entities/company_serials.entity';
-import { CompanyServices } from '../../companies/entities/company_services.entity';
+import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
+import { VehicleType } from './vehicle-type.entity';
 
 @Entity('vehicles')
-export class Vehicles {
+export class Vehicle {
   @PrimaryGeneratedColumn()
   vehicle_id: number;
 
@@ -35,12 +36,6 @@ export class Vehicles {
   company_id: number;
 
   @Column({ type: 'integer', nullable: true })
-  company_serial_id: number;
-
-  @Column({ type: 'integer', nullable: true })
-  company_service_id: number;
-
-  @Column({ type: 'integer', nullable: true })
   transport_category_id: number;
 
   @Column({ type: 'varchar', nullable: true })
@@ -55,40 +50,30 @@ export class Vehicles {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @ManyToOne(() => Models, (model) => model.model_id)
-  @JoinColumn({ name: 'model_id' })
-  model: Models;
+  @ManyToOne(() => VehicleType, (vehicle_type) => vehicle_type.vehicles)
+  @JoinColumn({ name: 'vehicle_type_id' })
+  vehicle_type: VehicleType;
 
-  @ManyToOne(() => Chassis, (chassis) => chassis.chassis_id)
+  @ManyToOne(() => Model, (model) => model.vehicles)
+  @JoinColumn({ name: 'model_id' })
+  model: Model;
+
+  @ManyToOne(() => Chassis, (chassis) => chassis.vehicles)
   @JoinColumn({ name: 'chassis_id' })
   chassis: Chassis;
 
-  @ManyToOne(() => Bodywork, (bodywork) => bodywork.bodywork_id)
+  @ManyToOne(() => Bodywork, (bodywork) => bodywork.vehicles)
   @JoinColumn({ name: 'bodywork_id' })
   bodywork: Bodywork;
 
-  @ManyToOne(() => Companies, (company) => company.company_id)
+  @ManyToOne(() => Company, (company) => company.vehicles)
   @JoinColumn({ name: 'company_id' })
-  company: Companies;
+  company: Company;  
 
-  @ManyToOne(
-    () => TransportCategory,
-    (transportCategory) => transportCategory.transport_category_id,
-  )
+  @ManyToOne(() => TransportCategory,(category) => category.vehicles)
   @JoinColumn({ name: 'transport_category_id' })
   transportCategory: TransportCategory;
 
-  @ManyToOne(
-    () => CompanySerials,
-    (companySerial) => companySerial.company_serial_id,
-  )
-  @JoinColumn({ name: 'company_serial_id' })
-  companySerial: CompanySerials;
-
-  @ManyToOne(
-    () => CompanyServices,
-    (companyService) => companyService.company_service_id,
-  )
-  @JoinColumn({ name: 'company_service_id' })
-  companyService: CompanyServices;
+  @OneToMany(() => VehiclePhoto,(photo) => photo.vehicle)
+  vehiclePhotos: VehiclePhoto[];
 }
