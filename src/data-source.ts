@@ -1,18 +1,18 @@
 import { DataSource } from 'typeorm';
-import { Photo } from './photos/entities/photos.entity';
-import { TransportCategory } from './transport-categories/entities/transport-category.entity';
-import { Vehicles } from './vehicle/entities/vehicle.entity';
+import { VehiclePhoto } from './vehicle-photo/entities/vehicle-photo.entity';
+import { TransportCategory } from './transport-category/entities/transport-category.entity';
+import { Vehicle } from './vehicle/entities/vehicle.entity';
 import { Brand } from './brands/entities/brands.entity';
-import { Photographers } from './photos/entities/photographers.entity';
-import { Countries } from './countries/entities/countries.entity';
+import { Photographer } from './vehicle-photo/entities/photographer.entity';
+import { Country } from './country/entities/country.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
-import { Companies } from './companies/entities/companies.entity';
-import { CompanySerials } from './companies/entities/company_serials.entity';
-import { CompanyServices } from './companies/entities/company_services.entity';
+import { Company } from './company/entities/company.entity';
+import { CompanySerial } from './company/entities/company-serial.entity';
+import { CompanyService } from './company/entities/company-service.entity';
 import { VehicleType } from './vehicle/entities/vehicle-type.entity';
 
-import { Models } from './vehicle/entities/vehicle-models.entity';
+import { Model } from './vehicle/entities/vehicle-model.entity';
 
 import { Posts } from './posts/post.entity';
 
@@ -33,18 +33,18 @@ export const AppDataSource = new DataSource({
   logging: true,
   entities: [
     Posts,
-    Photo,
-    Photographers,
+    VehiclePhoto,
+    Photographer,
     TransportCategory,
-    Vehicles,
-    Models,
+    Vehicle,
+    Model,
     Bodywork,
     Chassis,
     Brand,
-    Countries,
-    Companies,
-    CompanySerials,
-    CompanyServices,
+    Country,
+    Company,
+    CompanySerial,
+    CompanyService,
     VehicleType,    
   ],  
   migrations: ['src/migrations/*.ts'],
