@@ -14,6 +14,7 @@ import { Chassis } from './chassis.entity';
 import { Bodywork } from './bodyworks.entity';
 import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleType } from './vehicle-type.entity';
+import { CompanySerial } from '../../company/entities/company-serial.entity';
 
 @Entity('vehicles')
 export class Vehicle {
@@ -37,6 +38,9 @@ export class Vehicle {
 
   @Column({ type: 'integer', nullable: true })
   transport_category_id: number;
+
+  @Column({ type: 'integer', nullable: true })
+  company_serial_id: number;
 
   @Column({ type: 'varchar', nullable: true })
   plate: string;
@@ -73,6 +77,10 @@ export class Vehicle {
   @ManyToOne(() => TransportCategory,(category) => category.vehicles)
   @JoinColumn({ name: 'transport_category_id' })
   transportCategory: TransportCategory;
+
+  @ManyToOne(() => CompanySerial,(companySerial) => companySerial.vehicles)
+  @JoinColumn({ name: 'company_serial_id' })
+  companySerial: CompanySerial;
 
   @OneToMany(() => VehiclePhoto,(photo) => photo.vehicle)
   vehiclePhotos: VehiclePhoto[];
