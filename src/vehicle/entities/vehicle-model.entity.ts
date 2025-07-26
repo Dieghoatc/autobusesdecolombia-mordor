@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  OneToOne,
+  ManyToOne,
   JoinColumn,
 } from 'typeorm';
 import { Vehicle } from './vehicle.entity';
@@ -29,7 +29,7 @@ export class Model {
   @OneToMany(() => Vehicle, (vehicle) => vehicle.model)
   vehicles: Vehicle[];
 
-  @OneToOne(() => Brand, (brand) => brand.models)
+  @ManyToOne(() => Brand, { nullable: true })
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 }

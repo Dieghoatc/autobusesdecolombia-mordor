@@ -19,12 +19,6 @@ export class Company {
   company_id: number;
 
   @Column({ type: 'integer', nullable: true })
-  company_serial_id: number;
-
-  @Column({ type: 'integer', nullable: true })
-  company_service_id: number;
-
-  @Column({ type: 'integer', nullable: true })
   country_id: number;
 
   @Column({ type: 'varchar', nullable: true })
@@ -57,13 +51,13 @@ export class Company {
   @OneToMany(() => Vehicle, (vehicle) => vehicle.company)
   vehicles: Vehicle[];
 
-  @OneToMany(() => CompanySerial, (companySerials) => companySerials.companies)
-  companySerials: CompanySerial[];
-
-  @OneToMany(() => CompanyService, (companyServices) => companyServices.companies)
-  companyServices: CompanyService[];
-
   @ManyToOne(() => Country, (country) => country.companies)
   @JoinColumn({ name: 'country_id' })
   country: Country;
+
+  @OneToMany(() => CompanySerial, (companySerial) => companySerial.company)
+  companySerials: CompanySerial[];
+
+  @OneToMany(() => CompanyService, (companyService) => companyService.company)
+  companyServices: CompanyService[];
 }
