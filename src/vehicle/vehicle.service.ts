@@ -16,9 +16,9 @@ export class VehicleService {
       this.vehicleDao.findCount(id),
     ]);
 
-    const vehicleIds = vehicles.map((v) => v.vehicle_id);
-    const vehiclesWithRelations =
-      await this.vehicleDao.findByIdsWithRelations(vehicleIds);
+    // const vehicleIds = vehicles.map((v) => v.vehicle_id);
+    // const vehiclesWithRelations =
+    //   await this.vehicleDao.findByIdsWithRelations(vehicleIds);
 
     const totalPages = Math.ceil(totalCount / limit);
     const hasNext = page < totalPages;
@@ -37,7 +37,7 @@ export class VehicleService {
         startItem: offset + 1,
         endItem: Math.min(offset + limit, totalCount),
       },
-      data: vehiclesWithRelations,
+      data: vehicles,
     };
   }
 }
