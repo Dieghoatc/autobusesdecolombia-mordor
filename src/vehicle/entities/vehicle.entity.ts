@@ -10,8 +10,6 @@ import {
 import { TransportCategory } from '../../transport-category/entities/transport-category.entity';
 import { Company } from '../../company/entities/company.entity';
 import { Model } from './vehicle-model.entity';
-import { Chassis } from './chassis.entity';
-import { Bodywork } from './bodyworks.entity';
 import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleType } from './vehicle-type.entity';
 import { CompanySerial } from '../../company/entities/company-serial.entity';
@@ -26,12 +24,6 @@ export class Vehicle {
 
   @Column({ type: 'integer', nullable: true })
   model_id: number;
-
-  @Column({ type: 'integer', nullable: true })
-  chassis_id: number;
-
-  @Column({ type: 'integer', nullable: true })
-  bodywork_id: number;
 
   @Column({ type: 'integer', nullable: true })
   company_id: number;
@@ -61,14 +53,6 @@ export class Vehicle {
   @ManyToOne(() => Model, (model) => model.vehicles)
   @JoinColumn({ name: 'model_id' })
   model: Model;
-
-  @ManyToOne(() => Chassis, (chassis) => chassis.vehicles)
-  @JoinColumn({ name: 'chassis_id' })
-  chassis: Chassis;
-
-  @ManyToOne(() => Bodywork, (bodywork) => bodywork.vehicles)
-  @JoinColumn({ name: 'bodywork_id' })
-  bodywork: Bodywork;
 
   @ManyToOne(() => Company, (company) => company.vehicles)
   @JoinColumn({ name: 'company_id' })

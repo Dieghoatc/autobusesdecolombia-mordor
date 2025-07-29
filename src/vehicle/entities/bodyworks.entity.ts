@@ -4,9 +4,10 @@ import {
   Column,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Brand } from '../../brands/entities/brands.entity';
-import { Vehicle } from './vehicle.entity';
+import { Model } from './vehicle-model.entity';
 
 @Entity('bodyworks')
 export class Bodywork {
@@ -22,10 +23,10 @@ export class Bodywork {
   @Column({ nullable: true, default: null })
   description: string;
 
-  @ManyToOne(() => Brand, (brand) => brand.brand_id)
+  @ManyToOne(() => Brand, (brand) => brand.bodyworks)
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.bodywork)
-  vehicles: Vehicle[];
+  @OneToMany(() => Model, (model) => model.bodywork)
+  models: Model[];
 }

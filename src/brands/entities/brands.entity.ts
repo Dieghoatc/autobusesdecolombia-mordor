@@ -15,7 +15,7 @@ export class Brand {
   @PrimaryGeneratedColumn()
   brand_id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   name: string;
 
   @Column({ nullable: true })
