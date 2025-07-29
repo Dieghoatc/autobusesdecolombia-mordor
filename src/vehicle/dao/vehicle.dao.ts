@@ -18,8 +18,9 @@ export class VehicleDAO {
     return this.vehicleRepository
       .createQueryBuilder('vehicle') 
       .leftJoinAndSelect('vehicle.company', 'company')
-      .leftJoinAndSelect('vehicle.bodywork', 'bodywork')
-      .leftJoinAndSelect('vehicle.chassis', 'chassis')
+      .leftJoinAndSelect('vehicle.model', 'model')
+      .leftJoinAndSelect('model.chassis', 'chassis')
+      .leftJoinAndSelect('model.bodywork', 'bodywork')
       .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
       .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
       .where('vehicle.transport_category_id = :id', { id })
