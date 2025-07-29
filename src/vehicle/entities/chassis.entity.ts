@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Brand } from '../../brands/entities/brands.entity';
-import { Vehicle } from './vehicle.entity';
+import { Model } from './vehicle-model.entity';
 
 @Entity('chassis')
 export class Chassis {
@@ -27,6 +27,6 @@ export class Chassis {
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.chassis)
-  vehicles: Vehicle[];
+  @OneToMany(() => Model, (model) => model.chassis)
+  models: Model[];
 }

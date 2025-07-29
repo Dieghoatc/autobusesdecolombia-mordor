@@ -21,7 +21,7 @@ export class Company {
   @Column({ type: 'integer', nullable: true })
   country_id: number;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   company_name: string;
 
   @Column({ type: 'varchar', nullable: true })
