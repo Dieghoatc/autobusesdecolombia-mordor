@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Posts {
@@ -12,10 +13,19 @@ export class Posts {
   title: string;
 
   @Column({ nullable: true })
+  resume: string;
+
+  @Column({ nullable: true })
+  category: string;
+
+  @Column({ nullable: true })
   slug: string;
 
   @Column({ nullable: true })
   tags: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   @Column({ nullable: true, type: 'json' })
   content: any;
