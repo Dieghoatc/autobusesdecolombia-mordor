@@ -13,12 +13,8 @@ export class VehicleService {
 
     const [vehicles, totalCount] = await Promise.all([
       this.vehicleDao.findAllPaginatedByIdTransportCategory(id, limit, offset),
-      this.vehicleDao.findCount(id),
+      this.vehicleDao.findCountByID(id),
     ]);
-
-    // const vehicleIds = vehicles.map((v) => v.vehicle_id);
-    // const vehiclesWithRelations =
-    //   await this.vehicleDao.findByIdsWithRelations(vehicleIds);
 
     const totalPages = Math.ceil(totalCount / limit);
     const hasNext = page < totalPages;
@@ -32,6 +28,37 @@ export class VehicleService {
         limit,
         next: hasNext ? `/vehicle/${id}?page=${page + 1}&limit=${limit}` : null,
         prev: hasPrev ? `/vehicle/${id}?page=${page - 1}&limit=${limit}` : null,
+        hasNext,
+        hasPrev,
+        startItem: offset + 1,
+        endItem: Math.min(offset + limit, totalCount),
+      },
+      data: vehicles,
+    };
+  }
+
+  async getVehicles(paginationDto: VehiclePaginationDTO) {
+    const page = Math.max(1, Number(paginationDto.page) || 1);
+    const limit = Math.max(1, Number(paginationDto.limit) || 20);
+    const offset = (page - 1) * limit;
+
+    const [vehicles, totalCount] = await Promise.all([
+      this.vehicleDao.findAll(limit, offset),
+      this.vehicleDao.findCount(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+
+    return {
+      info: {
+        count: totalCount,
+        currentPage: page,
+        pages: totalPages,
+        limit,
+        next: hasNext ? `/vehicle?page=${page + 1}&limit=${limit}` : null,
+        prev: hasPrev ? `/vehicle?page=${page - 1}&limit=${limit}` : null,
         hasNext,
         hasPrev,
         startItem: offset + 1,
