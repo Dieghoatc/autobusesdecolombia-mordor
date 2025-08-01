@@ -16,7 +16,7 @@ export class VehicleDAO {
     offset: number,
   ): Promise<Vehicle[]> {
     return this.vehicleRepository
-      .createQueryBuilder('vehicle') 
+      .createQueryBuilder('vehicle')
       .leftJoinAndSelect('vehicle.company', 'company')
       .leftJoinAndSelect('vehicle.model', 'model')
       .leftJoinAndSelect('model.chassis', 'chassis')
@@ -30,10 +30,29 @@ export class VehicleDAO {
       .getMany();
   }
 
-  async findCount(id: number): Promise<number> {
+  async findCountByID(id: number): Promise<number> {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
       .where('vehicle.transport_category_id = :id', { id })
       .getCount();
+  }
+
+  async findAll(limit: number, offset: number): Promise<Vehicle[]> {
+    return this.vehicleRepository
+      .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.company', 'company')
+      .leftJoinAndSelect('vehicle.model', 'model')
+      .leftJoinAndSelect('model.chassis', 'chassis')
+      .leftJoinAndSelect('model.bodywork', 'bodywork')
+      .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
+      .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
+      .orderBy('vehicle.vehicle_id', 'ASC')
+      .take(limit)
+      .skip(offset)
+      .getMany();
+  }
+
+  async findCount(): Promise<number> {
+    return this.vehicleRepository.createQueryBuilder('vehicle').getCount();
   }
 }
