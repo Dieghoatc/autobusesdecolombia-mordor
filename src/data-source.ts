@@ -11,7 +11,6 @@ import { Company } from './company/entities/company.entity';
 import { CompanySerial } from './company/entities/company-serial.entity';
 import { CompanyService } from './company/entities/company-service.entity';
 import { VehicleType } from './vehicle/entities/vehicle-type.entity';
-
 import { Model } from './vehicle/entities/vehicle-model.entity';
 
 import { Posts } from './posts/post.entity';

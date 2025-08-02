@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Company } from './company.entity';
+import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
 
 @Entity('company_services')
 export class CompanyService {
@@ -15,4 +16,7 @@ export class CompanyService {
   @ManyToOne(() => Company, (company) => company.companyServices)
   @JoinColumn({ name: 'company_id' })
   company: Company;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.companyService)
+  vehicles: Vehicle[]
 }
