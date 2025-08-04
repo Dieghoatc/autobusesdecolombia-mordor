@@ -36,7 +36,7 @@ export class Vehicle {
   company_serial_id: number;
 
   @Column({ type: 'integer', nullable: true })
-  Company_service_id: number
+  company_service_id: number
 
   @Column({ type: 'varchar', nullable: true })
   plate: string;

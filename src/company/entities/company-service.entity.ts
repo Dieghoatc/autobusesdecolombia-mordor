@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Company } from './company.entity';
-import { Vehicle } from 'src/vehicle/entities/vehicle.entity';
+import { Vehicle } from '../../vehicle/entities/vehicle.entity';
 
 @Entity('company_services')
 export class CompanyService {
