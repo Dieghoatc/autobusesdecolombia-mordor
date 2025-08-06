@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vehicle } from '../entities/vehicle.entity';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class VehicleDAO {
@@ -17,10 +17,13 @@ export class VehicleDAO {
   ): Promise<Vehicle[]> {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
-      .leftJoinAndSelect('vehicle.company', 'company')
       .leftJoinAndSelect('vehicle.model', 'model')
-      .leftJoinAndSelect('model.chassis', 'chassis')
-      .leftJoinAndSelect('model.bodywork', 'bodywork')
+      .leftJoinAndSelect('vehicle.company', 'company')
+      .leftJoinAndSelect('vehicle.transportCategory', 'transportCategory')
+      .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
+      .leftJoinAndSelect('companySerial.company', 'companyFromSerial')
+      .leftJoinAndSelect('vehicle.companyService', 'companyService')   
+      .leftJoinAndSelect('companyService.company', 'companyFromService')
       .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
       .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
       .where('vehicle.transport_category_id = :id', { id })
