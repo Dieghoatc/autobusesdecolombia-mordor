@@ -49,7 +49,7 @@ export class VehicleDAO {
       .leftJoinAndSelect('model.bodywork', 'bodywork')
       .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
       .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
-      .orderBy('vehicle.vehicle_id', 'ASC')
+      .orderBy('vehicle.vehicle_id', 'DESC')
       .take(limit)
       .skip(offset)
       .getMany();
