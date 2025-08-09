@@ -6,7 +6,11 @@ import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 export class VehicleService {
   constructor(private readonly vehicleDao: VehicleDAO) {}
 
-  async getVehicleById(id: number, paginationDto: VehiclePaginationDTO) {
+  async getVehicleById(id: number) {
+    return this.vehicleDao.findVehicleByID(id);
+  }
+
+  async getVehiclesByCategory(id: number, paginationDto: VehiclePaginationDTO) {
     const page = Math.max(1, Number(paginationDto.page) || 1);
     const limit = Math.max(1, Number(paginationDto.limit) || 20);
     const offset = (page - 1) * limit;
