@@ -6,11 +6,15 @@ import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
-  @Get(':id') getVehicleById(
+  @Get(':id') getVehicleById(@Param('id') id: string) {
+    return this.vehicleService.getVehicleById(+id);
+  }
+
+  @Get('category/:id') getVehiclesByCategory(
     @Param('id') id: string,
     @Query() paginationDto: VehiclePaginationDTO,
   ) {
-    return this.vehicleService.getVehicleById(+id, paginationDto);
+    return this.vehicleService.getVehiclesByCategory(+id, paginationDto);
   }
 
   @Get() getVehicles(@Query() paginationDto: VehiclePaginationDTO) {

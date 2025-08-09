@@ -10,6 +10,24 @@ export class VehicleDAO {
     private readonly vehicleRepository: Repository<Vehicle>,
   ) {}
 
+  async findVehicleByID(id: number): Promise<Vehicle> {
+    return this.vehicleRepository
+      .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.model', 'model')
+      .leftJoinAndSelect('vehicle.company', 'company')
+      .leftJoinAndSelect('vehicle.transportCategory', 'transportCategory')
+      .leftJoinAndSelect('model.chassis', 'chassis')
+      .leftJoinAndSelect('model.bodywork', 'bodywork')
+      .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
+      .leftJoinAndSelect('companySerial.company', 'companyFromSerial')
+      .leftJoinAndSelect('vehicle.companyService', 'companyService')
+      .leftJoinAndSelect('companyService.company', 'companyFromService')
+      .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
+      .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
+      .where('vehicle.vehicle_id = :id', { id })
+      .getOne();
+  }
+
   async findAllPaginatedByIdTransportCategory(
     id: number,
     limit: number,
@@ -22,7 +40,7 @@ export class VehicleDAO {
       .leftJoinAndSelect('vehicle.transportCategory', 'transportCategory')
       .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
       .leftJoinAndSelect('companySerial.company', 'companyFromSerial')
-      .leftJoinAndSelect('vehicle.companyService', 'companyService')   
+      .leftJoinAndSelect('vehicle.companyService', 'companyService')
       .leftJoinAndSelect('companyService.company', 'companyFromService')
       .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
       .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
