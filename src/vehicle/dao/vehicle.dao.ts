@@ -16,6 +16,7 @@ export class VehicleDAO {
       .leftJoinAndSelect('vehicle.model', 'model')
       .leftJoinAndSelect('vehicle.company', 'company')
       .leftJoinAndSelect('vehicle.transportCategory', 'transportCategory')
+      .leftJoinAndSelect('model.brand', 'brand')
       .leftJoinAndSelect('model.chassis', 'chassis')
       .leftJoinAndSelect('model.bodywork', 'bodywork')
       .leftJoinAndSelect('vehicle.companySerial', 'companySerial')

@@ -38,9 +38,6 @@ export class Model {
   @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.model)
-  vehicles: Vehicle[];
-
   @ManyToOne(() => Chassis, (chassis) => chassis.models)
   @JoinColumn({ name: 'chassis_id' })
   chassis: Chassis;
@@ -48,4 +45,7 @@ export class Model {
   @ManyToOne(() => Bodywork, (bodywork) => bodywork.models)
   @JoinColumn({ name: 'bodywork_id' })
   bodywork: Bodywork;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.model)
+  vehicles: Vehicle[];
 }
