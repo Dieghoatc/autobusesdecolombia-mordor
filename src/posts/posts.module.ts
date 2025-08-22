@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Posts } from './post.entity';
+import { Posts } from './entities/posts.entity';
+import { PostDao } from './dao/posts.dao';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts])],
   controllers: [PostsController],
-  providers: [PostsService],
-  exports: [TypeOrmModule], 
+  providers: [PostsService, PostDao],
+  imports: [TypeOrmModule.forFeature([Posts])],
+  exports: [TypeOrmModule],
 })
 export class PostsModule {}

@@ -9,7 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Posts } from './posts/post.entity'; // Importamos la clase Post
+import { Posts } from './posts/entities/posts.entity';
 import { VehiclePhoto } from './vehicle-photo/entities/vehicle-photo.entity';
 import { TransportCategory } from './transport-category/entities/transport-category.entity';
 import { Brand } from './brands/entities/brands.entity';

@@ -13,7 +13,7 @@ import { CompanyService } from './company/entities/company-service.entity';
 import { VehicleType } from './vehicle/entities/vehicle-type.entity';
 import { Model } from './vehicle/entities/vehicle-model.entity';
 
-import { Posts } from './posts/post.entity';
+import { Posts } from './posts/entities/posts.entity';
 
 import { config } from 'dotenv';
 config();
@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD, 
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   synchronize: false,
   migrationsRun: true, // ⚠️ ¡muy importante!
@@ -44,8 +44,8 @@ export const AppDataSource = new DataSource({
     Company,
     CompanySerial,
     CompanyService,
-    VehicleType,    
-  ],  
+    VehicleType,
+  ],
   migrations: ['src/migrations/*.ts'],
 });
 
