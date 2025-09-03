@@ -3,7 +3,8 @@ import axios, { AxiosError } from 'axios';
 import * as FormData from 'form-data'; // CORRECCIÓN 1: Cambiar importación
 
 export class PhotoWatermarkClient {
-  private readonly URL_LOCAL = 'http://localhost:8000';
+  private readonly URL_LOCAL =
+    process.env.IMAGEMARK_CLIENT_URL || 'http://localhost:8000';
 
   async markPhoto(
     file: Express.Multer.File,
