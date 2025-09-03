@@ -4,11 +4,13 @@ import * as streamifier from 'streamifier';
 import { Injectable } from '@nestjs/common';
 import { QueryPaginationDto } from './dto/query-pagination.dto';
 import { VehiclePhotoPostgresDAO } from './dao/vehicle-photo-postgresql.dao';
+import { PhotoWatermarkClient } from 'src/services/mark-photo/mark-photo';
 
 @Injectable()
 export class VehiclePhotoService {
   constructor(
     private readonly photoDao: VehiclePhotoPostgresDAO,
+    private readonly photowhatermarkClient: PhotoWatermarkClient,
   ) {}
 
   private urlApi =
@@ -17,10 +19,6 @@ export class VehiclePhotoService {
       : process.env.NODE_ENV === 'staging'
         ? 'https://abcdev1-production.up.railway.app/'
         : 'http://localhost:3000/';
-
-  private CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
-  private CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
-  private CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;  
 
   async getPhotos() {
     const page = 1;
@@ -60,7 +58,7 @@ export class VehiclePhotoService {
   async getPhotosPagination(paginationDto: QueryPaginationDto) {
     const { page = 1, limit = paginationDto.limit ?? 20 } = paginationDto;
     const offset = (page - 1) * limit;
-    
+
     const photosQuery = this.photoDao.findAllPaginated(limit, offset);
     const totalCountQuery = this.photoDao.findCount();
 
@@ -96,9 +94,15 @@ export class VehiclePhotoService {
   async getPhotoById(id: number) {
     const photoQuery = this.photoDao.findById(id);
     return photoQuery;
-  }  
- 
-   
+  }
+
+  async markPhotoService(
+    file: Express.Multer.File,
+    author: string,
+    location?: string,
+  ) {
+    return await this.photowhatermarkClient.markPhoto(file, author, location);
+  }
 
   // async getAllPhotos() {
   //   try {
