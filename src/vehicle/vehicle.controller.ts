@@ -20,4 +20,18 @@ export class VehicleController {
   @Get() getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
     return this.vehicleService.getVehicles(paginationDto);
   }
+
+  @Get('plate/:plate') getVehiclesByPlate(
+    @Param('plate') plate: string,
+    @Query() paginationDto: VehiclePaginationDTO,
+  ) {
+    return this.vehicleService.getVehiclesByPlate(plate, paginationDto);
+  }
+
+  @Get('serial/:serial') getVehiclesBySerial(
+    @Param('serial') serial: string,
+    @Query() paginationDto: VehiclePaginationDTO,
+  ) {
+    return this.vehicleService.getVehiclesBySerial(serial, paginationDto);
+  }
 }

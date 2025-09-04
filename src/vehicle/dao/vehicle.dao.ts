@@ -79,4 +79,33 @@ export class VehicleDAO {
   async findCount(): Promise<number> {
     return this.vehicleRepository.createQueryBuilder('vehicle').getCount();
   }
-}
+
+  async findVehicleForPlate(
+    plate: string,
+    limit: number,
+    offset: number,
+  ): Promise<Vehicle[]> {
+    return this.vehicleRepository
+      .createQueryBuilder('vehicle')
+      .where('vehicle.plate = :plate', { plate })
+      .orderBy('vehicle.vehicle_id', 'DESC')
+      .take(limit)
+      .skip(offset)
+      .getMany();
+  }
+
+  async findVehicleForSerial(
+    serial: string,
+    limit: number,
+    offset: number,
+  ): Promise<Vehicle[]> {
+    return this.vehicleRepository
+      .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
+      .where('companySerial.company_serial_code = :serial', { serial })
+      .orderBy('vehicle.vehicle_id', 'DESC')
+      .take(limit)
+      .skip(offset)
+      .getMany();
+  }
+}  
