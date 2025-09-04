@@ -87,6 +87,9 @@ export class VehicleDAO {
   ): Promise<Vehicle[]> {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
+      .leftJoinAndSelect('vehicle.model', 'model')
+      .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
       .where('vehicle.plate = :plate', { plate })
       .orderBy('vehicle.vehicle_id', 'DESC')
       .take(limit)
@@ -101,6 +104,8 @@ export class VehicleDAO {
   ): Promise<Vehicle[]> {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
+      .leftJoinAndSelect('vehicle.vehiclePhotos', 'vehiclePhotos')
+      .leftJoinAndSelect('vehicle.model', 'model')
       .leftJoinAndSelect('vehicle.companySerial', 'companySerial')
       .where('companySerial.company_serial_code = :serial', { serial })
       .orderBy('vehicle.vehicle_id', 'DESC')
