@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { VehicleDAO } from './dao/vehicle.dao';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 
@@ -134,3 +134,4 @@ export class VehicleService {
     };
   }
 }
+

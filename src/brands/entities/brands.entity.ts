@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-import { Model } from '../../vehicle/entities/vehicle-model.entity';
+import { Model } from '../../vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from '../../vehicle/entities/chassis.entity';
 import { Bodywork } from '../../vehicle/entities/bodyworks.entity';
 

@@ -6,7 +6,7 @@ import { Vehicle } from './entities/vehicle.entity';
 import { TransportCategory } from '../transport-category/entities/transport-category.entity';
 import { Brand } from '../brands/entities/brands.entity';
 import { Company } from '../company/entities/company.entity';
-import { Model } from './entities/vehicle-model.entity';
+import { Model } from '../vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './entities/chassis.entity';
 import { Bodywork } from './entities/bodyworks.entity';
 import { CompanySerial } from '../company/entities/company-serial.entity';

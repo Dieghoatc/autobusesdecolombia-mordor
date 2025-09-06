@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { Vehicle } from '../../vehicle/entities/vehicle.entity';
-import { Photographer } from './photographer.entity';
+import { Photographer } from '../../photographer/entities/photographer.entity';
 import { Country } from '../../country/entities/country.entity';
 
 @Entity('vehicle_photos')

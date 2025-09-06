@@ -3,7 +3,7 @@ import { VehiclePhoto } from './vehicle-photo/entities/vehicle-photo.entity';
 import { TransportCategory } from './transport-category/entities/transport-category.entity';
 import { Vehicle } from './vehicle/entities/vehicle.entity';
 import { Brand } from './brands/entities/brands.entity';
-import { Photographer } from './vehicle-photo/entities/photographer.entity';
+import { Photographer } from './photographer/entities/photographer.entity';
 import { Country } from './country/entities/country.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
@@ -11,7 +11,7 @@ import { Company } from './company/entities/company.entity';
 import { CompanySerial } from './company/entities/company-serial.entity';
 import { CompanyService } from './company/entities/company-service.entity';
 import { VehicleType } from './vehicle/entities/vehicle-type.entity';
-import { Model } from './vehicle/entities/vehicle-model.entity';
+import { Model } from './vehicle-model/entities/vehicle-model.entity';
 
 import { Posts } from './posts/entities/posts.entity';
 

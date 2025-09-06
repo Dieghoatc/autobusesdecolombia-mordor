@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, OneToMany, Column, CreateDateColumn } from "typeorm";
-import { VehiclePhoto } from "./vehicle-photo.entity";
+import { VehiclePhoto } from "../../vehicle-photo/entities/vehicle-photo.entity";
 
 @Entity('photographers')
 export class Photographer {

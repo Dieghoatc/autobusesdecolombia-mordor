@@ -13,7 +13,7 @@ import { Posts } from './posts/entities/posts.entity';
 import { VehiclePhoto } from './vehicle-photo/entities/vehicle-photo.entity';
 import { TransportCategory } from './transport-category/entities/transport-category.entity';
 import { Brand } from './brands/entities/brands.entity';
-import { Photographer } from './vehicle-photo/entities/photographer.entity';
+import { Photographer } from './photographer/entities/photographer.entity';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { CompaniesModule } from './company/company.module';
 import { BrandsModule } from './brands/brands.module';
@@ -23,10 +23,12 @@ import { Company } from './company/entities/company.entity';
 import { Country } from './country/entities/country.entity';
 import { CompanySerial } from './company/entities/company-serial.entity';
 import { CompanyService } from './company/entities/company-service.entity';
-import { Model } from './vehicle/entities/vehicle-model.entity';
+import { Model } from './vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
 import { VehicleType } from './vehicle/entities/vehicle-type.entity';
+import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
+import { PhotographerModule } from './photographer/photographer.module';
 
 @Module({
   imports: [
@@ -74,6 +76,8 @@ import { VehicleType } from './vehicle/entities/vehicle-type.entity';
     CompaniesModule,
     BrandsModule,
     CountriesModule,
+    VehicleModelModule,
+    PhotographerModule,
   ],
   providers: [],
 })

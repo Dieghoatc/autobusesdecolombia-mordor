@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { TransportCategory } from '../../transport-category/entities/transport-category.entity';
 import { Company } from '../../company/entities/company.entity';
-import { Model } from './vehicle-model.entity';
+import { Model } from '../../vehicle-model/entities/vehicle-model.entity';
 import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleType } from './vehicle-type.entity';
 import { CompanySerial } from '../../company/entities/company-serial.entity';
