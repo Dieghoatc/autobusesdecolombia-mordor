@@ -20,6 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { categoryValidator } from './utils/categoryValidator';
 import { typeCarValidator } from './utils/typeCarValidator';
 import { QueryPaginationDto } from './dto/query-pagination.dto';
+import * as multer from 'multer';
 
 @Controller('photo')
 export class VehiclePhotoController {
@@ -41,7 +42,9 @@ export class VehiclePhotoController {
   }
 
   @Post('mark')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(
+    FileInterceptor('image', { storage: multer.memoryStorage() }),
+  )
   async markImage(
     @UploadedFile() file: Express.Multer.File,
     @Body(ValidationPipe) markPhotoDto: MarkPhotoDto,
@@ -58,23 +61,19 @@ export class VehiclePhotoController {
       throw new HttpException('Image size exeds 5MB', HttpStatus.BAD_REQUEST);
     }
     try {
-      const processedImage = await this.photoService.markPhotoService(
+      const buffer = await this.photoService.markPhotoService(
         file,
         markPhotoDto.author,
         markPhotoDto.location,
       );
 
       const filename = `marked_${file.originalname.split('.')[0]}.webp`;
-      res.set({
-        'Content-Type': 'image/webp',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-        'Content-Length': processedImage.length.toString(),
-      });
-
-      return res.send(processedImage);
+      res.setHeader('Content-Type', 'image/webp');
+      res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+      return res.send(buffer);
     } catch (error) {
       console.error('Error en controlador:', error);
-      throw error; // Re-lanzar el error para que NestJS lo maneje
+      throw error;
     }
   }
 
