@@ -26,9 +26,10 @@ import { CompanyService } from './company/entities/company-service.entity';
 import { Model } from './vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
-import { VehicleType } from './vehicle/entities/vehicle-type.entity';
+import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
 import { PhotographerModule } from './photographer/photographer.module';
+import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { PhotographerModule } from './photographer/photographer.module';
     CountriesModule,
     VehicleModelModule,
     PhotographerModule,
+    VehicleTypeModule,
   ],
   providers: [],
 })

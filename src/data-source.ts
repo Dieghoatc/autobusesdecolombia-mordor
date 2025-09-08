@@ -10,7 +10,7 @@ import { Chassis } from './vehicle/entities/chassis.entity';
 import { Company } from './company/entities/company.entity';
 import { CompanySerial } from './company/entities/company-serial.entity';
 import { CompanyService } from './company/entities/company-service.entity';
-import { VehicleType } from './vehicle/entities/vehicle-type.entity';
+import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { Model } from './vehicle-model/entities/vehicle-model.entity';
 
 import { Posts } from './posts/entities/posts.entity';

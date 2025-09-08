@@ -11,7 +11,7 @@ import { Chassis } from './entities/chassis.entity';
 import { Bodywork } from './entities/bodyworks.entity';
 import { CompanySerial } from '../company/entities/company-serial.entity';
 import { CompanyService } from '../company/entities/company-service.entity';
-import { VehicleType } from './entities/vehicle-type.entity';
+import { VehicleType } from '../vehicle-type/entities/vehicle-type.entity';
 import { VehiclePhoto } from '../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleDAO } from './dao/vehicle.dao';
 

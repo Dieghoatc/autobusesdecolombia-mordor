@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { VehicleDAO } from './dao/vehicle.dao';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
+import { VehicleDTO } from './dto/vehicle.dto';
 
 @Injectable()
 export class VehicleService {
-  constructor(private readonly vehicleDao: VehicleDAO) {}
+  constructor(
+    private readonly vehicleDao: VehicleDAO,
+  ) {}
 
   async getVehicleById(id: number) {
     return this.vehicleDao.findVehicleByID(id);
@@ -132,6 +135,13 @@ export class VehicleService {
       },
       data: vehicles,
     };
+  }
+
+  async createVehicle(file: Express.Multer.File, vehicleDTO: VehicleDTO) {
+    console.log(file);
+    console.log(vehicleDTO);
+    
+    return "Perras"
   }
 }
 

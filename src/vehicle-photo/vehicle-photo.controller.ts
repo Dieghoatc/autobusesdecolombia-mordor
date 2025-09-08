@@ -67,8 +67,8 @@ export class VehiclePhotoController {
         markPhotoDto.location,
       );
 
-      const filename = `marked_${file.originalname.split('.')[0]}.webp`;
-      res.setHeader('Content-Type', 'image/webp');
+      const filename = `marked_${file.originalname.split('.')[0]}.avif`;
+      res.setHeader('Content-Type', 'image/avif');
       res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
       return res.send(buffer);
     } catch (error) {

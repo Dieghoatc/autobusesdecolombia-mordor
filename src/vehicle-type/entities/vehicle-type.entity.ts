@@ -6,7 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Vehicle } from './vehicle.entity';
+import { Vehicle } from '../../vehicle/entities/vehicle.entity';
 
 @Entity({ name: 'vehicle_types' })
 export class VehicleType {
