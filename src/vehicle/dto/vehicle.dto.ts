@@ -27,7 +27,7 @@ export class VehicleDTO {
 
     @IsOptional()
     @IsString()
-    company_service: string;
+    company_service_id: string;
 
     @IsOptional()
     @IsString()
