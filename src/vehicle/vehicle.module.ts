@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Vehicle } from './entities/vehicle.entity';
 import { TransportCategory } from '../transport-category/entities/transport-category.entity';
 import { Brand } from '../brands/entities/brands.entity';
-import { Company } from '../company/entities/company.entity';
+import { CompanyEntiti } from '../company/entities/company.entity';
 import { Model } from '../vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './entities/chassis.entity';
 import { Bodywork } from './entities/bodyworks.entity';
-import { CompanySerial } from '../company/entities/company-serial.entity';
-import { CompanyService } from '../company/entities/company-service.entity';
+import { CompanySerialEntiti } from '../company/entities/company-serial.entity';
+import { CompanyServiceEntiti } from '../company/entities/company-service.entity';
 import { VehicleType } from '../vehicle-type/entities/vehicle-type.entity';
 import { VehiclePhoto } from '../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleDAO } from './dao/vehicle.dao';
@@ -24,12 +24,12 @@ import { VehicleDAO } from './dao/vehicle.dao';
       VehiclePhoto,
       TransportCategory,
       Brand,
-      Company,
+      CompanyEntiti,
       Model,
       Chassis,
       Bodywork,
-      CompanySerial,
-      CompanyService,
+      CompanySerialEntiti,
+      CompanyServiceEntiti,
       VehicleType,
     ]),
   ],

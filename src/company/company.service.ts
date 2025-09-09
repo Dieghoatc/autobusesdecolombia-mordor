@@ -8,4 +8,8 @@ export class CompanyService {
     findAll() {
         return this.companyDao.findAll();
     }
+
+    findAllServices() {
+        return this.companyDao.findAllServices();
+    }
 }

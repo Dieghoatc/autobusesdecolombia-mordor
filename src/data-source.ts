@@ -7,9 +7,9 @@ import { Photographer } from './photographer/entities/photographer.entity';
 import { Country } from './country/entities/country.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
-import { Company } from './company/entities/company.entity';
-import { CompanySerial } from './company/entities/company-serial.entity';
-import { CompanyService } from './company/entities/company-service.entity';
+import { CompanyEntiti } from './company/entities/company.entity';
+import { CompanySerialEntiti } from './company/entities/company-serial.entity';
+import { CompanyServiceEntiti } from './company/entities/company-service.entity';
 import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { Model } from './vehicle-model/entities/vehicle-model.entity';
 
@@ -41,9 +41,9 @@ export const AppDataSource = new DataSource({
     Chassis,
     Brand,
     Country,
-    Company,
-    CompanySerial,
-    CompanyService,
+    CompanyEntiti,
+    CompanySerialEntiti,
+    CompanyServiceEntiti,
     VehicleType,
   ],
   migrations: ['src/migrations/*.ts'],

@@ -9,4 +9,9 @@ export class CompanyController {
     findAll() {
         return this.companyService.findAll();
     }
+
+    @Get('service')
+    findAllServices() {
+        return this.companyService.findAllServices();
+    }
 }

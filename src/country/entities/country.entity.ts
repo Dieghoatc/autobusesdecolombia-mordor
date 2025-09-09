@@ -5,7 +5,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
-import { Company } from '../../company/entities/company.entity';
+import { CompanyEntiti } from '../../company/entities/company.entity';
 
 @Entity('countries')
 export class Country {
@@ -21,6 +21,6 @@ export class Country {
   @OneToMany(() => VehiclePhoto, (photo) => photo.country)
   vehiclePhotos: VehiclePhoto[];
 
-  @OneToMany(() => Company, (company) => company.country)
-  companies: Company[];
+  @OneToMany(() => CompanyEntiti, (company) => company.country)
+  companies: CompanyEntiti[];
 }

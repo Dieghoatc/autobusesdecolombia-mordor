@@ -19,10 +19,10 @@ import { CompaniesModule } from './company/company.module';
 import { BrandsModule } from './brands/brands.module';
 import { CountriesModule } from './country/country.module';
 import { Vehicle } from './vehicle/entities/vehicle.entity';
-import { Company } from './company/entities/company.entity';
+import { CompanyEntiti } from './company/entities/company.entity';
 import { Country } from './country/entities/country.entity';
-import { CompanySerial } from './company/entities/company-serial.entity';
-import { CompanyService } from './company/entities/company-service.entity';
+import { CompanySerialEntiti } from './company/entities/company-serial.entity';
+import { CompanyServiceEntiti } from './company/entities/company-service.entity';
 import { Model } from './vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
@@ -50,13 +50,13 @@ import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
         TransportCategory,
         Vehicle,
         Brand,
-        Company,
+        CompanyEntiti,
         Photographer,
         Country,
         Bodywork,
         Chassis,
-        CompanySerial,
-        CompanyService,
+        CompanySerialEntiti,
+        CompanyServiceEntiti,
         Model,
         VehicleType,
       ],

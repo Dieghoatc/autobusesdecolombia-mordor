@@ -8,12 +8,12 @@ import {
   OneToMany,
 } from 'typeorm';
 import { TransportCategory } from '../../transport-category/entities/transport-category.entity';
-import { Company } from '../../company/entities/company.entity';
+import { CompanyEntiti } from '../../company/entities/company.entity';
 import { Model } from '../../vehicle-model/entities/vehicle-model.entity';
 import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
 import { VehicleType } from '../../vehicle-type/entities/vehicle-type.entity';
-import { CompanySerial } from '../../company/entities/company-serial.entity';
-import { CompanyService } from '../../company/entities/company-service.entity';
+import { CompanySerialEntiti } from '../../company/entities/company-serial.entity';
+import { CompanyServiceEntiti } from '../../company/entities/company-service.entity';
 
 @Entity('vehicles')
 export class Vehicle {
@@ -58,21 +58,21 @@ export class Vehicle {
   @JoinColumn({ name: 'model_id' })
   model: Model;
 
-  @ManyToOne(() => Company, (company) => company.vehicles)
+  @ManyToOne(() => CompanyEntiti, (company) => company.vehicles)
   @JoinColumn({ name: 'company_id' })
-  company: Company;  
+  company: CompanyEntiti;  
 
   @ManyToOne(() => TransportCategory,(category) => category.vehicles)
   @JoinColumn({ name: 'transport_category_id' })
   transportCategory: TransportCategory;
 
-  @ManyToOne(() => CompanySerial,(companySerial) => companySerial.vehicles)
+  @ManyToOne(() => CompanySerialEntiti,(companySerial) => companySerial.vehicles)
   @JoinColumn({ name: 'company_serial_id' })
-  companySerial: CompanySerial;
+  companySerial: CompanySerialEntiti;
 
-  @ManyToOne(() => CompanyService,(companyService) => companyService.vehicles)
+  @ManyToOne(() => CompanyServiceEntiti,(companyService) => companyService.vehicles)
   @JoinColumn({ name: 'company_service_id' })
-  companyService: CompanyService ;
+  companyService: CompanyServiceEntiti ;
 
   @OneToMany(() => VehiclePhoto,(photo) => photo.vehicle)
   vehiclePhotos: VehiclePhoto[];

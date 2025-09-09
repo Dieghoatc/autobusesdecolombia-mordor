@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
-import { Company } from './company.entity';
+import { CompanyEntiti } from './company.entity';
 import { Vehicle } from '../../vehicle/entities/vehicle.entity';
 
 @Entity('company_services')
-export class CompanyService {
+export class CompanyServiceEntiti {
   @PrimaryGeneratedColumn()
   company_service_id: number;
 
@@ -13,9 +13,9 @@ export class CompanyService {
   @Column({ type: 'varchar', nullable: true })
   company_service_name: string;
 
-  @ManyToOne(() => Company, (company) => company.companyServices)
+  @ManyToOne(() => CompanyEntiti, (company) => company.companyServices)
   @JoinColumn({ name: 'company_id' })
-  company: Company;
+  company: CompanyEntiti;
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.companyService)
   vehicles: Vehicle[]
