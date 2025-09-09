@@ -1,10 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { VehicleDAO } from './dao/vehicle.dao';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
+import { VehicleDTO } from './dto/vehicle.dto';
+import { CloudinaryService } from 'src/services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class VehicleService {
-  constructor(private readonly vehicleDao: VehicleDAO) {}
+  constructor(
+    private readonly vehicleDao: VehicleDAO,
+
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   async getVehicleById(id: number) {
     return this.vehicleDao.findVehicleByID(id);
@@ -71,4 +77,72 @@ export class VehicleService {
       data: vehicles,
     };
   }
+
+  async getVehiclesByPlate(plate: string, paginationDto: VehiclePaginationDTO) {
+    const page = Math.max(1, Number(paginationDto.page) || 1);
+    const limit = Math.max(1, Number(paginationDto.limit) || 20);
+    const offset = (page - 1) * limit;
+
+    const [vehicles, totalCount] = await Promise.all([
+      this.vehicleDao.findVehicleForPlate(plate, limit, offset),
+      this.vehicleDao.findCount(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+
+    return {
+      info: {
+        count: totalCount,
+        currentPage: page,
+        pages: totalPages,
+        limit,
+        next: hasNext ? `/vehicle?page=${page + 1}&limit=${limit}` : null,
+        prev: hasPrev ? `/vehicle?page=${page - 1}&limit=${limit}` : null,
+        hasNext,
+        hasPrev,
+        startItem: offset + 1,
+        endItem: Math.min(offset + limit, totalCount),
+      },
+      data: vehicles,
+    };
+  }
+
+  async getVehiclesBySerial(serial: string, paginationDto: VehiclePaginationDTO) {
+    const page = Math.max(1, Number(paginationDto.page) || 1);
+    const limit = Math.max(1, Number(paginationDto.limit) || 20);
+    const offset = (page - 1) * limit;
+
+    const [vehicles, totalCount] = await Promise.all([
+      this.vehicleDao.findVehicleForSerial(serial, limit, offset),
+      this.vehicleDao.findCount(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+
+    return {
+      info: {
+        count: totalCount,
+        currentPage: page,
+        pages: totalPages,
+        limit,
+        next: hasNext ? `/vehicle?page=${page + 1}&limit=${limit}` : null,
+        prev: hasPrev ? `/vehicle?page=${page - 1}&limit=${limit}` : null,
+        hasNext,
+        hasPrev,
+        startItem: offset + 1,
+        endItem: Math.min(offset + limit, totalCount),
+      },
+      data: vehicles,
+    };
+  }
+
+  async createVehicle(file: Express.Multer.File, vehicleDTO: VehicleDTO) {    
+    const uploadResultCloudinary = await this.cloudinaryService.uploadImage('autobusesdecolombia', file.buffer);    
+    return this.vehicleDao.createVehicle(uploadResultCloudinary, vehicleDTO);
+  }
 }
+

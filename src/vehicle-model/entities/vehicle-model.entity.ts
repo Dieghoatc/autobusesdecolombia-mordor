@@ -6,10 +6,10 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { Vehicle } from './vehicle.entity';
+import { Vehicle } from '../../vehicle/entities/vehicle.entity';
 import { Brand } from '../../brands/entities/brands.entity';
-import { Chassis } from './chassis.entity';
-import { Bodywork } from './bodyworks.entity';
+import { Chassis } from '../../vehicle/entities/chassis.entity';
+import { Bodywork } from '../../vehicle/entities/bodyworks.entity';
 
 @Entity('models')
 export class Model {

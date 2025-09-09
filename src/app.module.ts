@@ -13,20 +13,23 @@ import { Posts } from './posts/entities/posts.entity';
 import { VehiclePhoto } from './vehicle-photo/entities/vehicle-photo.entity';
 import { TransportCategory } from './transport-category/entities/transport-category.entity';
 import { Brand } from './brands/entities/brands.entity';
-import { Photographer } from './vehicle-photo/entities/photographer.entity';
+import { Photographer } from './photographer/entities/photographer.entity';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { CompaniesModule } from './company/company.module';
 import { BrandsModule } from './brands/brands.module';
 import { CountriesModule } from './country/country.module';
 import { Vehicle } from './vehicle/entities/vehicle.entity';
-import { Company } from './company/entities/company.entity';
+import { CompanyEntiti } from './company/entities/company.entity';
 import { Country } from './country/entities/country.entity';
-import { CompanySerial } from './company/entities/company-serial.entity';
-import { CompanyService } from './company/entities/company-service.entity';
-import { Model } from './vehicle/entities/vehicle-model.entity';
+import { CompanySerialEntiti } from './company/entities/company-serial.entity';
+import { CompanyServiceEntiti } from './company/entities/company-service.entity';
+import { Model } from './vehicle-model/entities/vehicle-model.entity';
 import { Chassis } from './vehicle/entities/chassis.entity';
 import { Bodywork } from './vehicle/entities/bodyworks.entity';
-import { VehicleType } from './vehicle/entities/vehicle-type.entity';
+import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
+import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
+import { PhotographerModule } from './photographer/photographer.module';
+import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 
 @Module({
   imports: [
@@ -47,13 +50,13 @@ import { VehicleType } from './vehicle/entities/vehicle-type.entity';
         TransportCategory,
         Vehicle,
         Brand,
-        Company,
+        CompanyEntiti,
         Photographer,
         Country,
         Bodywork,
         Chassis,
-        CompanySerial,
-        CompanyService,
+        CompanySerialEntiti,
+        CompanyServiceEntiti,
         Model,
         VehicleType,
       ],
@@ -74,6 +77,9 @@ import { VehicleType } from './vehicle/entities/vehicle-type.entity';
     CompaniesModule,
     BrandsModule,
     CountriesModule,
+    VehicleModelModule,
+    PhotographerModule,
+    VehicleTypeModule,
   ],
   providers: [],
 })

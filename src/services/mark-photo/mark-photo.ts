@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
-import * as FormData from 'form-data'; // CORRECCIÓN 1: Cambiar importación
+import * as FormData from 'form-data'; 
 
 export class PhotoWatermarkClient {
   private readonly URL_LOCAL =
@@ -20,7 +20,6 @@ export class PhotoWatermarkClient {
       });
 
       formData.append('author', author);
-      // CORRECCIÓN 2: Tu FastAPI requiere location, no puede estar vacío
       formData.append('location', location || 'No especificado');
 
       const response = await axios.post(`${this.URL_LOCAL}/upload/`, formData, {
@@ -29,7 +28,6 @@ export class PhotoWatermarkClient {
         },
         responseType: 'arraybuffer',
         timeout: 30000,
-        // CORRECCIÓN 3: Agregar estas opciones para archivos grandes
         maxBodyLength: Infinity,
         maxContentLength: Infinity,
       });
@@ -40,11 +38,9 @@ export class PhotoWatermarkClient {
 
       if (error instanceof AxiosError) {
         const status = error.response?.status || 500;
-        // CORRECCIÓN 4: Mejorar manejo del mensaje de error
         let message = error.message;
 
         if (error.response?.data) {
-          // Si la respuesta es un buffer, convertirla a string
           if (error.response.data instanceof ArrayBuffer) {
             message = new TextDecoder().decode(error.response.data);
           } else {
@@ -73,7 +69,7 @@ export class PhotoWatermarkClient {
     }
   }
 
-  // BONUS: Método para verificar conectividad
+  // Verify Connectivity Service
   async healthCheck(): Promise<boolean> {
     try {
       const response = await axios.get(`${this.URL_LOCAL}/`, {

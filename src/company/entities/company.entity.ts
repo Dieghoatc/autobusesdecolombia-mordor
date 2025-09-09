@@ -10,11 +10,11 @@ import {
 
 import { Country } from '../../country/entities/country.entity';
 import { Vehicle } from '../../vehicle/entities/vehicle.entity';
-import { CompanySerial } from './company-serial.entity';
-import { CompanyService } from './company-service.entity';
+import { CompanySerialEntiti } from './company-serial.entity';
+import { CompanyServiceEntiti } from './company-service.entity';
 
 @Entity('companies')
-export class Company {
+export class CompanyEntiti {
   @PrimaryGeneratedColumn()
   company_id: number;
 
@@ -55,9 +55,9 @@ export class Company {
   @JoinColumn({ name: 'country_id' })
   country: Country;
 
-  @OneToMany(() => CompanySerial, (companySerial) => companySerial.company)
-  companySerials: CompanySerial[];
+  @OneToMany(() => CompanySerialEntiti, (companySerial) => companySerial.company)
+  companySerials: CompanySerialEntiti[];
 
-  @OneToMany(() => CompanyService, (companyService) => companyService.company)
-  companyServices: CompanyService[];
+  @OneToMany(() => CompanyServiceEntiti, (companyService) => companyService.company)
+  companyServices: CompanyServiceEntiti[];
 }
