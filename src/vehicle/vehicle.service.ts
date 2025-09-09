@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { VehicleDAO } from './dao/vehicle.dao';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 import { VehicleDTO } from './dto/vehicle.dto';
+import { CloudinaryService } from 'src/services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class VehicleService {
   constructor(
     private readonly vehicleDao: VehicleDAO,
+
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async getVehicleById(id: number) {
@@ -137,11 +140,9 @@ export class VehicleService {
     };
   }
 
-  async createVehicle(file: Express.Multer.File, vehicleDTO: VehicleDTO) {
-    console.log(file);
-    console.log(vehicleDTO);
-    
-    return "Perras"
+  async createVehicle(file: Express.Multer.File, vehicleDTO: VehicleDTO) {    
+    const uploadResultCloudinary = await this.cloudinaryService.uploadImage('autobusesdecolombia', file.buffer);    
+    return this.vehicleDao.createVehicle(uploadResultCloudinary, vehicleDTO);
   }
 }
 

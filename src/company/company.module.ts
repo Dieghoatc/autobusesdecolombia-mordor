@@ -6,7 +6,7 @@ import { CompanyServiceEntiti } from './entities/company-service.entity';
 
 import { CompanyController } from './company.controller';
 import { CompanyService } from './company.service';
-import { CompanyDao } from './dao/company-dao';
+import { CompanyDao } from './dao/company.dao';
 
 @Module({
   //Only entities in array typeorm

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CompanyDao } from './dao/company-dao';
+import { CompanyDao } from './dao/company.dao';
 
 @Injectable()
 export class CompanyService {

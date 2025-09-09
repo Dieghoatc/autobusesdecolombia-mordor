@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { VehicleService } from './vehicle.service';
 import { VehicleController } from './vehicle.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { Vehicle } from './entities/vehicle.entity';
 import { TransportCategory } from '../transport-category/entities/transport-category.entity';
 import { Brand } from '../brands/entities/brands.entity';
@@ -13,11 +15,13 @@ import { CompanySerialEntiti } from '../company/entities/company-serial.entity';
 import { CompanyServiceEntiti } from '../company/entities/company-service.entity';
 import { VehicleType } from '../vehicle-type/entities/vehicle-type.entity';
 import { VehiclePhoto } from '../vehicle-photo/entities/vehicle-photo.entity';
+
 import { VehicleDAO } from './dao/vehicle.dao';
+import { CompanySerialDAO } from '../company/dao/company-serial.dao';
+import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
+import { VehiclePhotoPostgresDAO } from '../vehicle-photo/dao/vehicle-photo-postgresql.dao';
 
 @Module({
-  controllers: [VehicleController],
-  providers: [VehicleService, VehicleDAO],
   imports: [
     TypeOrmModule.forFeature([
       Vehicle,
@@ -31,8 +35,17 @@ import { VehicleDAO } from './dao/vehicle.dao';
       CompanySerialEntiti,
       CompanyServiceEntiti,
       VehicleType,
+      VehiclePhoto,
     ]),
+    CloudinaryModule,
   ],
+  providers: [
+    VehicleService,
+    VehicleDAO,
+    CompanySerialDAO,
+    VehiclePhotoPostgresDAO,
+  ],
+  controllers: [VehicleController],
   exports: [TypeOrmModule],
 })
 export class VehicleModule {}

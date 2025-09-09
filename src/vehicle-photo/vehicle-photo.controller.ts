@@ -13,7 +13,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { PhotoDto } from './dto/photo.dto';
+import { PhotoDTO } from './dto/photo.dto';
 import { MarkPhotoDto } from './dto/mark-photo';
 import { VehiclePhotoService } from './vehicle-photo.service';
 import { FileInterceptor } from '@nestjs/platform-express';
