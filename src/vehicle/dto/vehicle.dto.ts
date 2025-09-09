@@ -1,44 +1,41 @@
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsInt, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class VehicleDTO {
-    
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
-    vehicle_type_id: number;
 
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
-    model_id: number;
-
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
     @IsOptional()
-    company_id: number;
+    @IsString()
+    vehicle_id: string;
 
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
-    transport_category_id: number;
-
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
     @IsOptional()
-    company_serial_id: number;
+    @IsString()
+    vehicle_type_id: string;
 
-    @Type(() => Number)
-    @IsNotEmpty()
-    @IsInt()
     @IsOptional()
-    company_service_id: number;
+    @IsString()
+    model_id: string;
 
-    @Type(() => String)
-    @IsNotEmpty()
     @IsOptional()
-    plate: string;     
+    @IsString()
+    company_id: string;
 
+    @IsString()
+    transport_category_id: string;
+
+    @IsOptional()
+    @IsString()
+    company_serial: string;
+
+    @IsOptional()
+    @IsString()
+    company_service: string;
+
+    @IsOptional()
+    @IsString()
+    plate: string;
+
+    @IsString()
+    photographer_id: string;
+
+    @IsString()
+    location: string;
 }
