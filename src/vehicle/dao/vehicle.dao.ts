@@ -124,11 +124,13 @@ export class VehicleDAO {
   }
 
   async createVehicle(imageUrl: string, vehicle: VehicleDTO) {
+        
     try {
       const company_serial = await this.serialDao.findOrCreate(
         vehicle.company_serial,
         vehicle.company_id,
       );
+
 
       const vehicleSave = await this.vehicleRepository.save(
         this.vehicleRepository.create({
