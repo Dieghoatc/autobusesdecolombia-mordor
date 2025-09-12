@@ -4,7 +4,7 @@ import * as FormData from 'form-data';
 
 export class PhotoWatermarkClient {
   private readonly URL_LOCAL =
-    process.env.IMAGEMARK_CLIENT_URL || 'http://localhost:8000';
+    process.env.IMAGE_MARK_CLIENT_URL || 'http://localhost:8000';
 
   async markPhoto(
     file: Express.Multer.File,
