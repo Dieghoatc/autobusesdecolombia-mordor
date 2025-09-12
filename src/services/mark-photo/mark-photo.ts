@@ -27,7 +27,7 @@ export class PhotoWatermarkClient {
           ...formData.getHeaders(),
         },
         responseType: 'arraybuffer',
-        timeout: 30000,
+        timeout: 50000,
         maxBodyLength: Infinity,
         maxContentLength: Infinity,
       });
