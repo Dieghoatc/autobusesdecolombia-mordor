@@ -22,7 +22,7 @@ export class PhotoWatermarkClient {
       formData.append('author', author);
       formData.append('location', location || 'No especificado');
 
-      const response = await axios.post(`${this.URL_LOCAL}/upload/`, formData, {
+      const response = await axios.post(`${this.URL_LOCAL}`, formData, {
         headers: {
           ...formData.getHeaders(),
         },
