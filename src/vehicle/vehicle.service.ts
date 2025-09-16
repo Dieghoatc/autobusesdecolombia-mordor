@@ -61,6 +61,8 @@ export class VehicleService {
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
 
+    console.log('📡 Consultando base de datos...');
+
     return {
       info: {
         count: totalCount,

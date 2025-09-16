@@ -20,6 +20,7 @@ import { VehicleDAO } from './dao/vehicle.dao';
 import { CompanySerialDAO } from '../company/dao/company-serial.dao';
 import { CloudinaryModule } from 'src/services/cloudinary/cloudinary.module';
 import { VehiclePhotoPostgresDAO } from '../vehicle-photo/dao/vehicle-photo-postgresql.dao';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { VehiclePhotoPostgresDAO } from '../vehicle-photo/dao/vehicle-photo-post
       VehiclePhoto,
     ]),
     CloudinaryModule,
+    RedisModule
   ],
   providers: [
     VehicleService,

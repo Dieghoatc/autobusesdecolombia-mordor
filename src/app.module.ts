@@ -1,5 +1,9 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
+import { HttpCacheInterceptor } from './redis/http-cache.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+
+
 import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './vehicle-photo/vehicle-photo.module';
 import { PostsModule } from './posts/posts.module';
@@ -30,20 +34,23 @@ import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
 import { PhotographerModule } from './photographer/photographer.module';
 import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
+import { RedisModule } from './redis/redis.module';
+
 
 @Module({
-  imports: [
+  imports: [   
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_PUBLIC_URL, // Usamos una variable de entorno
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.PGDATABASE,
+      url: process.env.DATABASE_PUBLIC_URL || undefined, // solo si usas Railway/Supabase
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 5432,
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.PGDATABASE || 'autobuses',
       entities: [
         Posts,
         VehiclePhoto,
@@ -63,9 +70,10 @@ import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
       synchronize: false,
       migrationsRun: true,
       migrations: ['dist/migrations/*.ts'],
-      ssl: {
-        rejectUnauthorized: false, // Necesario para conexiones SSL en Railway
-      },
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false } // Railway/Supabase/Heroku
+          : false, // Local / Docker
     }),
     PhotosModule,
     PostsModule,
@@ -79,9 +87,8 @@ import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
     CountriesModule,
     VehicleModelModule,
     PhotographerModule,
-    VehicleTypeModule,
-  ],
-  providers: [],
+    VehicleTypeModule
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
