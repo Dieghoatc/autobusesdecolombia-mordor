@@ -35,6 +35,7 @@ import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
 import { PhotographerModule } from './photographer/photographer.module';
 import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 import { RedisModule } from './redis/redis.module';
+import { SearchModule } from './search/search.module';
 
 
 @Module({
@@ -87,7 +88,8 @@ import { RedisModule } from './redis/redis.module';
     CountriesModule,
     VehicleModelModule,
     PhotographerModule,
-    VehicleTypeModule
+    VehicleTypeModule,
+    SearchModule
   ]
 })
 export class AppModule implements NestModule {
