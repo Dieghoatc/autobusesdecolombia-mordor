@@ -32,7 +32,7 @@ export class VehicleController {
   }
 
   @Get()
-  getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
+  async getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
     return this.vehicleService.getVehicles(paginationDto);
   }
 

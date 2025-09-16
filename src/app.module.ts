@@ -38,18 +38,19 @@ import { RedisModule } from './redis/redis.module';
 
 
 @Module({
-  imports: [
+  imports: [   
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_PUBLIC_URL, // Usamos una variable de entorno
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.PGDATABASE,
+      url: process.env.DATABASE_PUBLIC_URL || undefined, // solo si usas Railway/Supabase
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 5432,
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.PGDATABASE || 'autobuses',
       entities: [
         Posts,
         VehiclePhoto,
@@ -69,9 +70,10 @@ import { RedisModule } from './redis/redis.module';
       synchronize: false,
       migrationsRun: true,
       migrations: ['dist/migrations/*.ts'],
-      ssl: {
-        rejectUnauthorized: false, // Necesario para conexiones SSL en Railway
-      },
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false } // Railway/Supabase/Heroku
+          : false, // Local / Docker
     }),
     PhotosModule,
     PostsModule,
@@ -85,15 +87,8 @@ import { RedisModule } from './redis/redis.module';
     CountriesModule,
     VehicleModelModule,
     PhotographerModule,
-    VehicleTypeModule,
-    RedisModule,
-  ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: HttpCacheInterceptor,
-    },
-  ],
+    VehicleTypeModule
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

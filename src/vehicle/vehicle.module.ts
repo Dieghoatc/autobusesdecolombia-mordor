@@ -15,6 +15,7 @@ import { CompanySerialEntiti } from '../company/entities/company-serial.entity';
 import { CompanyServiceEntiti } from '../company/entities/company-service.entity';
 import { VehicleType } from '../vehicle-type/entities/vehicle-type.entity';
 import { VehiclePhoto } from '../vehicle-photo/entities/vehicle-photo.entity';
+  import { RedisService } from 'src/redis/redis.service';
 
 import { VehicleDAO } from './dao/vehicle.dao';
 import { CompanySerialDAO } from '../company/dao/company-serial.dao';

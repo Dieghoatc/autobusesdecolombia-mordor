@@ -1,22 +1,27 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { RedisService } from './redis.service';
 import { RedisController } from './redis.controller';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import Redis from 'ioredis';
 
+@Global()
 @Module({
-  controllers: [RedisController],
-  providers: [RedisService],
   imports: [
     CacheModule.register({
       isGlobal: true,
-      max: 100,
-      ttl: 60, // tiempo en segundos por defecto
-      store: redisStore,
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-      auth_pass: process.env.REDIS_PASSWORD,
+      ttl: 60
     }),
-  ]
+  ],
+  controllers: [RedisController],
+  providers: [
+    {
+      provide: 'REDIS_CLIENT',
+      useFactory: () => {
+        const redisUrl = process.env.REDIS_URL;
+        return new Redis(redisUrl);
+      },
+    },
+    RedisService,
+  ],
 })
 export class RedisModule {}
