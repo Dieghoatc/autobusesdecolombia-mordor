@@ -1,5 +1,9 @@
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ResponseTimeMiddleware } from './middleware/response-time.middleware';
+import { HttpCacheInterceptor } from './redis/http-cache.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+
+
 import { ConfigModule } from '@nestjs/config';
 import { PhotosModule } from './vehicle-photo/vehicle-photo.module';
 import { PostsModule } from './posts/posts.module';
@@ -31,6 +35,7 @@ import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
 import { PhotographerModule } from './photographer/photographer.module';
 import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 import { RedisModule } from './redis/redis.module';
+
 
 @Module({
   imports: [
@@ -83,7 +88,12 @@ import { RedisModule } from './redis/redis.module';
     VehicleTypeModule,
     RedisModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: HttpCacheInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -7,15 +7,16 @@ import * as redisStore from 'cache-manager-redis-store';
 @Module({
   controllers: [RedisController],
   providers: [RedisService],
-  imports: [CacheModule.register({
-    isGlobal: true,
-    max: 100,
-    ttl: 600,
-    store: redisStore,
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    auth_passs: process.env.REDIS_PASSWORD,   
-    db:0 
-  })]
+  imports: [
+    CacheModule.register({
+      isGlobal: true,
+      max: 100,
+      ttl: 60, // tiempo en segundos por defecto
+      store: redisStore,
+      host: process.env.REDIS_HOST,
+      port: Number(process.env.REDIS_PORT),
+      auth_pass: process.env.REDIS_PASSWORD,
+    }),
+  ]
 })
 export class RedisModule {}

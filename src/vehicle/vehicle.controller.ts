@@ -1,15 +1,24 @@
-import { Controller, Get, Param, Query, Post, UseInterceptors, UploadedFile, Body, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Body,
+  ValidationPipe,
+} from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VehicleDTO } from './dto/vehicle.dto';
-import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
-
 
 @Controller('vehicle')
-@UseInterceptors(CacheInterceptor)  
 export class VehicleController {
-  constructor(private readonly vehicleService: VehicleService) {}
+  constructor(
+    private readonly vehicleService: VehicleService,
+  ) {}
 
   @Get(':id') getVehicleById(@Param('id') id: string) {
     return this.vehicleService.getVehicleById(+id);
@@ -22,10 +31,9 @@ export class VehicleController {
     return this.vehicleService.getVehiclesByCategory(+id, paginationDto);
   }
 
-  @Get() 
-  @CacheKey('vehicles')
-  async getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
-    return await this.vehicleService.getVehicles(paginationDto);
+  @Get()
+  getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
+    return this.vehicleService.getVehicles(paginationDto);
   }
 
   @Get('plate/:plate') getVehiclesByPlate(
@@ -44,12 +52,10 @@ export class VehicleController {
 
   @Post()
   @UseInterceptors(FileInterceptor('photo'))
-
   createVehicle(
     @UploadedFile() file: Express.Multer.File,
     @Body(ValidationPipe) vehicleDTO: VehicleDTO,
   ) {
-
     if (!file) {
       throw new Error('No se recibió ningún archivo');
     }
