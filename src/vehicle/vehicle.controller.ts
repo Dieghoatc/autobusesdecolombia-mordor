@@ -3,9 +3,11 @@ import { VehicleService } from './vehicle.service';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VehicleDTO } from './dto/vehicle.dto';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
 
 
 @Controller('vehicle')
+@UseInterceptors(CacheInterceptor)  
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
@@ -20,8 +22,10 @@ export class VehicleController {
     return this.vehicleService.getVehiclesByCategory(+id, paginationDto);
   }
 
-  @Get() getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
-    return this.vehicleService.getVehicles(paginationDto);
+  @Get() 
+  @CacheKey('vehicles')
+  async getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
+    return await this.vehicleService.getVehicles(paginationDto);
   }
 
   @Get('plate/:plate') getVehiclesByPlate(

@@ -30,6 +30,7 @@ import { VehicleType } from './vehicle-type/entities/vehicle-type.entity';
 import { VehicleModelModule } from './vehicle-model/vehicle-model.module';
 import { PhotographerModule } from './photographer/photographer.module';
 import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
     VehicleModelModule,
     PhotographerModule,
     VehicleTypeModule,
+    RedisModule,
   ],
   providers: [],
 })
