@@ -17,18 +17,17 @@ import Redis from 'ioredis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: () => {
-        const nodeEnv = process.env.NODE_ENV || 'development'
+        const nodeEnv = process.env.NODE_ENV || 'staging'
         const host = process.env.REDISHOST || 'localhost'
         const port = process.env.REDISPORT || 6379
 
-        if (nodeEnv === 'staging') {
-          console.log('Using Redis staging');
+        if (nodeEnv === 'local') {
           return new Redis({ host, port: Number(port) });
         }
 
         const redisUrl = process.env.REDIS_URL;
         if (!redisUrl) {
-          throw new Error('Configure REDIS_URL and NODE_ENV=staging');
+          throw new Error('Configure REDIS_URL and NODE_ENV=local');
         }
         return new Redis(redisUrl);
       },
