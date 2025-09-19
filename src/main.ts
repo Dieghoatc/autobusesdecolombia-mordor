@@ -41,7 +41,7 @@ async function bootstrap() {
     const port =
       portEnv && !isNaN(parseInt(portEnv, 10)) ? parseInt(portEnv, 10) : 3001;
 
-    app.listen(port, "0.0.0.0", () => {
+    app.listen(port, () => {
       console.log(`Server listening on ${port}`);
     });
     
