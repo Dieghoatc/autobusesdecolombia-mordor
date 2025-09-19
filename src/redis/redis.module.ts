@@ -17,19 +17,17 @@ import Redis from 'ioredis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: () => {
-        const nodeEnv = process.env.NODE_ENV || 'development';
+        const nodeEnv = process.env.NODE_ENV || 'staging';
+        const host = process.env.REDIS_HOST || '127.0.0.1';
+        const port = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
 
-        // Desarrollo: usar Redis local en Docker
-        if (['development', 'dev', 'local'].includes(nodeEnv)) {
-          const host = process.env.REDIS_HOST || '127.0.0.1';
-          const port = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
+        if (nodeEnv === 'staging') {
           return new Redis({ host, port });
         }
 
-        // Otros entornos: usar URL completa
         const redisUrl = process.env.REDIS_URL;
         if (!redisUrl) {
-          throw new Error('REDIS_URL no está definido para el entorno actual. Configure REDIS_URL o establezca NODE_ENV=development para usar Redis local.');
+          throw new Error('Configure REDIS_URL and NODE_ENV=staging');
         }
         return new Redis(redisUrl);
       },
