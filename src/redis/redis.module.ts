@@ -17,9 +17,9 @@ import Redis from 'ioredis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: () => {
-        const nodeEnv = process.env.NODE_ENV || 'staging';
-        const host = process.env.REDIS_HOST || '127.0.0.1';
-        const port = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
+        const nodeEnv = process.env.REDISHOST || 'staging';
+        const host = process.env.REDISPORT  || '127.0.0.1';
+        const port = process.env.REDISPORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
 
         if (nodeEnv === 'staging') {
           return new Redis({ host, port });

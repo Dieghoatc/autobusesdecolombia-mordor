@@ -46,12 +46,12 @@ import { SearchModule } from './search/search.module';
     RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      //url: process.env.DATABASE_PUBLIC_URL || undefined, // solo si usas Railway/Supabase
-      host: process.env.DB_HOST || '172.18.0.5',
-      port: Number(process.env.DB_PORT) || 5433,
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'example',
-      database: process.env.PGDATABASE || 'postgres',
+      url: process.env.DATABASE_PUBLIC_URL, 
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.PGDATABASE,
       entities: [
         Posts,
         VehiclePhoto,
