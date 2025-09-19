@@ -36,6 +36,7 @@ import { PhotographerModule } from './photographer/photographer.module';
 import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 import { RedisModule } from './redis/redis.module';
 import { SearchModule } from './search/search.module';
+import { AppController } from './app.controllet';
 
 
 @Module({
@@ -46,12 +47,12 @@ import { SearchModule } from './search/search.module';
     RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_PUBLIC_URL, 
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.PGDATABASE,
+      //url: process.env.DATABASE_PUBLIC_URL, 
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 5433,
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'example',
+      database: process.env.DB_NAME || 'postgres',
       entities: [
         Posts,
         VehiclePhoto,
@@ -73,8 +74,8 @@ import { SearchModule } from './search/search.module';
       migrations: ['dist/migrations/*.ts'],
       ssl:
         process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false } // Railway/Supabase/Heroku
-          : false, // Local / Docker
+            ? { rejectUnauthorized: false } 
+            : false, 
     }),
     PhotosModule,
     PostsModule,
@@ -90,10 +91,12 @@ import { SearchModule } from './search/search.module';
     PhotographerModule,
     VehicleTypeModule,
     SearchModule
-  ]
+  ],
+  controllers: [AppController],
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ResponseTimeMiddleware).forRoutes('*'); // Aplica el middleware a todas las rutas
+    consumer.apply(ResponseTimeMiddleware).forRoutes('*');
   }
 }

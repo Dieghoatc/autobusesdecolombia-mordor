@@ -31,8 +31,7 @@ services:
       - 6379:6379
 
   # NestJS API
-  mordor_api:
-    
+  mordor_api:    
     build: .
     container_name: mordor_api
     restart: always
@@ -51,9 +50,9 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: example
       DB_NAME: postgres
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      NODE_ENV: development
+      REDISHOST: redis
+      REDISPORT: 6379
+      NODE_ENV: staging
       CORS_ORIGIN: http://localhost:3000
 
 volumes:

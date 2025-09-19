@@ -13,7 +13,7 @@ export class SearchController {
   @Get(':search')
   async searchController(
     @Param('search') search: string,
-    @Query('query') paginationDto: SearchPaginationDTO,
+    @Query() paginationDto: SearchPaginationDTO,
   ) {
     const cacheKey = `search_${search}_${paginationDto.page}_${paginationDto.limit}`;
     const cachedData = await this.redisService.getCacheKey(cacheKey);
