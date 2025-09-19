@@ -9,6 +9,6 @@ import { Model } from './entities/vehicle-model.entity';
   controllers: [VehicleModelController],
   providers: [VehicleModelService, VehicleModelDAO],
   imports: [TypeOrmModule.forFeature([Model])],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule]
 })
 export class VehicleModelModule {}

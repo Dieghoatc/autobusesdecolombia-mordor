@@ -1,0 +1,60 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres
+    container_name: morialocal_db
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Adminer (UI for PostgreSQL)
+  adminer:
+    image: adminer
+    container_name: moria_adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  # Redis Database
+  redis:
+    image: redis
+    container_name: morialocal_redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  # NestJS API
+  mordor_api:
+    
+    build: .
+    container_name: mordor_api
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001 # Ajustado al puerto por defecto de NestJS
+    command: npm run start:dev
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: example
+      DB_NAME: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      NODE_ENV: development
+      CORS_ORIGIN: http://localhost:3000
+
+volumes:
+  pgdata:
