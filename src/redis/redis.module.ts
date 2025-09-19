@@ -16,7 +16,7 @@ import Redis from 'ioredis';
   providers: [
     {
       provide: 'REDIS_CLIENT',
-      useFactory: () => {
+      useFactory: async () => {
         const nodeEnv = process.env.NODE_ENV;
 
         if (nodeEnv === 'local') {
@@ -31,7 +31,10 @@ import Redis from 'ioredis';
         if (!redisUrl) {
           throw new Error('Configure REDIS_URL and NODE_ENV=local');
         }
-        return new Redis(redisUrl); //Forze ipv6
+        const redis =  new Redis(process.env.REDIS_URL + "?family=0");
+        const ping = await redis.ping()
+        console.log(ping)
+        return redis
       },
     },
     RedisService,
