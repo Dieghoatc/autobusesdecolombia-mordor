@@ -18,11 +18,11 @@ import Redis from 'ioredis';
       provide: 'REDIS_CLIENT',
       useFactory: () => {
         const nodeEnv = process.env.REDISHOST || 'staging';
-        const host = process.env.REDISPORT  || '127.0.0.1';
-        const port = process.env.REDISPORT ? parseInt(process.env.REDIS_PORT, 10) : 6379;
+        const host = process.env.REDISHOST
+        const port = process.env.REDISPORT
 
         if (nodeEnv === 'staging') {
-          return new Redis({ host, port });
+          return new Redis({ host, port: parseInt(port) });
         }
 
         const redisUrl = process.env.REDIS_URL;
