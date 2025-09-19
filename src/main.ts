@@ -41,9 +41,11 @@ async function bootstrap() {
     const port =
       portEnv && !isNaN(parseInt(portEnv, 10)) ? parseInt(portEnv, 10) : 3001;
 
-    await app.listen(port);
-
-    logger.log(`🚀 Server running on http://localhost:${port}`);
+    app.listen(port, '::', () => {
+      console.log(`Server listening on ${port}`);
+    });
+    
+    logger.log(`🚀 Server running on port:${port}`);
     logger.log(`📝 Environment: ${environment}`);
   } catch (error) {
     logger.error('❌ Error starting the application:', error);

@@ -9,27 +9,32 @@ import Redis from 'ioredis';
   imports: [
     CacheModule.register({
       isGlobal: true,
-      ttl: 60
+      ttl: 60,
     }),
   ],
   controllers: [RedisController],
   providers: [
     {
       provide: 'REDIS_CLIENT',
-      useFactory: () => {
-        const nodeEnv = process.env.REDISHOST || 'staging';
-        const host = process.env.REDISHOST
-        const port = process.env.REDISPORT
+      useFactory: async () => {
+        const nodeEnv = process.env.NODE_ENV;
 
-        if (nodeEnv === 'staging') {
-          return new Redis({ host, port: parseInt(port) });
+        if (nodeEnv === 'local') {
+          const host = process.env.REDISHOST || 'localhost';
+          const port = process.env.REDISPORT || 6379;
+
+          return new Redis({ host, port: Number(port) });
         }
 
         const redisUrl = process.env.REDIS_URL;
+
         if (!redisUrl) {
-          throw new Error('Configure REDIS_URL and NODE_ENV=staging');
+          throw new Error('Configure REDIS_URL and NODE_ENV=local');
         }
-        return new Redis(redisUrl);
+        const redis =  new Redis(process.env.REDIS_URL + "?family=0");
+        const ping = await redis.ping()
+        console.log(ping)
+        return redis
       },
     },
     RedisService,

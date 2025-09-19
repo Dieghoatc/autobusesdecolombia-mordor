@@ -15,8 +15,8 @@ export class SearchService {
     const page = Math.max(1, Number(paginationDto.page) || 1);
     const limit = Math.max(1, Number(paginationDto.limit) || 5);
     const offset = (page - 1) * limit;
-
-    const models = await this.vehicleRepository
+  
+    const searchForModel = await this.vehicleRepository
       .createQueryBuilder('model')
       .leftJoinAndSelect('model.chassis', 'chassis')
       .leftJoinAndSelect('model.bodywork', 'bodywork')
@@ -27,27 +27,30 @@ export class SearchService {
       .take(limit)
       .skip(offset)
       .getMany();
-
-    const totalCount = await this.vehicleRepository.createQueryBuilder('model').getCount()
-
+  
+    const totalCount = await this.vehicleRepository
+      .createQueryBuilder('model')
+      .where('model.model_name ILIKE :search', { search: `%${search}%` })
+      .getCount();
+  
     const totalPages = Math.ceil(totalCount / limit);
     const hasNext = page < totalPages;
     const hasPrev = page > 1;
-
+  
     return {
       info: {
         count: totalCount,
         currentPage: page,
         pages: totalPages,
         limit,
-        next: hasNext ? `/search?${search}?page=${page + 1}&limit=${limit}` : null,
-        prev: hasPrev ? `/search?${search}?page=${page - 1}&limit=${limit}` : null,
+        next: hasNext ? `/search/${search}?page=${page + 1}&limit=${limit}` : null,
+        prev: hasPrev ? `/search/${search}?page=${page - 1}&limit=${limit}` : null,
         hasNext,
         hasPrev,
         startItem: offset + 1,
         endItem: Math.min(offset + limit, totalCount),
       },
-      data: models,
+      data: searchForModel,
     };
   }
-}
+}  
