@@ -71,7 +71,7 @@ export class VehicleController {
 
   @Post()
   @UseInterceptors(FileInterceptor('photo'))
-  createVehicle(
+  async createVehicle(
     @UploadedFile() file: Express.Multer.File,
     @Body(ValidationPipe) vehicleDTO: VehicleDTO,
   ) {
@@ -84,6 +84,7 @@ export class VehicleController {
     if (file.size > maxSize) {
       throw new Error('El archivo es demasiado grande.');
     }
+    await this.redisService.delCacheKey("vehicles:*");
 
     return this.vehicleService.createVehicle(file, vehicleDTO);
   }

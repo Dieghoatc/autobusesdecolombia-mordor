@@ -15,4 +15,8 @@ export class RedisService {
   async getCacheKey(key: string) {
     return await this.redis.get(key);
   }
+
+  async delCacheKey(key: string) {
+    return await this.redis.del(key);
+  }
 }
