@@ -17,10 +17,21 @@ import Redis from 'ioredis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: () => {
-        const host = process.env.REDISHOST || 'localhost';
-        const port = process.env.REDISPORT || 6379;
+        const nodeEnv = process.env.NODE_ENV;
 
-        return new Redis({ host, port: Number(port) });
+        if (nodeEnv === 'local') {
+          const host = process.env.REDISHOST || 'localhost';
+          const port = process.env.REDISPORT || 6379;
+
+          return new Redis({ host, port: Number(port) });
+        }
+
+        const redisUrl = process.env.REDIS_URL;
+
+        if (!redisUrl) {
+          throw new Error('Configure REDIS_URL and NODE_ENV=local');
+        }
+        return new Redis(redisUrl);
       },
     },
     RedisService,
