@@ -31,7 +31,7 @@ import Redis from 'ioredis';
         if (!redisUrl) {
           throw new Error('Configure REDIS_URL and NODE_ENV=local');
         }
-        return new Redis(redisUrl);
+        return new Redis(redisUrl, {family: 6}); //Forze ipv6
       },
     },
     RedisService,
