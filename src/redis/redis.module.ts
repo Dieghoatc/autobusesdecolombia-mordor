@@ -29,7 +29,7 @@ import Redis from 'ioredis';
         const redisUrl = process.env.REDIS_URL;
 
         if (!redisUrl) {
-          throw new Error('Configure REDIS_URL and NODE_ENV=staging');
+          throw new Error('Configure REDIS_URL and NODE_ENV=local');
         }
         return new Redis(redisUrl);
       },

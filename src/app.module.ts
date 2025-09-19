@@ -47,8 +47,8 @@ import { AppController } from './app.controllet';
     RedisModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL, 
-      host: process.env.DB_HOST || 'localhost',
+      url: process.env.DATABASE_URL || undefined, 
+      host: process.env.PGHOST || 'localhost',
       port: Number(process.env.PGPORT) || 5433,
       username: process.env.PGUSER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || 'example',
