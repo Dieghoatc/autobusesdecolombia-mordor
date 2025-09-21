@@ -16,7 +16,10 @@ export class RedisService {
     return await this.redis.get(key);
   }
 
-  async delCacheKey(key: string) {
-    return await this.redis.del(key);
+  async delCacheByPattern(pattern: string) {
+    const keys = await this.redis.keys(pattern);
+    if (keys.length) {
+      await this.redis.del(...keys);
+    }
   }
 }
