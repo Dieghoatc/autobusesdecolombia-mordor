@@ -29,6 +29,13 @@ export class VehicleModelDAO {
     const [vehicles, total] = await this.vehicleModelRepository.manager
     .getRepository('vehicles')
     .createQueryBuilder('v')
+    .leftJoinAndSelect('v.transportCategory', 'transportCategory')
+    .leftJoinAndSelect('v.vehicle_type', 'vehicleType')
+    .leftJoinAndSelect('v.company', 'company')
+    .leftJoinAndSelect('v.companySerial', 'companySerial')
+    .leftJoinAndSelect('v.companyService', 'companyService')
+    .leftJoinAndSelect('v.vehiclePhotos', 'vehiclePhotos')
+    .leftJoinAndSelect('vehiclePhotos.photographer', 'photographer')
     .where('v.model_id = :id', { id })
     .orderBy('v.vehicle_id', 'ASC')
     .skip(offset)
