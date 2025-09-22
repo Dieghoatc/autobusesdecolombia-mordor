@@ -85,7 +85,10 @@ export class VehicleController {
       throw new Error('El archivo es demasiado grande.');
     }
     await this.redisService.delCacheByPattern(
-      `vehicles_by_category_${VehiclePaginationDTO}_*`
+      `vehicles_${VehiclePaginationDTO}_*`
+    );
+    await this.redisService.delCacheByPattern(
+      `vehicles_by_category_${vehicleDTO.transport_category_id}_${VehiclePaginationDTO}_*`
     );
 
     return this.vehicleService.createVehicle(file, vehicleDTO);
