@@ -45,14 +45,7 @@ export class VehicleController {
 
   @Get()
   async getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
-    const cacheKey = `vehicles_${paginationDto.page}_${paginationDto.limit}`;
-    const cachedData = await this.redisService.getCacheKey(cacheKey);
-    if (cachedData) {
-      return JSON.parse(cachedData);
-    }
-    const data = await this.vehicleService.getVehicles(paginationDto);
-    await this.redisService.setCacheKey(cacheKey, JSON.stringify(data));
-    return data;
+    return await this.vehicleService.getVehicles(paginationDto);
   }
 
   @Get('plate/:plate') getVehiclesByPlate(
