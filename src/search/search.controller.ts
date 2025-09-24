@@ -15,13 +15,6 @@ export class SearchController {
     @Param('search') search: string,
     @Query() paginationDto: SearchPaginationDTO,
   ) {
-    const cacheKey = `search_${search}_${paginationDto.page}_${paginationDto.limit}`;
-    const cachedData = await this.redisService.getCacheKey(cacheKey);
-    if (cachedData) {
-      return JSON.parse(cachedData);
-    }
-    const data = await this.searchService.searchService(search, paginationDto);
-    await this.redisService.setCacheKey(cacheKey, JSON.stringify(data));
-    return data;
+    return await this.searchService.searchService(search, paginationDto);
   }
 }
