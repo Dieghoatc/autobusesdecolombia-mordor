@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchPaginationDTO } from './dto/search.dto';
 import { RedisService } from 'src/redis/redis.service';
@@ -10,11 +10,14 @@ export class SearchController {
     private readonly redisService: RedisService,
   ) {}
 
-  @Get(':search')
+  @Get()
   async searchController(
-    @Param('search') search: string,
-    @Query() paginationDto: SearchPaginationDTO,
+    @Query() searchPaginationDto: SearchPaginationDTO,
   ) {
-    return await this.searchService.searchService(search, paginationDto);
+    if (!searchPaginationDto.q || searchPaginationDto.q.trim() === '') {
+      throw new BadRequestException('Query string "q" is required for searching.');
+    }
+    console.log("Search controller!!!!", searchPaginationDto)
+    return await this.searchService.searchService(searchPaginationDto);
   }
 }
