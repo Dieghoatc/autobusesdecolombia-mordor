@@ -1,23 +1,86 @@
-Restore database:
+# 🚌 MORDOR: AutobusesDeColombia API with NestJS
+
+## 📌 Description
+
+This project is an API built with the **NestJS framework**, used to provide and manage data for the **AutobusesDeColombia** website.
+It is designed to store data in the **Moria database** and integrate with external services such as the **Rivendel API** (for photo marking and metadata).
+
+## 🛠️ Tech Stack
+
+* **NestJS** – Backend framework for Node.js
+* **PostgreSQL** – Relational database
+* **TypeORM** – Object-relational mapper
+* **Redis** – In-memory data store
+* **Docker / Docker Compose** – Container orchestration & local development
+
+## ⚙️ Installation & Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Dieghoatc/autobusesdecolombia-mordor.git
+cd autobusesdecolombia-mordor
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+## ▶️ Running the App
+
+Development mode:
+
+```bash
+npm run start:dev
+```
+
+Production build:
+
+```bash
+npm run build
+npm run start:prod
+```
+
+## 🧪 Testing
+
+Run unit tests:
+
+```bash
+npm run test
+```
+
+E2E tests:
+
+```bash
+npm run test:e2e
+```
+
+Coverage:
+
+```bash
+npm run test:cov
+```
+
+## 🐳 Docker
+
+Start services with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+Stop services:
+
+```bash
 docker compose down
+```
 
-1. First, verify ports
+## 🗄️ Database Restore (Moria)
 
-Listening ports:
-netstat -ano | findstr 5432
+This project includes a PostgreSQL database named **Moria**.
 
-Process ID:
-tasklist /FI "PID eq 11964"
-tasklist /FI "PID eq 23676"
+## 📄 License
 
-2. docker compose up -d
-
-3. Then, copy the backup file to the container
-
-docker cp .\abc-backup-9-15-2025 morialocal_db:/backup.dump
-
-docker exec -it morialocal_db pg_restore --clean --no-acl --no-owner -U postgres -d postgres /backup.dump
-
-Listen Logs:
-
-docker logs mordor_api
+This project is licensed under the MIT License.
