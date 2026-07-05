@@ -42,7 +42,7 @@ async function bootstrap() {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Autobuses de Colombia API')
       .setDescription(
-        'API pública para consultar vehículos, marcas, empresas, fotos y categorías de transporte de autobusesdecolombia.com',
+        'Public API to browse vehicles, brands, companies, photos and transport categories for autobusesdecolombia.com',
       )
       .setVersion('1.0.0')
       .addBearerAuth(
@@ -50,25 +50,25 @@ async function bootstrap() {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
-          description: 'Token JWT emitido por /users/login',
+          description: 'JWT token issued by /users/login',
         },
         'access_token',
       )
-      .addTag('auth', 'Verificación de sesión')
-      .addTag('users', 'Registro, login y perfil de usuario')
-      .addTag('vehicles', 'Consulta de vehículos')
-      .addTag('vehicle-photos', 'Fotos de vehículos')
-      .addTag('vehicle-models', 'Modelos de vehículo')
-      .addTag('vehicle-types', 'Tipos de vehículo')
-      .addTag('transport-categories', 'Categorías de transporte')
-      .addTag('company', 'Empresas transportadoras')
-      .addTag('photographers', 'Fotógrafos')
+      .addTag('auth', 'Session verification')
+      .addTag('users', 'Register, login and user profile')
+      .addTag('vehicles', 'Vehicle catalog')
+      .addTag('vehicle-photos', 'Vehicle photos')
+      .addTag('vehicle-models', 'Vehicle models')
+      .addTag('vehicle-types', 'Vehicle types')
+      .addTag('transport-categories', 'Transport categories')
+      .addTag('company', 'Transport companies')
+      .addTag('photographers', 'Photographers')
       .addTag('posts', 'Blog / posts')
-      .addTag('contact', 'Formulario de contacto')
-      .addTag('search', 'Búsqueda general')
-      .addTag('cache', 'Utilidades de caché (Redis)')
+      .addTag('contact', 'Contact form')
+      .addTag('search', 'General search')
+      .addTag('cache', 'Cache utilities (Redis)')
       .addServer('http://localhost:3001', 'Local')
-      .addServer('https://api.autobusesdecolombia.com', 'Producción')
+      .addServer('https://api.autobusesdecolombia.com', 'Production')
       .build();
 
     const document = SwaggerModule.createDocument(app, swaggerConfig);

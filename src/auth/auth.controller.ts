@@ -5,12 +5,12 @@ import { ApiTags, ApiOperation, ApiOkResponse, ApiUnauthorizedResponse } from '@
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  @ApiOperation({ summary: 'Verifica la cookie de sesión (access_token) del usuario actual' })
-  @ApiOkResponse({ description: 'Token válido', schema: { example: { status: 'ok', token: '<jwt>' } } })
-  @ApiUnauthorizedResponse({ description: 'No hay cookie de sesión válida' })
+  @ApiOperation({ summary: "Verify the current user's session cookie (access_token)" })
+  @ApiOkResponse({ description: 'Valid token', schema: { example: { status: 'ok', token: '<jwt>' } } })
+  @ApiUnauthorizedResponse({ description: 'No valid session cookie' })
   @Get('verify')
   checkCookie(@Req() req: Request) {
-    const token = req.cookies['access_token']; // 👈 accede a la cookie llamada "jwt"
+    const token = req.cookies['access_token']; // 👈 access the cookie named "jwt"
     if( !token ) {
       throw new Error('No token found');
     }

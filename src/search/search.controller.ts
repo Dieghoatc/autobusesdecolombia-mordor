@@ -12,8 +12,8 @@ export class SearchController {
     private readonly redisService: RedisService,
   ) {}
 
-  @ApiOperation({ summary: 'Búsqueda general por texto (vehículos, empresas, etc.)' })
-  @ApiBadRequestResponse({ description: 'El parámetro "q" es requerido' })
+  @ApiOperation({ summary: 'General text search (vehicles, companies, etc.)' })
+  @ApiBadRequestResponse({ description: 'The "q" parameter is required' })
   @Get()
   async searchController(
     @Query() searchPaginationDto: SearchPaginationDTO,

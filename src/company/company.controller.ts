@@ -7,13 +7,13 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 export class CompanyController {
     constructor(private readonly companyService: CompanyService) {}
 
-    @ApiOperation({ summary: 'Lista todas las empresas transportadoras' })
+    @ApiOperation({ summary: 'List all transport companies' })
     @Get()
     findAll() {
         return this.companyService.findAll();
     }
 
-    @ApiOperation({ summary: 'Lista todos los servicios ofrecidos por las empresas' })
+    @ApiOperation({ summary: 'List all services offered by companies' })
     @Get('service')
     findAllServices() {
         return this.companyService.findAllServices();

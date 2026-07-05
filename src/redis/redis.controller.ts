@@ -7,7 +7,7 @@ import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 export class RedisController {
   constructor(private readonly redisService: RedisService) {}
 
-  @ApiOperation({ summary: 'Guarda un valor en caché (Redis)' })
+  @ApiOperation({ summary: 'Save a value in cache (Redis)' })
   @ApiQuery({ name: 'key', example: 'posts' })
   @ApiQuery({ name: 'value', example: '{"foo":"bar"}' })
   @Post()
@@ -26,7 +26,7 @@ export class RedisController {
     }
   }
 
-  @ApiOperation({ summary: 'Obtiene un valor de caché (Redis)' })
+  @ApiOperation({ summary: 'Get a value from cache (Redis)' })
   @ApiQuery({ name: 'key', example: 'posts' })
   @Get()
   async getCacheKey(@Query('key') key: string) {

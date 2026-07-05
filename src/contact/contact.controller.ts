@@ -16,21 +16,21 @@ import { ApiTags, ApiOperation, ApiCreatedResponse, ApiInternalServerErrorRespon
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
-  @ApiOperation({ summary: 'Envía un mensaje desde el formulario de contacto' })
-  @ApiCreatedResponse({ description: 'Contacto creado exitosamente' })
-  @ApiInternalServerErrorResponse({ description: 'Error al crear el contacto' })
+  @ApiOperation({ summary: 'Send a message from the contact form' })
+  @ApiCreatedResponse({ description: 'Contact created successfully' })
+  @ApiInternalServerErrorResponse({ description: 'Error creating the contact' })
   @Post()
   @UsePipes(new ValidationPipe())
   async create(@Body() createContactDto: CreateContactDto) {
     try {
       const createdContact = await this.contactService.create(createContactDto);
       return {
-        statusCode: HttpStatus.CREATED, // Usa HttpStatus para códigos de estado
+        statusCode: HttpStatus.CREATED, // Use HttpStatus for status codes
         data: createdContact,
       };
     } catch (error) {
       throw new HttpException(
-        'Error al crear el contacto',
+        'Error creating the contact',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

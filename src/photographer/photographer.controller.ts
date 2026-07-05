@@ -9,37 +9,37 @@ import { ApiTags, ApiOperation, ApiParam, ApiNotFoundResponse } from '@nestjs/sw
 export class PhotographerController {
   constructor(private readonly photographerService: PhotographerService) {}
 
-  @ApiOperation({ summary: 'Crea un fotógrafo' })
+  @ApiOperation({ summary: 'Create a photographer' })
   @Post()
   create(@Body() createPhotographerDto: CreatePhotographerDto) {
     return this.photographerService.create(createPhotographerDto);
   }
 
-  @ApiOperation({ summary: 'Lista todos los fotógrafos' })
+  @ApiOperation({ summary: 'List all photographers' })
   @Get()
   findAll() {
     return this.photographerService.findAll();
   }
 
-  @ApiOperation({ summary: 'Obtiene un fotógrafo por ID' })
+  @ApiOperation({ summary: 'Get a photographer by ID' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.photographerService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Actualiza un fotógrafo' })
+  @ApiOperation({ summary: 'Update a photographer' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePhotographerDto: UpdatePhotographerDto) {
     return this.photographerService.update(+id, updatePhotographerDto);
   }
 
-  @ApiOperation({ summary: 'Elimina un fotógrafo' })
+  @ApiOperation({ summary: 'Delete a photographer' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.photographerService.remove(+id);

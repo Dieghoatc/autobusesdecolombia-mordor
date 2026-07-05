@@ -24,14 +24,14 @@ export class VehicleController {
     private readonly redisService: RedisService,
   ) {}
 
-  @ApiOperation({ summary: 'Obtiene un vehículo por ID' })
+  @ApiOperation({ summary: 'Get a vehicle by ID' })
   @ApiParam({ name: 'id', example: 101 })
   @Get(':id') getVehicleById(@Param('id') id: string) {
     return this.vehicleService.getVehicleById(+id);
   }
 
-  @ApiOperation({ summary: 'Lista vehículos por categoría de transporte (con caché en Redis)' })
-  @ApiParam({ name: 'id', example: 1, description: 'ID de la categoría de transporte' })
+  @ApiOperation({ summary: 'List vehicles by transport category (cached in Redis)' })
+  @ApiParam({ name: 'id', example: 1, description: 'Transport category ID' })
   @Get('category/:id') async getVehiclesByCategory(
     @Param('id') id: string,
     @Query() paginationDto: VehiclePaginationDTO,
@@ -49,13 +49,13 @@ export class VehicleController {
     return data;
   }
 
-  @ApiOperation({ summary: 'Lista vehículos paginados' })
+  @ApiOperation({ summary: 'List paginated vehicles' })
   @Get()
   async getVehicles(@Query() paginationDto: VehiclePaginationDTO) {
     return await this.vehicleService.getVehicles(paginationDto);
   }
 
-  @ApiOperation({ summary: 'Busca vehículos por placa' })
+  @ApiOperation({ summary: 'Search vehicles by plate' })
   @ApiParam({ name: 'plate', example: 'ABC123' })
   @Get('plate/:plate') getVehiclesByPlate(
     @Param('plate') plate: string,
@@ -64,7 +64,7 @@ export class VehicleController {
     return this.vehicleService.getVehiclesByPlate(plate, paginationDto);
   }
 
-  @ApiOperation({ summary: 'Busca vehículos por serial de empresa' })
+  @ApiOperation({ summary: 'Search vehicles by company serial' })
   @ApiParam({ name: 'serial', example: 'INT-4521' })
   @Get('serial/:serial') getVehiclesBySerial(
     @Param('serial') serial: string,
@@ -73,7 +73,7 @@ export class VehicleController {
     return this.vehicleService.getVehiclesBySerial(serial, paginationDto);
   }
 
-  @ApiOperation({ summary: 'Crea un vehículo con su foto principal' })
+  @ApiOperation({ summary: 'Create a vehicle with its main photo' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -100,13 +100,13 @@ export class VehicleController {
     @Body(ValidationPipe) vehicleDTO: VehicleDTO,
   ) {
     if (!file) {
-      throw new Error('No se recibió ningún archivo');
+      throw new Error('No file was received');
     }
 
     const maxSize = 5 * 1024 * 1024; // 5 MB
 
     if (file.size > maxSize) {
-      throw new Error('El archivo es demasiado grande.');
+      throw new Error('The file is too large.');
     }
     await this.redisService.delCacheByPattern(
       `vehicles_${VehiclePaginationDTO}_*`

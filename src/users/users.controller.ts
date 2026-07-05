@@ -23,29 +23,29 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiOkResponse, ApiUnauthorizedRes
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Obtiene el perfil del usuario autenticado' })
+  @ApiOperation({ summary: 'Get the authenticated user profile' })
   @ApiBearerAuth('access_token')
-  @ApiOkResponse({ description: 'Perfil del usuario' })
-  @ApiUnauthorizedResponse({ description: 'Credenciales inválidas o token ausente' })
+  @ApiOkResponse({ description: 'User profile' })
+  @ApiUnauthorizedResponse({ description: 'Invalid credentials or missing token' })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
     try {
-      return req.user; // lo que retornas en validate()
+      return req.user; // whatever you return in validate()
     } catch (error) {
       throw new UnauthorizedException('Invalid credentials');
     }
   }
 
-  @ApiOperation({ summary: 'Registra un nuevo usuario' })
-  @ApiCreatedResponse({ description: 'Usuario creado' })
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiCreatedResponse({ description: 'User created' })
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
-  @ApiOperation({ summary: 'Inicia sesión y setea la cookie access_token (JWT)' })
-  @ApiOkResponse({ description: 'Login exitoso', schema: { example: { message: 'Logged successful' } } })
+  @ApiOperation({ summary: 'Log in and set the access_token (JWT) cookie' })
+  @ApiOkResponse({ description: 'Login successful', schema: { example: { message: 'Logged successful' } } })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
