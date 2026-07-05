@@ -1,11 +1,14 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { TransportCategoriesService } from './transport-category.service';
 import { RedisService } from 'src/redis/redis.service';
+import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 
+@ApiTags('transport-categories')
 @Controller('transport-categories')
 export class TransportCategoriesController {
   constructor(private readonly transportCategoriesService: TransportCategoriesService, private readonly redisService: RedisService) {}
 
+  @ApiOperation({ summary: 'Lista todas las categorías de transporte (con caché en Redis)' })
   @Get()
   async findAll() {
     const cacheKey = `transport-categories`;
@@ -18,6 +21,8 @@ export class TransportCategoriesController {
     return data;
   } 
 
+  @ApiOperation({ summary: 'Obtiene una categoría de transporte por slug' })
+  @ApiParam({ name: 'slug', example: 'intermunicipal' })
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.transportCategoriesService.findBySlug(slug);

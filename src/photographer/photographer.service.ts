@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PhotographerDAO } from './dao/photograper.dao';
 import { CreatePhotographerDto } from './dto/create-photographer.dto';
 import { UpdatePhotographerDto } from './dto/update-photographer.dto';
@@ -6,24 +6,31 @@ import { UpdatePhotographerDto } from './dto/update-photographer.dto';
 @Injectable()
 export class PhotographerService {
   constructor(private readonly photographerDao: PhotographerDAO) {}
-  
+
   create(createPhotographerDto: CreatePhotographerDto) {
-    return 'This action adds a new photographer';
+    return this.photographerDao.create(createPhotographerDto);
   }
 
   findAll() {
     return this.photographerDao.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} photographer`;
+  async findOne(id: number) {
+    const photographer = await this.photographerDao.findOne(id);
+    if (!photographer) {
+      throw new NotFoundException(`Photographer #${id} not found`);
+    }
+    return photographer;
   }
 
-  update(id: number, updatePhotographerDto: UpdatePhotographerDto) {
-    return `This action updates a #${id} photographer`;
+  async update(id: number, updatePhotographerDto: UpdatePhotographerDto) {
+    await this.findOne(id);
+    return this.photographerDao.update(id, updatePhotographerDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} photographer`;
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.photographerDao.remove(id);
+    return { message: `Photographer #${id} removed` };
   }
 }

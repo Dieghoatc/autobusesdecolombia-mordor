@@ -12,11 +12,28 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetPostDto } from './dto/get_post';
 import { RedisService } from 'src/redis/redis.service';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
 
+@ApiTags('posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService, private readonly redisService: RedisService) {}
 
+  @ApiOperation({ summary: 'Crea un post con imagen de portada' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: { type: 'string', format: 'binary' },
+        image_url: { type: 'string' },
+        title: { type: 'string' },
+        slug: { type: 'string' },
+        tags: { type: 'string' },
+        content: { type: 'string' },
+      },
+    },
+  })
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(
@@ -26,6 +43,9 @@ export class PostsController {
     return this.postsService.create(createPostDto, file);
   }
 
+  @ApiOperation({ summary: 'Sube una imagen suelta (usada por el editor de contenido)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ schema: { type: 'object', properties: { image: { type: 'string', format: 'binary' } } } })
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))
   async ploadImage(@UploadedFile() file: Express.Multer.File) {
@@ -51,6 +71,7 @@ export class PostsController {
     };
   }
 
+  @ApiOperation({ summary: 'Lista todos los posts (con caché en Redis)' })
   @Get()
   async findAll() {
     const cacheKey = `posts`;
@@ -63,6 +84,8 @@ export class PostsController {
     return data;
   }
 
+  @ApiOperation({ summary: 'Obtiene un post por ID (con caché en Redis)' })
+  @ApiParam({ name: 'id', example: 1 })
   @Get(':id')
   async findOne(@Param() params: GetPostDto) {
     const cacheKey = `post_${params.id}`;

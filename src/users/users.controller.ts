@@ -16,11 +16,17 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiOkResponse, ApiUnauthorizedResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOperation({ summary: 'Obtiene el perfil del usuario autenticado' })
+  @ApiBearerAuth('access_token')
+  @ApiOkResponse({ description: 'Perfil del usuario' })
+  @ApiUnauthorizedResponse({ description: 'Credenciales inválidas o token ausente' })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
@@ -31,11 +37,15 @@ export class UsersController {
     }
   }
 
+  @ApiOperation({ summary: 'Registra un nuevo usuario' })
+  @ApiCreatedResponse({ description: 'Usuario creado' })
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
+  @ApiOperation({ summary: 'Inicia sesión y setea la cookie access_token (JWT)' })
+  @ApiOkResponse({ description: 'Login exitoso', schema: { example: { message: 'Logged successful' } } })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(

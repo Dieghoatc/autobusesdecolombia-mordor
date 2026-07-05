@@ -2,7 +2,9 @@ import { Controller, Get, Query, BadRequestException } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchPaginationDTO } from './dto/search.dto';
 import { RedisService } from 'src/redis/redis.service';
+import { ApiTags, ApiOperation, ApiBadRequestResponse } from '@nestjs/swagger';
 
+@ApiTags('search')
 @Controller('search')
 export class SearchController {
   constructor(
@@ -10,6 +12,8 @@ export class SearchController {
     private readonly redisService: RedisService,
   ) {}
 
+  @ApiOperation({ summary: 'Búsqueda general por texto (vehículos, empresas, etc.)' })
+  @ApiBadRequestResponse({ description: 'El parámetro "q" es requerido' })
   @Get()
   async searchController(
     @Query() searchPaginationDto: SearchPaginationDTO,

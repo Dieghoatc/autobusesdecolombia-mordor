@@ -13,34 +13,50 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { PhotoDTO } from './dto/photo.dto';
 import { MarkPhotoDto } from './dto/mark-photo';
 import { VehiclePhotoService } from './vehicle-photo.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { categoryValidator } from './utils/categoryValidator';
-import { typeCarValidator } from './utils/typeCarValidator';
 import { QueryPaginationDto } from './dto/query-pagination.dto';
 import * as multer from 'multer';
+import { ApiTags, ApiOperation, ApiParam, ApiConsumes, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('vehicle-photos')
 @Controller('photo')
 export class VehiclePhotoController {
   constructor(private readonly photoService: VehiclePhotoService) {}
 
+  @ApiOperation({ summary: 'Lista todas las fotos de vehículos' })
   @Get()
   getPhotos() {
     return this.photoService.getPhotos();
   }
 
+  @ApiOperation({ summary: 'Lista fotos de vehículos paginadas' })
   @Get('page')
   getPhotosPagination(@Query() query: QueryPaginationDto) {
     return this.photoService.getPhotosPagination(query);
   }
 
+  @ApiOperation({ summary: 'Obtiene una foto por ID' })
+  @ApiParam({ name: 'id', example: 10 })
   @Get(':id')
   getPhotoById(@Param('id') id: string) {
     return this.photoService.getPhotoById(+id);
   }
 
+  @ApiOperation({ summary: 'Marca (watermark) una imagen con el nombre del fotógrafo y ubicación, devuelve un .avif' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: { type: 'string', format: 'binary' },
+        author: { type: 'string' },
+        location: { type: 'string' },
+      },
+      required: ['image', 'author'],
+    },
+  })
   @Post('mark')
   @UseInterceptors(
     FileInterceptor('image', { storage: multer.memoryStorage() }),
@@ -76,68 +92,4 @@ export class VehiclePhotoController {
       throw error;
     }
   }
-
-  // upload
-  // @Post('image')
-  // @UseInterceptors(FileInterceptor('image'))
-  // async uploadImage(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @Body(ValidationPipe) photoDto: PhotoDto,
-  // ) {
-  //   if (!file) {
-  //     throw new Error('No se recibió ningún archivo');
-  //   }
-  //   if (file.mimetype !== 'image/webp') {
-  //     throw new Error('Formato de archivo no soportado.');
-  //   }
-  //   const maxSize = 5 * 1024 * 1024; // 5 MB
-
-  //   if (file.size > maxSize) {
-  //     throw new Error('El archivo es demasiado grande.');
-  //   }
-
-  //   const base64Data = file.buffer.toString('base64');
-  //   const dataUrl = `data:${file.mimetype};base64,${base64Data}`;
-  //   const category = categoryValidator(photoDto.category);
-  //   const type = typeCarValidator(photoDto.type);
-  //   const company = photoDto.company;
-  //   const serial = photoDto.serial;
-  //   const bodywork = photoDto.bodywork;
-  //   const chassis = photoDto.chassis;
-  //   const plate = photoDto.plate;
-  //   const service = photoDto.service;
-  //   const author = photoDto.author;
-  //   const isInternational = Number(photoDto.isInternational);
-  //   const country = photoDto.country;
-  //   const location = photoDto.location;
-  //   const formatBase64Data = dataUrl.replace(/^data:image\/webp;base64,/, '');
-  //   const buffer = Buffer.from(formatBase64Data, 'base64');
-
-  //   try {
-  //     const result = await this.photosService.uploadImageFromBuffer(
-  //       buffer,
-  //       category,
-  //       type,
-  //       company,
-  //       serial,
-  //       bodywork,
-  //       chassis,
-  //       plate,
-  //       service,
-  //       author,
-  //       isInternational,
-  //       country,
-  //       location,
-  //     );
-  //     return {
-  //       message: 'Image uploaded successfully controller',
-  //       url: result,
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       message: 'Error uploading image',
-  //       error: error.message,
-  //     };
-  //   }
-  // }
 }

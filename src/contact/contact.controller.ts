@@ -9,11 +9,16 @@ import {
 } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
+import { ApiTags, ApiOperation, ApiCreatedResponse, ApiInternalServerErrorResponse } from '@nestjs/swagger';
 
+@ApiTags('contact')
 @Controller('contact')
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
+  @ApiOperation({ summary: 'Envía un mensaje desde el formulario de contacto' })
+  @ApiCreatedResponse({ description: 'Contacto creado exitosamente' })
+  @ApiInternalServerErrorResponse({ description: 'Error al crear el contacto' })
   @Post()
   @UsePipes(new ValidationPipe())
   async create(@Body() createContactDto: CreateContactDto) {

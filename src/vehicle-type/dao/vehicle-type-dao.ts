@@ -13,4 +13,22 @@ export class VehicleTypeDao {
   findAll() {
     return this.vehicleTypeRepository.find();
   }
+
+  findOne(id: number): Promise<VehicleType | null> {
+    return this.vehicleTypeRepository.findOne({ where: { vehicle_type_id: id } });
+  }
+
+  create(data: Partial<VehicleType>): Promise<VehicleType> {
+    const vehicleType = this.vehicleTypeRepository.create(data);
+    return this.vehicleTypeRepository.save(vehicleType);
+  }
+
+  async update(id: number, data: Partial<VehicleType>): Promise<VehicleType | null> {
+    await this.vehicleTypeRepository.update({ vehicle_type_id: id }, data);
+    return this.findOne(id);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.vehicleTypeRepository.delete({ vehicle_type_id: id });
+  }
 }

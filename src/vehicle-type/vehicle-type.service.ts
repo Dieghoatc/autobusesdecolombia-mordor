@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVehicleTypeDto } from './dto/create-vehicle-type.dto';
 import { UpdateVehicleTypeDto } from './dto/update-vehicle-type.dto';
 import { VehicleTypeDao } from './dao/vehicle-type-dao';
@@ -8,22 +8,29 @@ export class VehicleTypeService {
   constructor(private readonly vehicleTypeDao: VehicleTypeDao) {}
 
   create(createVehicleTypeDto: CreateVehicleTypeDto) {
-    return 'This action adds a new vehicleType';
+    return this.vehicleTypeDao.create(createVehicleTypeDto);
   }
 
   findAll() {
     return this.vehicleTypeDao.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vehicleType`;
+  async findOne(id: number) {
+    const vehicleType = await this.vehicleTypeDao.findOne(id);
+    if (!vehicleType) {
+      throw new NotFoundException(`Vehicle type #${id} not found`);
+    }
+    return vehicleType;
   }
 
-  update(id: number, updateVehicleTypeDto: UpdateVehicleTypeDto) {
-    return `This action updates a #${id} vehicleType`;
+  async update(id: number, updateVehicleTypeDto: UpdateVehicleTypeDto) {
+    await this.findOne(id);
+    return this.vehicleTypeDao.update(id, updateVehicleTypeDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} vehicleType`;
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.vehicleTypeDao.remove(id);
+    return { message: `Vehicle type #${id} removed` };
   }
 }
