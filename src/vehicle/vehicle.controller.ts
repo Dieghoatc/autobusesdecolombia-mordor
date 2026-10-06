@@ -15,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { VehicleDTO } from './dto/vehicle.dto';
 import { RedisService } from 'src/redis/redis.service';
 import { ApiTags, ApiOperation, ApiParam, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('vehicles')
 @Controller('vehicle')
@@ -93,6 +94,7 @@ export class VehicleController {
       required: ['location'],
     },
   })
+  @AdminOnly()
   @Post()
   @UseInterceptors(FileInterceptor('photo'))
   async createVehicle(

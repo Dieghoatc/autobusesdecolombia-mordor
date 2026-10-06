@@ -13,6 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { GetPostDto } from './dto/get_post';
 import { RedisService } from 'src/redis/redis.service';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -34,6 +35,7 @@ export class PostsController {
       },
     },
   })
+  @AdminOnly()
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(
@@ -46,6 +48,7 @@ export class PostsController {
   @ApiOperation({ summary: 'Upload a standalone image (used by the content editor)' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ schema: { type: 'object', properties: { image: { type: 'string', format: 'binary' } } } })
+  @AdminOnly()
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))
   async ploadImage(@UploadedFile() file: Express.Multer.File) {

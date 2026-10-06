@@ -1,8 +1,10 @@
 import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { RedisService } from './redis.service';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('cache')
+@AdminOnly()
 @Controller('/cache')
 export class RedisController {
   constructor(private readonly redisService: RedisService) {}

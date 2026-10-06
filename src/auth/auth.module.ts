@@ -1,26 +1,28 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller' ;
-import { UsersModule } from 'src/users/users.module';
-import { JwtModule } from '@nestjs/jwt'
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './jwt.strategy';
 
+import { UsersModule } from '../users/users.module';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtStrategy } from './jwt.strategy';
+import { ACCESS_TOKEN_TTL_SECONDS } from './auth.constants';
 
 @Module({
   imports: [
-    forwardRef(() => UsersModule),
+    UsersModule,
+    PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('SECRET_JWT_KEY'), // ✅ toma el secreto del .env
-        signOptions: { expiresIn: '1h' },
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow<string>('SECRET_JWT_KEY'),
+        signOptions: { expiresIn: ACCESS_TOKEN_TTL_SECONDS },
       }),
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
 })
 export class AuthModule {}

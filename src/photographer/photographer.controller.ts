@@ -3,6 +3,7 @@ import { PhotographerService } from './photographer.service';
 import { CreatePhotographerDto } from './dto/create-photographer.dto';
 import { UpdatePhotographerDto } from './dto/update-photographer.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiNotFoundResponse } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('photographers')
 @Controller('photographer')
@@ -10,6 +11,7 @@ export class PhotographerController {
   constructor(private readonly photographerService: PhotographerService) {}
 
   @ApiOperation({ summary: 'Create a photographer' })
+  @AdminOnly()
   @Post()
   create(@Body() createPhotographerDto: CreatePhotographerDto) {
     return this.photographerService.create(createPhotographerDto);
@@ -32,6 +34,7 @@ export class PhotographerController {
   @ApiOperation({ summary: 'Update a photographer' })
   @ApiParam({ name: 'id', example: 1 })
   @ApiNotFoundResponse({ description: 'Photographer not found' })
+  @AdminOnly()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePhotographerDto: UpdatePhotographerDto) {
     return this.photographerService.update(+id, updatePhotographerDto);
@@ -40,6 +43,7 @@ export class PhotographerController {
   @ApiOperation({ summary: 'Delete a photographer' })
   @ApiParam({ name: 'id', example: 1 })
   @ApiNotFoundResponse({ description: 'Photographer not found' })
+  @AdminOnly()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.photographerService.remove(+id);

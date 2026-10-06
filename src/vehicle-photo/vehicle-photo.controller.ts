@@ -19,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { PhotoFilterDto } from './dto/photo-filter.dto';
 import * as multer from 'multer';
 import { ApiTags, ApiOperation, ApiParam, ApiConsumes, ApiBody, ApiNotFoundResponse } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('vehicle-photos')
 @Controller('photo')
@@ -62,6 +63,7 @@ export class VehiclePhotoController {
       required: ['image', 'author'],
     },
   })
+  @AdminOnly()
   @Post('mark')
   @UseInterceptors(
     FileInterceptor('image', { storage: multer.memoryStorage() }),
