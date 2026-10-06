@@ -37,6 +37,7 @@ import { VehicleTypeModule } from './vehicle-type/vehicle-type.module';
 import { RedisModule } from './redis/redis.module';
 import { SearchModule } from './search/search.module';
 import { AppController } from './app.controllet';
+import { User } from './users/entities/user.entity';
 
 
 @Module({
@@ -68,10 +69,12 @@ import { AppController } from './app.controllet';
         CompanyServiceEntiti,
         Model,
         VehicleType,
+        User,
       ],
       synchronize: false,
-      migrationsRun: true,
-      migrations: ['dist/migrations/*.ts'],
+      // Migrations are applied manually with `npm run migration:run`
+      migrationsRun: false,
+      migrations: ['dist/migrations/*.js'],
       ssl:
         process.env.NODE_ENV === 'production'
             ? { rejectUnauthorized: false } 

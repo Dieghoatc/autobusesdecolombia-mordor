@@ -1,12 +1,12 @@
 services:
   # PostgreSQL Database
   db:
-    image: postgres
+    image: postgres:17
     container_name: morialocal_db
     restart: always
     shm_size: 128mb
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
@@ -36,15 +36,19 @@ services:
     container_name: mordor_api
     restart: always
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      # Live code (the Dockerfile's WORKDIR is /app); node_modules stays from the image
+      - .:/app
+      - /app/node_modules
     ports:
       - 3001:3001 # Ajustado al puerto por defecto de NestJS
     command: npm run start:dev
     depends_on:
       - db
       - redis
+    # Secrets (JWT, Cloudinary...) come from .env; the database is always the local one
+    env_file: .env
     environment:
+      DATABASE_URL: postgresql://postgres:example@db:5432/postgres
       PGHOST: db
       PGPORT: 5432
       PGUSER: postgres
