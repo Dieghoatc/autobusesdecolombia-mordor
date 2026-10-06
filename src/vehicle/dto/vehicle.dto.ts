@@ -1,13 +1,14 @@
-import { IsOptional, IsString, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsNumber, IsInt, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class VehicleDTO {
 
-    @ApiPropertyOptional({ example: 101, description: 'Vehicle ID (read/update only)' })
+    @ApiPropertyOptional({ example: 101, description: 'Existing vehicle to add the photo to. When omitted, a new vehicle is created' })
     @Type(() => Number)
     @IsOptional()
-    @IsString()
+    @IsInt()
+    @Min(1)
     vehicle_id?: number;
 
     @ApiPropertyOptional({ example: 2, description: 'Vehicle type ID' })
@@ -50,11 +51,10 @@ export class VehicleDTO {
     @IsString()
     plate?: string;
 
-    @ApiPropertyOptional({ example: 4, description: 'Photographer ID' })
+    @ApiProperty({ example: 4, description: 'Photographer ID' })
     @Type(() => Number)
-    @IsOptional()
-    @IsNumber()
-    photographer_id?: number;
+    @IsInt()
+    photographer_id: number;
 
     @ApiProperty({ example: 'Medellín, Colombia' })
     @IsString()

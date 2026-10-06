@@ -8,6 +8,7 @@ import {
   UploadedFile,
   Body,
   ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { VehiclePaginationDTO } from './dto/vehicle-pagination.dto';
@@ -74,13 +75,19 @@ export class VehicleController {
     return this.vehicleService.getVehiclesBySerial(serial, paginationDto);
   }
 
-  @ApiOperation({ summary: 'Create a vehicle with its main photo' })
+  @ApiOperation({
+    summary: 'Publish a vehicle photo',
+    description:
+      'With vehicle_id, adds the photo to that vehicle. Without it, creates a new vehicle ' +
+      '(vehicle_type_id, model_id, company_id and transport_category_id are required).',
+  })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
         photo: { type: 'string', format: 'binary' },
+        vehicle_id: { type: 'number' },
         vehicle_type_id: { type: 'number' },
         model_id: { type: 'number' },
         company_id: { type: 'number' },
@@ -91,7 +98,7 @@ export class VehicleController {
         photographer_id: { type: 'number' },
         location: { type: 'string' },
       },
-      required: ['location'],
+      required: ['photo', 'photographer_id', 'location'],
     },
   })
   @AdminOnly()
@@ -102,21 +109,20 @@ export class VehicleController {
     @Body(ValidationPipe) vehicleDTO: VehicleDTO,
   ) {
     if (!file) {
-      throw new Error('No file was received');
+      throw new BadRequestException('No file was received');
     }
 
     const maxSize = 5 * 1024 * 1024; // 5 MB
 
     if (file.size > maxSize) {
-      throw new Error('The file is too large.');
+      throw new BadRequestException('The file is too large (max 5MB)');
     }
-    await this.redisService.delCacheByPattern(
-      `vehicles_${VehiclePaginationDTO}_*`
-    );
-    await this.redisService.delCacheByPattern(
-      `vehicles_by_category_${vehicleDTO.transport_category_id}_${VehiclePaginationDTO}_*`
-    );
 
-    return this.vehicleService.createVehicle(file, vehicleDTO);
+    const result = await this.vehicleService.createVehicle(file, vehicleDTO);
+
+    // Category listings are cached as vehicles_by_category_{id}_{page}_{limit}
+    await this.redisService.delCacheByPattern('vehicles_by_category_*');
+
+    return result;
   }
 }

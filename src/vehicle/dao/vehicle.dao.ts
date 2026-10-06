@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Vehicle } from '../entities/vehicle.entity';
+import { VehiclePhoto } from '../../vehicle-photo/entities/vehicle-photo.entity';
 
 import { VehicleDTO } from '../dto/vehicle.dto';
 import { CompanySerialDAO } from '../../company/dao/company-serial.dao';
@@ -123,39 +124,50 @@ export class VehicleDAO {
       .getMany();
   }
 
-  async createVehicle(imageUrl: string, vehicle: VehicleDTO) {
-        
-    try {
-      const company_serial = await this.serialDao.findOrCreate(
-        vehicle.company_serial,
-        vehicle.company_id,
-      );
+  existsById(id: number): Promise<boolean> {
+    return this.vehicleRepository.existsBy({ vehicle_id: id });
+  }
 
+  async addPhoto(vehicleId: number, imageUrl: string, vehicle: VehicleDTO) {
+    await this.photoDao.createVehiclePhoto(imageUrl, {
+      vehicle_id: vehicleId,
+      image_url: imageUrl,
+      photographer_id: vehicle.photographer_id,
+      country_id: 1,
+      location: vehicle.location,
+    });
+  }
 
-      const vehicleSave = await this.vehicleRepository.save(
-        this.vehicleRepository.create({
+  // Creates the vehicle and its first photo in one transaction; returns the new vehicle id
+  async createVehicle(imageUrl: string, vehicle: VehicleDTO): Promise<number> {
+    const companySerial = vehicle.company_serial
+      ? await this.serialDao.findOrCreate(vehicle.company_serial, vehicle.company_id)
+      : null;
+
+    return this.vehicleRepository.manager.transaction(async (manager) => {
+      const vehicleSave = await manager.save(
+        manager.create(Vehicle, {
           vehicle_type_id: vehicle.vehicle_type_id,
           model_id: vehicle.model_id,
           company_id: vehicle.company_id,
           transport_category_id: vehicle.transport_category_id,
           plate: vehicle.plate,
-          company_serial_id: company_serial.company_serial_id,
+          company_serial_id: companySerial?.company_serial_id ?? null,
           company_service_id: vehicle.company_service_id,
         }),
       );
 
-      await this.photoDao.createVehiclePhoto(imageUrl, {
-        vehicle_id: vehicleSave.vehicle_id,
-        image_url: imageUrl,
-        photographer_id: vehicle.photographer_id,
-        country_id: 1,
-        location: vehicle.location,
-      });
+      await manager.save(
+        manager.create(VehiclePhoto, {
+          vehicle_id: vehicleSave.vehicle_id,
+          image_url: imageUrl,
+          photographer_id: vehicle.photographer_id,
+          country_id: 1,
+          location: vehicle.location,
+        }),
+      );
 
-      return 'Vehicle created successfully';
-    } catch (error) {
-      console.error('❌ Error in createVehicle:', error);
-      return 'Error creating vehicle';
-    }
+      return vehicleSave.vehicle_id;
+    });
   }
 }
