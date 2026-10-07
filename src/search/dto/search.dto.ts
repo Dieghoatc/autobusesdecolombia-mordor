@@ -4,20 +4,20 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SearchPaginationDTO {
 
-  @ApiPropertyOptional({ example: 'busetón', description: 'Texto a buscar' })
+  @ApiPropertyOptional({ example: 'busetón', description: 'Text to search for' })
   @IsOptional()
   @Type(() => String)
   @IsString()
   q: string;
 
-  @ApiPropertyOptional({ example: 1, minimum: 1, description: 'Número de página' })
+  @ApiPropertyOptional({ example: 1, minimum: 1, description: 'Page number' })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page?: number;
 
-  @ApiPropertyOptional({ example: 20, minimum: 1, description: 'Resultados por página' })
+  @ApiPropertyOptional({ example: 20, minimum: 1, description: 'Results per page' })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

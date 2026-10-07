@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class PhotoDTO {
 
-  @ApiProperty({ example: 12, description: 'ID del vehículo fotografiado' })
+  @ApiProperty({ example: 12, description: 'ID of the photographed vehicle' })
   @Type(() => Number)
   @IsNumber()
   vehicle_id: number;
@@ -15,12 +15,12 @@ export class PhotoDTO {
   @IsString()
   image_url: string;
 
-  @ApiProperty({ example: 4, description: 'ID del fotógrafo' })
+  @ApiProperty({ example: 4, description: 'Photographer ID' })
   @Type(() => Number)
   @IsNumber()
   photographer_id: number;
 
-  @ApiProperty({ example: 1, description: 'ID del país' })
+  @ApiProperty({ example: 1, description: 'Country ID' })
   @Type(() => Number)
   @IsNumber()
   country_id: number;

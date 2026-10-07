@@ -1,60 +1,45 @@
 import * as bcrypt from 'bcrypt';
-import {
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-  Inject,
-  forwardRef,
-} from '@nestjs/common';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
-
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
 
+import { LoginUserDto } from '../users/dto/login-user.dto';
+import { UsersService } from '../users/users.service';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { ACCESS_TOKEN_TTL_SECONDS } from './auth.constants';
 
+// Compared against when the email does not exist, so both failure paths take
+// the same time and don't reveal which emails are registered.
+const DUMMY_HASH = '$2b$10$lJI76SsB7iybmvO4Pb50yOgkIhbUh2VOCuFqfXLGyRQ00lg.0P0zm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-
-    @Inject(forwardRef(() => UsersService))
-    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly usersService: UsersService,
   ) {}
 
-  async register(
-    createUserDto: CreateUserDto,
-  ): Promise<{ email: string; password: string }> {
-    try {
-      const hashed = await bcrypt.hash(createUserDto.password, 10);
-      return { email: createUserDto.email, password: hashed };
-    } catch (error) {
-      throw new InternalServerErrorException('Error creating user');
+  async login(loginUser: LoginUserDto) {
+    const user = await this.usersService.findByEmailWithPassword(loginUser.email);
+    const passwordMatches = await bcrypt.compare(
+      loginUser.password,
+      user?.password ?? DUMMY_HASH,
+    );
+
+    if (!user || !passwordMatches || !user.active) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-  }
 
-  async validateUser(
-    loginUser: LoginUserDto,
-    findUser: LoginUserDto,
-  ): Promise<boolean> { 
-    try {
-      return await bcrypt.compare(loginUser.password, findUser.password);
-    } catch (error) {
-      throw new InternalServerErrorException('Error validating user');
-    }
-  }
+    const payload: JwtPayload = {
+      sub: user.user_id,
+      email: user.email,
+      role: user.role,
+    };
 
-  async login(loginUser: LoginUserDto): Promise<{ access_token: string }> {
-    const findUser = await this.userService.findUserByEmail(loginUser.email);
-    const validUser = await this.validateUser(loginUser, findUser);
-
-    if (!validUser) {
-      throw new UnauthorizedException('Invalid password');
-    }
-    const payload = { sub: loginUser.email };
-    const token = await this.jwtService.sign(payload);
-
-    return { access_token: token };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      token_type: 'Bearer',
+      expires_in: ACCESS_TOKEN_TTL_SECONDS,
+      user: { user_id: user.user_id, email: user.email, role: user.role },
+    };
   }
 }

@@ -21,6 +21,7 @@ REST API built with **NestJS** that powers [autobusesdecolombia.com](https://www
 - [Available scripts](#available-scripts)
 - [Testing](#testing)
 - [Docker](#docker)
+- [Backups](#-backups)
 - [License](#license)
 
 ## Features
@@ -162,6 +163,54 @@ docker compose down       # stop everything
 - Adminer (Postgres UI) → `http://localhost:8080`
 - Postgres → `localhost:5432`
 - Redis → `localhost:6379`
+
+## 💾 Backups
+
+Two independent things need backing up: the PostgreSQL database and the photo library on Cloudinary. Neither is automated yet — run these manually (or wire them into a scheduled job/CI cron).
+
+### PostgreSQL
+
+Requires `pg_dump`/`pg_restore` locally (`brew install postgresql` on macOS).
+
+```bash
+# Load DATABASE_URL from .env into the current shell
+export $(grep DATABASE_URL .env | xargs)
+
+# Dump (custom/compressed format — recommended for restores)
+pg_dump "$DATABASE_URL" -F c -f backup_$(date +%Y%m%d).dump
+```
+
+Restore into a (target) database:
+
+```bash
+pg_restore -d "<target_database_url>" backup_20260705.dump
+```
+
+> Use the **public/proxy** connection string (`DATABASE_URL`), not the `*.railway.internal` host — the internal hostname only resolves from inside Railway's network, not from your local machine.
+
+### Cloudinary photos
+
+Photos live in two Cloudinary folders: `autobusesdecolombia` (vehicle photos — the bulk of the library) and `post` (blog cover images). With 2000+ assets, use the official CLI instead of the dashboard — it paginates through the Admin API for you.
+
+```bash
+# Install once
+pip install cloudinary-cli
+
+# Point it at this project's Cloudinary account
+export CLOUDINARY_URL=cloudinary://<CLOUDINARY_API_KEY>:<CLOUDINARY_API_SECRET>@<CLOUDINARY_CLOUD_NAME>
+
+# Verify it's pointing at the right account
+cld config
+
+# Download everything (repeat per folder)
+mkdir -p ./backups/cloudinary/$(date +%Y%m%d)
+cld -c "$CLOUDINARY_URL" sync --pull ./backups/cloudinary/$(date +%Y%m%d)/vehiculos autobusesdecolombia
+cld -c "$CLOUDINARY_URL" sync --pull ./backups/cloudinary/$(date +%Y%m%d)/posts post
+```
+
+> If `cld config` or `cld sync` fails with `Error 401 - cloud_name mismatch`, you likely have an old saved default configuration overriding `CLOUDINARY_URL` (check with `cld config -ls`, clear it with `cld config --unset-default`). Passing `-c "$CLOUDINARY_URL"` explicitly (as above) takes the highest precedence and sidesteps that.
+
+Store both the `.dump` file and the `cloudinary/` folder somewhere outside this repo and outside the machine running the API (external drive, S3, Google Drive, etc.) — never commit them to git.
 
 ## License
 

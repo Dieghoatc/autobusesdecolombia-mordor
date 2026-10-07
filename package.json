@@ -21,7 +21,8 @@
     "typeorm": "ts-node --transpile-only ./node_modules/typeorm/cli",
     "migration:generate": "ts-node --transpile-only ./node_modules/typeorm/cli migration:generate -d src/data-source.ts",
     "migration:run": "ts-node --transpile-only ./node_modules/typeorm/cli migration:run -d src/data-source.ts",
-    "migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli migration:revert -d src/data-source.ts"
+    "migration:revert": "ts-node --transpile-only ./node_modules/typeorm/cli migration:revert -d src/data-source.ts",
+    "seed:admin": "ts-node --transpile-only src/seeds/create-admin.ts"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.1",
@@ -103,6 +104,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }

@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, IsEmail, IsOptional, IsBoolean } from 'class-vali
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreatePhotographerDto {
-  @ApiProperty({ example: 'Juan Pérez', description: 'Nombre del fotógrafo (único)' })
+  @ApiProperty({ example: 'Juan Pérez', description: 'Photographer name (unique)' })
   @IsString()
   @IsNotEmpty()
   name: string;

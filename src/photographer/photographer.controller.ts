@@ -3,43 +3,47 @@ import { PhotographerService } from './photographer.service';
 import { CreatePhotographerDto } from './dto/create-photographer.dto';
 import { UpdatePhotographerDto } from './dto/update-photographer.dto';
 import { ApiTags, ApiOperation, ApiParam, ApiNotFoundResponse } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('photographers')
 @Controller('photographer')
 export class PhotographerController {
   constructor(private readonly photographerService: PhotographerService) {}
 
-  @ApiOperation({ summary: 'Crea un fotógrafo' })
+  @ApiOperation({ summary: 'Create a photographer' })
+  @AdminOnly()
   @Post()
   create(@Body() createPhotographerDto: CreatePhotographerDto) {
     return this.photographerService.create(createPhotographerDto);
   }
 
-  @ApiOperation({ summary: 'Lista todos los fotógrafos' })
+  @ApiOperation({ summary: 'List all photographers' })
   @Get()
   findAll() {
     return this.photographerService.findAll();
   }
 
-  @ApiOperation({ summary: 'Obtiene un fotógrafo por ID' })
+  @ApiOperation({ summary: 'Get a photographer by ID' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.photographerService.findOne(+id);
   }
 
-  @ApiOperation({ summary: 'Actualiza un fotógrafo' })
+  @ApiOperation({ summary: 'Update a photographer' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
+  @AdminOnly()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePhotographerDto: UpdatePhotographerDto) {
     return this.photographerService.update(+id, updatePhotographerDto);
   }
 
-  @ApiOperation({ summary: 'Elimina un fotógrafo' })
+  @ApiOperation({ summary: 'Delete a photographer' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiNotFoundResponse({ description: 'Fotógrafo no encontrado' })
+  @ApiNotFoundResponse({ description: 'Photographer not found' })
+  @AdminOnly()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.photographerService.remove(+id);
