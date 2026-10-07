@@ -8,7 +8,7 @@ import {
 
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { AuthService } from './auth.service';
-import { Auth } from './decorators/auth.decorator';
+import { AdminOnly, Auth } from './decorators/auth.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthUser } from './interfaces/jwt-payload.interface';
 
@@ -46,5 +46,21 @@ export class AuthController {
   @Get('profile')
   getProfile(@CurrentUser() user: AuthUser) {
     return user;
+  }
+
+  @ApiOperation({
+    summary: 'Get a short-lived upload token (admin only)',
+    description:
+      'Valid for 10 minutes and only on the photo endpoints (POST /photo/mark, /photo/optimize, /vehicle), ' +
+      'so the browser can send photos straight to the API without the session token.',
+  })
+  @ApiOkResponse({
+    schema: { example: { upload_token: '<jwt>', token_type: 'Bearer', expires_in: 600 } },
+  })
+  @AdminOnly()
+  @Post('upload-token')
+  @HttpCode(HttpStatus.OK)
+  createUploadToken(@CurrentUser() user: AuthUser) {
+    return this.authService.createUploadToken(user);
   }
 }
