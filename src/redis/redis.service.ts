@@ -7,8 +7,13 @@ export class RedisService {
     @Inject('REDIS_CLIENT') private readonly redis: Redis, // <-- inyectamos el cliente
   ) {}
 
-  async setCacheKey(key: string, value: string) {
-    await this.redis.set(key, value);
+  // Without ttlSeconds the key never expires
+  async setCacheKey(key: string, value: string, ttlSeconds?: number) {
+    if (ttlSeconds) {
+      await this.redis.set(key, value, 'EX', ttlSeconds);
+    } else {
+      await this.redis.set(key, value);
+    }
     return value;
   }
 
