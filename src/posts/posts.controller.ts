@@ -13,13 +13,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { GetPostDto } from './dto/get_post';
 import { RedisService } from 'src/redis/redis.service';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
+import { AdminOnly } from '../auth/decorators/auth.decorator';
 
 @ApiTags('posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService, private readonly redisService: RedisService) {}
 
-  @ApiOperation({ summary: 'Crea un post con imagen de portada' })
+  @ApiOperation({ summary: 'Create a post with a cover image' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -34,6 +35,7 @@ export class PostsController {
       },
     },
   })
+  @AdminOnly()
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(
@@ -43,9 +45,10 @@ export class PostsController {
     return this.postsService.create(createPostDto, file);
   }
 
-  @ApiOperation({ summary: 'Sube una imagen suelta (usada por el editor de contenido)' })
+  @ApiOperation({ summary: 'Upload a standalone image (used by the content editor)' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ schema: { type: 'object', properties: { image: { type: 'string', format: 'binary' } } } })
+  @AdminOnly()
   @Post('image')
   @UseInterceptors(FileInterceptor('image'))
   async ploadImage(@UploadedFile() file: Express.Multer.File) {
@@ -66,12 +69,12 @@ export class PostsController {
     return {
       success: 1,
       file: {
-        url: imageUrl, // La URL que se insertará en el editor
+        url: imageUrl, // The URL that will be inserted into the editor
       },
     };
   }
 
-  @ApiOperation({ summary: 'Lista todos los posts (con caché en Redis)' })
+  @ApiOperation({ summary: 'List all posts (cached in Redis)' })
   @Get()
   async findAll() {
     const cacheKey = `posts`;
@@ -84,7 +87,7 @@ export class PostsController {
     return data;
   }
 
-  @ApiOperation({ summary: 'Obtiene un post por ID (con caché en Redis)' })
+  @ApiOperation({ summary: 'Get a post by ID (cached in Redis)' })
   @ApiParam({ name: 'id', example: 1 })
   @Get(':id')
   async findOne(@Param() params: GetPostDto) {

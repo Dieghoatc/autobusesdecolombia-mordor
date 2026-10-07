@@ -1,44 +1,50 @@
-import { Injectable, Inject, forwardRef, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { AuthService } from 'src/auth/auth.service';
+import * as bcrypt from 'bcrypt';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-const db = [
-  {
-    email: 'admin@abc.com',
-    password: '$2b$10$nXOv0LdQrflvS6iR7y4VFeJoFbjqHLToLedrSfZcTW39hx03Zgeba'
-  }
-];
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
+
+const SALT_ROUNDS = 10;
 
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private authService: AuthService,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto):Promise<{email: string; password: string}> {
-    if (db.find((user) => user.email === createUserDto.email)) {
-      throw new UnauthorizedException('Email already exists');
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const email = this.normalizeEmail(createUserDto.email);
+
+    if (await this.usersRepository.existsBy({ email })) {
+      throw new ConflictException('Email already exists');
     }
-    const authUser = await this.authService.register(createUserDto);
-    db.push(authUser);
-    return authUser;
+
+    const user = this.usersRepository.create({
+      email,
+      password: await bcrypt.hash(createUserDto.password, SALT_ROUNDS),
+      role: createUserDto.role,
+    });
+    const { password, ...saved } = await this.usersRepository.save(user);
+    return saved as User;
   }
 
-  async login(user: LoginUserDto) {
-    const authUSer = await this.authService.login(user);
-    return authUSer;
+  findById(userId: number): Promise<User | null> {
+    return this.usersRepository.findOneBy({ user_id: userId });
   }
 
-  async findUserByEmail(
-    email: string,
-  ): Promise<{ email: string; password: string } | {}> {
-    const findUser = await db.find((user) => user.email === email);
+  // Includes the password hash, which is excluded from normal queries
+  findByEmailWithPassword(email: string): Promise<User | null> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: this.normalizeEmail(email) })
+      .getOne();
+  }
 
-    if (!findUser) {
-      throw new UnauthorizedException('User not found');
-    }
-    return findUser;
+  private normalizeEmail(email: string): string {
+    return email.trim().toLowerCase();
   }
 }

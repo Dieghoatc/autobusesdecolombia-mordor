@@ -15,6 +15,11 @@ import {
       if (request.method !== 'GET') {
         return undefined;
       }
+
+      // Never cache per-user (authenticated) responses
+      if (request.headers.authorization) {
+        return undefined;
+      }
   
       // Clave única basada en la URL
       return `${request.method}-${request.url}`;

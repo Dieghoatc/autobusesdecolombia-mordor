@@ -8,13 +8,13 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 export class VehicleModelController {
   constructor(private readonly vehicleModelService: VehicleModelService) {}
 
-  @ApiOperation({ summary: 'Lista todos los modelos de vehículo' })
+  @ApiOperation({ summary: 'List all vehicle models' })
   @Get()
   findAll() {
     return this.vehicleModelService.findAll();
   }
 
-  @ApiOperation({ summary: 'Obtiene un modelo de vehículo por ID' })
+  @ApiOperation({ summary: 'Get a vehicle model by ID' })
   @ApiParam({ name: 'id', example: 5 })
   @Get(':id')
   findOne(@Param('id') id: string, @Query() paginationDto: ModelPaginationDTO) {
