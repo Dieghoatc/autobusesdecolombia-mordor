@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { LoginUserDto } from '../users/dto/login-user.dto';
 import { UsersService } from '../users/users.service';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { ACCESS_TOKEN_TTL_SECONDS } from './auth.constants';
+import { AuthUser, JwtPayload } from './interfaces/jwt-payload.interface';
+import { ACCESS_TOKEN_TTL_SECONDS, UPLOAD_TOKEN_TTL_SECONDS } from './auth.constants';
 
 // Compared against when the email does not exist, so both failure paths take
 // the same time and don't reveal which emails are registered.
@@ -40,6 +40,26 @@ export class AuthService {
       token_type: 'Bearer',
       expires_in: ACCESS_TOKEN_TTL_SECONDS,
       user: { user_id: user.user_id, email: user.email, role: user.role },
+    };
+  }
+
+  // Short-lived token the browser uses to send photos straight to the API. It only
+  // works on endpoints marked @UploadTokenAllowed(), so the session token never has
+  // to leave the dashboard server.
+  async createUploadToken(user: AuthUser) {
+    const payload: JwtPayload = {
+      sub: user.user_id,
+      email: user.email,
+      role: user.role,
+      scope: 'upload',
+    };
+
+    return {
+      upload_token: await this.jwtService.signAsync(payload, {
+        expiresIn: UPLOAD_TOKEN_TTL_SECONDS,
+      }),
+      token_type: 'Bearer',
+      expires_in: UPLOAD_TOKEN_TTL_SECONDS,
     };
   }
 }

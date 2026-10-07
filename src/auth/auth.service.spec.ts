@@ -75,4 +75,18 @@ describe('AuthService', () => {
     ).rejects.toThrow(UnauthorizedException);
     expect(jwtService.signAsync).not.toHaveBeenCalled();
   });
+
+  it('creates a short-lived upload token with the upload scope', async () => {
+    const result = await service.createUploadToken({
+      user_id: 1,
+      email: 'admin@example.com',
+      role: Role.Admin,
+    });
+
+    expect(jwtService.signAsync).toHaveBeenCalledWith(
+      { sub: 1, email: 'admin@example.com', role: Role.Admin, scope: 'upload' },
+      { expiresIn: 600 },
+    );
+    expect(result).toEqual({ upload_token: 'signed.jwt.token', token_type: 'Bearer', expires_in: 600 });
+  });
 });

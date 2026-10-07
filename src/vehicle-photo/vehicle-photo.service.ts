@@ -1,14 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PhotoFilterDto } from './dto/photo-filter.dto';
 import { VehiclePhotoPostgresDAO } from './dao/vehicle-photo-postgresql.dao';
-import { PhotoWatermarkClient } from 'src/services/mark-photo/mark-photo';
+import { PhotoWatermarkService } from 'src/services/watermark/photo-watermark.service';
+import { ImageConvert } from 'src/utils/imageConvert';
 
 @Injectable()
 export class VehiclePhotoService {
   constructor(
     private readonly photoDao: VehiclePhotoPostgresDAO,
-    private readonly photowhatermarkClient: PhotoWatermarkClient,
+    private readonly photoWatermarkService: PhotoWatermarkService,
   ) {}
+
+  private imageConvert = new ImageConvert();
 
   private urlApi =
     process.env.NODE_ENV === 'production'
@@ -72,11 +75,28 @@ export class VehiclePhotoService {
     return photo;
   }
 
+  // Adds the watermark and converts the photo to AVIF
   async markPhotoService(
     file: Express.Multer.File,
     author: string,
     location?: string,
-  ) {
-    return await this.photowhatermarkClient.markPhoto(file, author, location);
+    quality?: number,
+  ): Promise<Buffer> {
+    try {
+      return await this.photoWatermarkService.markPhoto(file.buffer, author, location, quality);
+    } catch (error) {
+      // sharp rejects files that are not images or are corrupt
+      throw new BadRequestException('Unsupported or corrupt image');
+    }
+  }
+
+  // Converts the photo to an optimized AVIF, without watermark
+  async optimizePhotoService(file: Express.Multer.File, quality?: number): Promise<Buffer> {
+    try {
+      return await this.imageConvert.toAvif(file.buffer, quality);
+    } catch (error) {
+      // sharp rejects files that are not images or are corrupt
+      throw new BadRequestException('Unsupported or corrupt image');
+    }
   }
 }

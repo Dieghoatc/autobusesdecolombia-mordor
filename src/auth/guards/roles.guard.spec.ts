@@ -8,15 +8,17 @@ describe('RolesGuard', () => {
   const reflector = { getAllAndOverride: jest.fn() } as unknown as Reflector;
   const guard = new RolesGuard(reflector);
 
-  const contextWithUser = (user?: { role: Role }) =>
+  const contextWithUser = (user?: { role: Role; scope?: 'upload' }) =>
     ({
       getHandler: () => null,
       getClass: () => null,
       switchToHttp: () => ({ getRequest: () => ({ user }) }),
     }) as unknown as ExecutionContext;
 
-  const requireRoles = (roles?: Role[]) =>
-    (reflector.getAllAndOverride as jest.Mock).mockReturnValue(roles);
+  const requireRoles = (roles?: Role[], uploadTokenAllowed = false) =>
+    (reflector.getAllAndOverride as jest.Mock).mockImplementation((key: string) =>
+      key === 'roles' ? roles : uploadTokenAllowed,
+    );
 
   it('allows any authenticated user when no roles are required', () => {
     requireRoles(undefined);
@@ -36,5 +38,20 @@ describe('RolesGuard', () => {
   it('denies when there is no user', () => {
     requireRoles([Role.Admin]);
     expect(guard.canActivate(contextWithUser(undefined))).toBe(false);
+  });
+
+  it('rejects an upload token on endpoints that do not allow it', () => {
+    requireRoles([Role.Admin]);
+    expect(guard.canActivate(contextWithUser({ role: Role.Admin, scope: 'upload' }))).toBe(false);
+  });
+
+  it('rejects an upload token even where no role is required', () => {
+    requireRoles(undefined);
+    expect(guard.canActivate(contextWithUser({ role: Role.Admin, scope: 'upload' }))).toBe(false);
+  });
+
+  it('accepts an upload token on endpoints marked @UploadTokenAllowed()', () => {
+    requireRoles([Role.Admin], true);
+    expect(guard.canActivate(contextWithUser({ role: Role.Admin, scope: 'upload' }))).toBe(true);
   });
 });

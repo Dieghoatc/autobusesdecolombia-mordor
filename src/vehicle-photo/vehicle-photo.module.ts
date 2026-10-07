@@ -7,7 +7,7 @@ import { VehiclePhoto } from './entities/vehicle-photo.entity';
 import { Vehicle } from '../vehicle/entities/vehicle.entity';
 import { Country } from '../country/entities/country.entity';
 import { VehiclePhotoPostgresDAO } from './dao/vehicle-photo-postgresql.dao';
-import { PhotoWatermarkClient } from 'src/services/mark-photo/mark-photo';
+import { PhotoWatermarkService } from 'src/services/watermark/photo-watermark.service';
 import { Photographer } from 'src/photographer/entities/photographer.entity';
 
 @Module({
@@ -18,7 +18,7 @@ import { Photographer } from 'src/photographer/entities/photographer.entity';
   providers: [
     VehiclePhotoService,
     VehiclePhotoPostgresDAO,
-    PhotoWatermarkClient,
+    PhotoWatermarkService,
   ],
   exports: [TypeOrmModule],
 })
