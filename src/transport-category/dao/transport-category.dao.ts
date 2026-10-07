@@ -18,10 +18,8 @@ export class TransportCategoryDAO {
     });
   }
 
-  findBySlug(slug: string): Promise<TransportCategory[]> {
-    return this.transportCategoryRepository.find({
-      where: { slug },
-    });
+  findBySlug(slug: string): Promise<TransportCategory | null> {
+    return this.transportCategoryRepository.findOneBy({ slug });
   }
 
   findCount(): Promise<number> {
