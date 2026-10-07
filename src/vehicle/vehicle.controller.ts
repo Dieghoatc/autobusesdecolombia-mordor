@@ -17,6 +17,7 @@ import { VehicleDTO } from './dto/vehicle.dto';
 import { RedisService } from 'src/redis/redis.service';
 import { ApiTags, ApiOperation, ApiParam, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { AdminOnly } from '../auth/decorators/auth.decorator';
+import { UploadTokenAllowed } from '../auth/decorators/upload-token.decorator';
 
 @ApiTags('vehicles')
 @Controller('vehicle')
@@ -102,6 +103,7 @@ export class VehicleController {
     },
   })
   @AdminOnly()
+  @UploadTokenAllowed()
   @Post()
   @UseInterceptors(FileInterceptor('photo'))
   async createVehicle(
